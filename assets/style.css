@@ -1,0 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;700&display=swap');
+
+body {
+    @apply bg-neutral-900;
+}
