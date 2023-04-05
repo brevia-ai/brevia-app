@@ -44,7 +44,9 @@ export default {
     created() {
         const config = useRuntimeConfig();
         this.apiUrl = config.public.apiUrl;
-        this.sessionId = self.crypto.randomUUID();
+        if (process.client) {
+            this.sessionId = self.crypto.randomUUID();
+        }
     },
 
     methods: {
