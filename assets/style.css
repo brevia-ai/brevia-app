@@ -1,5 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;700&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer components {
+    .bubble {
+        @apply relative bg-sky-800 text-white rounded-md py-2 px-3 text-sm;
+        min-width: 30%;
+        max-width: 80%;
+    }
+
+    .bubble:nth-child(2n) {
+        align-self: flex-end;
+    }
+    .bubble:nth-child(2n):after {
+        content: '';
+        @apply absolute right-2;
+        border-width: 16px 0 0 16px;
+        border-style: solid;
+        border-color: rgb(7 89 133) transparent;
+    }
+
+    .bubble:nth-child(2n+1) {
+        @apply bg-pink-900;
+        align-self: flex-start;
+    }
+
+    .bubble:nth-child(2n+1):after {
+        content: '';
+        @apply absolute left-2;
+        border-width: 16px 16px 0 0;
+        border-style: solid;
+        border-color: rgb(131, 24, 67) transparent;
+    }
+}
+
 body {
     @apply bg-neutral-900;
 }

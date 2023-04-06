@@ -8,9 +8,15 @@
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis perferendis, repudiandae beatae nisi voluptas magni! Sint fugit, temporibus dolores exercitationem nobis repellat.</p>
             </div>
 
-            <div v-if="hasAnswer">
+            <div v-if="dialog.length">
                 <hr class="my-6 border-neutral-300">
 
+                <div class="flex flex-col space-y-6 pb-4">
+                    <div class="bubble" v-for="(item, i) in dialog" :key="i">
+                        <div>{{ item.who }}</div>
+                        <p>{{ item.message }}</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -38,6 +44,7 @@ export default {
 
             isBusy: false,
             hasAnswer: false,
+            dialog: [],
         }
     },
 
@@ -56,6 +63,10 @@ export default {
 
             this.isBusy = true;
             const prompt = this.$refs['prompt'].value;
+            this.$refs['prompt'].value = '';
+
+            this.dialog.push( this.dialogItem('me', prompt) );
+
             try {
                 const response = await fetch(this.apiUrl, {
                     method: 'POST',
@@ -69,24 +80,30 @@ export default {
                     })
                 });
 
-                // clearInterval(loadInterval);
-                // messageDiv.innerHTML = '';
-
                 if (response.ok) {
                     const data = await response.json();
                     const parsedData = data.bot.trim();
-                    console.log(parsedData);
-                    // typeText(messageDiv, parsedData);
+                    this.dialog.push( this.dialogItem('him', parsedData) );
                 } else {
                     const err = await response.text();
 
                     messageDiv.innerHTML = 'Qualcosa non ha funzionato';
                     console.log(err);
                 }
+                this.isBusy = false;
+                setTimeout(() => {
+                    this.$refs['prompt'].focus();
+                }, 100);
             } catch (error) {
-                // clearInterval(loadInterval);
-                // messageDiv.innerHTML = 'Qualcosa non ha funzionato';
+                this.isBusy = false;
                 console.log(error);
+            }
+        },
+
+        dialogItem(who, message) {
+            return {
+                who,
+                message,
             }
         }
     }
