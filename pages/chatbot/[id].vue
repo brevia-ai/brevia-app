@@ -23,7 +23,7 @@
         </div>
 
         <div class="flex space-x-4">
-            <input class="grow text-lg p-2 rounded disabled:bg-neutral-200 shadow-md" type="text"
+            <input class="grow text-lg p-2 rounded border border-sky-500 disabled:bg-neutral-100 disabled:border-neutral-300 shadow-md" type="text"
                 ref="prompt"
                 :disabled="isBusy"
                 @keydown.enter="submit">
@@ -37,12 +37,14 @@
 </template>
 
 <script>
+import { useRoute } from 'vue-router';
+
 export default {
     data() {
         return {
             apiUrl: '',
             sessionId: '',
-            collection: 'storia-novecento',
+            collection: '',
 
             isBusy: false,
             hasAnswer: false,
@@ -55,6 +57,8 @@ export default {
         this.apiUrl = config.public.apiUrl;
         if (process.client) {
             this.sessionId = self.crypto.randomUUID();
+            const route = useRoute();
+            this.collection = route.params.id;
         }
     },
 
