@@ -8,6 +8,10 @@
         @apply bg-sky-700 hover:bg-sky-600 text-white rounded flex items-center justify-center;
     }
 
+    .big-button {
+        @apply p-6 flex items-center justify-center flex-col space-y-2 sm:aspect-square bg-sky-800 hover:bg-sky-600 text-white rounded-lg;
+    }
+
     .bubble {
         @apply relative bg-neutral-800 text-white rounded-md p-3;
         min-width: 30%;
@@ -54,7 +58,7 @@
 }
 
 body {
-    @apply text-neutral-900 bg-neutral-50 scroll-smooth;
+    @apply text-neutral-900 bg-slate-100 scroll-smooth;
 }
 
 html {
