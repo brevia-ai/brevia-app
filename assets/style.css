@@ -4,37 +4,59 @@
 @tailwind components;
 @tailwind utilities;
 @layer components {
+    .button {
+        @apply bg-sky-700 hover:bg-sky-600 text-white rounded flex items-center justify-center;
+    }
+
     .bubble {
-        @apply relative bg-sky-800 text-white rounded-md py-2 px-3 text-sm;
+        @apply relative bg-neutral-800 text-white rounded-md p-3;
         min-width: 30%;
         max-width: 80%;
     }
 
+    /* odd bubbles left */
     .bubble:nth-child(2n) {
-        align-self: flex-end;
+        align-self: flex-start;
     }
     .bubble:nth-child(2n):after {
         content: '';
-        @apply absolute right-2;
-        border-width: 16px 0 0 16px;
-        border-style: solid;
-        border-color: rgb(7 89 133) transparent;
+        @apply absolute left-2 bottom-0 translate-y-full border-solid;
+        border-width: .5rem .5rem 0 0;
+        border-color: rgb(38, 38, 38) transparent;
     }
 
+    /* even bubbles right */
     .bubble:nth-child(2n+1) {
-        @apply bg-pink-900;
-        align-self: flex-start;
+        @apply bg-sky-800;
+        align-self: flex-end;
     }
 
     .bubble:nth-child(2n+1):after {
-        content: '';
-        @apply absolute left-2;
-        border-width: 16px 16px 0 0;
-        border-style: solid;
-        border-color: rgb(131, 24, 67) transparent;
+        content: ' ';
+        @apply absolute right-2 bottom-0 translate-y-full border-solid;
+        border-width: .5rem 0 0 .5rem;
+        border-color: rgb(7 89 133) transparent;
+    }
+
+    .loading:after {
+        @apply inline-block text-2xl font-bold;
+        content: '\00a0 ';
+        animation: ellipsis steps(1, end) 1s infinite;
+    }
+
+    @keyframes ellipsis {
+        0%   { content: '\00a0 '; }
+        25%  { content: '.'; }
+        50%  { content: '..'; }
+        75%  { content: '...'; }
+        100% { content: '\00a0 '; }
     }
 }
 
 body {
-    @apply bg-neutral-900;
+    @apply text-neutral-900 bg-neutral-50 scroll-smooth;
+}
+
+html {
+    @apply scroll-smooth;
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="rounded space-y-3 text-white">
+    <div class="rounded space-y-3">
         <ClientOnly>
             <head> <title>About Chatlas</title> </head>
         </ClientOnly>
