@@ -28,7 +28,9 @@
                 :disabled="isBusy"
                 @keydown.enter="submit">
 
-            <button class="px-4 button shadow-md disabled:bg-neutral-200 disabled:shadow-none" :disabled="!apiUrl || isBusy">
+            <button class="px-4 button shadow-md disabled:bg-neutral-200 disabled:shadow-none" 
+                :disabled="isBusy"
+                @click="submit">
                 <span class="md:hidden">›</span>
                 <span class="hidden md:inline">invia</span>
             </button>
@@ -70,12 +72,12 @@ export default {
 
     methods: {
         async submit() {
-            if (!this.apiUrl)
-                return;
-
-            this.isBusy = true;
-            const prompt = this.$refs['prompt'].value;
+            const prompt = this.$refs['prompt']?.value?.trim();
             this.$refs['prompt'].value = '';
+            if (!prompt || !this.apiUrl) {
+                return;
+            }
+            this.isBusy = true;
 
             this.dialog.push( this.dialogItem('YOU', prompt) );
 
