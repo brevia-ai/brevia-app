@@ -28,8 +28,8 @@
                 :disabled="isBusy"
                 @keydown.enter="submit">
 
-            <button class="px-4 button shadow-md disabled:bg-neutral-200 disabled:shadow-none" 
-                :disabled="isBusy"
+            <button class="px-4 button shadow-md disabled:shadow-none"
+                :disabled="!isBusy"
                 @click="submit">
                 <span class="md:hidden">›</span>
                 <span class="hidden md:inline">invia</span>
