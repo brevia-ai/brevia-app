@@ -17,6 +17,8 @@ npm install
 pnpm install
 ```
 
+Copy `.env.sample` in `.env` and set Chatlas `API_BASE_URL` env var
+
 ## Development Server
 
 Start the development server on `http://localhost:3000`
