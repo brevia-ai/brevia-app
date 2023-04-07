@@ -12,7 +12,7 @@
                 <hr class="my-6 border-neutral-300">
 
                 <div class="flex flex-col space-y-6 pb-4">
-                    <div class="bubble space-y-2" v-for="(item, i) in dialog" :key="i">
+                    <div class="bubble space-y-2" v-for="(item, i) in dialog" :key="i" :class="{ 'bg-pink-800': item.error}">
                         <p class="text-xs">{{ item.who }}</p>
                         <p>{{ item.message }}</p>
                     </div>
@@ -92,8 +92,7 @@ export default {
                     this.dialog.push( this.dialogItem('CHATLAS', parsedData) );
                 } else {
                     const err = await response.text();
-
-                    messageDiv.innerHTML = 'Qualcosa non ha funzionato';
+                    this.dialog.push( this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true) );
                     console.log(err);
                 }
                 this.isBusy = false;
@@ -106,10 +105,11 @@ export default {
             }
         },
 
-        dialogItem(who, message) {
+        dialogItem(who, message, error = false) {
             return {
                 who,
                 message,
+                error,
             }
         }
     }
