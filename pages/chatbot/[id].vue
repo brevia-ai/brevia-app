@@ -62,6 +62,12 @@ export default {
         }
     },
 
+    mounted() {
+        setTimeout(() => {
+            this.$refs['prompt'].focus();
+        }, 100);
+    },
+
     methods: {
         async submit() {
             if (!this.apiUrl)
@@ -95,6 +101,7 @@ export default {
                     this.dialog.push( this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true) );
                     console.log(err);
                 }
+
                 this.isBusy = false;
                 setTimeout(() => {
                     this.$refs['prompt'].focus();
