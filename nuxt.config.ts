@@ -3,7 +3,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
         apiSecret: '123', // unused
         public: {
-            apiUrl: process.env.API_PROMPT_URL || '',
+            apiUrl: process.env.API_BASE_URL || '',
         },
     },
     modules: [
