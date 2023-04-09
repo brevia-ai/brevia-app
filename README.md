@@ -35,6 +35,12 @@ Build the application for production:
 npm run build
 ```
 
+To start the application:
+
+```bash
+npm start
+```
+
 Locally preview production build:
 
 ```bash
