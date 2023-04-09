@@ -7,16 +7,18 @@ WORKDIR /usr/src/nuxt-app
 
 # update and install dependency
 RUN apk update && apk upgrade
-RUN apk add git
 
-# copy the app, note .dockerignore
+# copy the app, user .dockerignore to exclude files
 COPY . /usr/src/nuxt-app/
 RUN npm install
-RUN npm run build
+# perform build at run time for now (see below)
+#RUN npm run build
 
 EXPOSE 3000
 
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=3000
 
-CMD [ "npm", "start" ]
+# build and start on docker run to be able to pass env vars
+# FIXME: env vars in Nuxt apps effective only at build time (why??)
+CMD ["sh", "-c", "npm run build; npm start"]

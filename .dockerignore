@@ -5,7 +5,8 @@ node_modules
 .nitro
 .cache
 .output
-.env
+.env*
+.editorconfig
 .DS_Store
 .history
 .vscode
