@@ -47,7 +47,6 @@
 export default {
     data() {
         return {
-            apiUrl: '',
             summaryType: 'summarize',
             file: null,
             isBusy: false,
@@ -55,9 +54,14 @@ export default {
         }
     },
 
-    created() {
-        const config = useRuntimeConfig();
-        this.apiUrl = config.public.apiUrl;
+    computed: {
+        apiUrl() {
+            const apiUrl = this.$config.public?.apiUrl?.trim();
+            if (!apiUrl) {
+                console.error('API url not set via `API_BASE_URL` env var');
+            }
+            return apiUrl;
+        }
     },
 
     methods: {

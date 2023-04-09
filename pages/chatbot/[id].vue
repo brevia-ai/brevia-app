@@ -47,7 +47,6 @@ import { useRoute } from 'vue-router';
 export default {
     data() {
         return {
-            apiUrl: '',
             sessionId: '',
             collection: '',
 
@@ -67,8 +66,6 @@ export default {
     },
 
     created() {
-        const config = useRuntimeConfig();
-        this.apiUrl = config.public.apiUrl;
         if (process.client) {
             this.sessionId = self.crypto.randomUUID();
             const route = useRoute();
@@ -83,6 +80,13 @@ export default {
     },
 
     computed: {
+        apiUrl() {
+            const apiUrl = this.$config.public?.apiUrl?.trim();
+            if (!apiUrl) {
+                console.error('API url not set via `API_BASE_URL` env var');
+            }
+            return apiUrl;
+        },
         isReady() {
             return !this.isBusy && this.hasCollection;
         },
