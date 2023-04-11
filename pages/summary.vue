@@ -74,6 +74,9 @@ export default {
             formData.append('file', this.file);
             const uploadUrl = this.apiUrl + '/upload_summarize';
             try {
+                // 'multipart/form-data' Content-type header
+                // intentionally not set to avoid boundary error
+                // https://stackoverflow.com/questions/39280438/fetch-missing-boundary-in-multipart-form-data-post/39281156#39281156
                 const response = await fetch(uploadUrl, {
                     method: 'POST',
                     body: formData,
