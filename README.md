@@ -17,6 +17,8 @@ npm install
 pnpm install
 ```
 
+Copy `.env.sample` in `.env` and set Chatlas `API_BASE_URL` env var
+
 ## Development Server
 
 Start the development server on `http://localhost:3000`
@@ -31,6 +33,12 @@ Build the application for production:
 
 ```bash
 npm run build
+```
+
+To start the application:
+
+```bash
+npm start
 ```
 
 Locally preview production build:
