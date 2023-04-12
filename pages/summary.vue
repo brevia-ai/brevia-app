@@ -3,7 +3,7 @@
         <h2 class="text-2xl font-bold">Document summary</h2>
         <div class="space-y-6 sm:space-y-8">
             <p>
-                In this section it is possible to upload a PDF document, even of several pages, and obtain a textual or point summary or a possible categorization.
+                Upload a PDF document, even one with many pages, to get a textual summary, a list summary or a potential categorization.
             </p>
 
             <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
