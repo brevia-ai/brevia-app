@@ -35,6 +35,10 @@ export default {
     },
 
     methods: {
+        reset() {
+            this.isDragging = false;
+            this.file = null;
+        },
         onChangeFile(e) {
             this.file = [...this.$refs.fileInput.files][0];
             this.$emit('fileChange', this.file);

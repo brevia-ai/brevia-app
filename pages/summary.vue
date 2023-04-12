@@ -3,12 +3,12 @@
         <h2 class="text-2xl font-bold">Document summary</h2>
         <div class="space-y-6 sm:space-y-8">
             <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur provident, laudantium eligendi deserunt modi pariatur ab odio iste accusantium beatae reprehenderit dolorem cumque consequuntur voluptate nihil repellendus accusamus quod expedita?
+                In this section it is possible to upload a PDF document, even of several pages, and obtain a textual or point summary or a possible categorization.
             </p>
 
             <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
                 <div class="sm:col-span-2">
-                    <DropZone @file-change="file = $event" :disabled="isBusy" />
+                    <DropZone @file-change="file = $event" :disabled="isBusy" ref="fileDrop"/>
                 </div>
 
                 <div class="sm:self-center justify-self-center sm:justify-self-start flex flex-col space-y-1 text-lg"
@@ -38,7 +38,7 @@
 
             <hr class="border-neutral-300" v-if="summary">
             <div class="space-y-4" v-if="summary">
-                <h2 class="text-xl leading-tight">Result for document <span class="block md:inline font-bold">{{ file.name }}</span></h2>
+                <h2 class="text-xl leading-tight">Result for document<span class="block md:inline font-bold">{{ file.name }}</span></h2>
                 <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ summary }}</p>
             </div>
         </div>
@@ -71,6 +71,13 @@ export default {
     },
 
     methods: {
+        reset() {
+            this.file = null;
+            this.summary = null;
+            this.isBusy = false;
+            this.$refs.fileDrop.reset();
+        },
+
         async submit() {
             this.isBusy = true;
             this.summary = null;
