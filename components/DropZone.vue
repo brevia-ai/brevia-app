@@ -1,13 +1,16 @@
 <template>
-    <label class="block p-8 bg-slate-700 border border-slate-900 hover:bg-slate-600 hover:border-slate-600 text-white rounded-lg text-lg text-center select-none cursor-pointer"
+    <label class="flex items-center p-8 min-h-[6rem] justify-center bg-slate-700 border border-slate-900 hover:bg-sky-800 hover:border-sky-800 text-white rounded-lg text-lg text-center select-none cursor-pointer"
         :class="{
-            '!bg-slate-600 !border-slate-600': isDragging,
+            '!bg-sky-800 !border-sky-800': isDragging,
             '!bg-neutral-500 !border-neutral-500 !text-neutral-300 !cursor-not-allowed pointer-events-none': disabled,
+            '!bg-slate-800': file && !disabled && !isDragging,
+            '!bg-red-900': isFileError,
         }"
         @dragover="onDragOver"
         @dragleave="onDragLeave"
         @drop="onDrop">
-            <div class="max-w-full overflow-hidden text-ellipsis" v-if="file">{{ file.name }}</div>
+            <div class="max-w-full text-sm font-mono text-green-300 overflow-hidden text-ellipsis" v-if="file">{{ file.name }}</div>
+            <div v-else-if="isFileError">Please drop a PDF file</div>
             <div v-else-if="isDragging">Drop file</div>
             <div v-else>Drop a PDF file here or click to open dialog</div>
 
@@ -30,6 +33,7 @@ export default {
     data() {
         return {
             isDragging: false,
+            isFileError: false,
             file: null,
         };
     },
@@ -52,7 +56,15 @@ export default {
         },
         onDrop(e) {
             e.preventDefault();
-            this.file = [...e.dataTransfer.files][0];
+            const file = [...e.dataTransfer.files][0] || null;
+            if (!file || !file.type || file.type !== 'application/pdf') {
+                this.isDragging = false;
+                this.isFileError = true;
+                setTimeout(() => { this.isFileError = false; }, 2000);
+                return;
+            }
+
+            this.file = file;
             this.$emit('fileChange', [...e.dataTransfer.files][0]);
             this.isDragging = false;
         },
