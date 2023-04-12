@@ -10,5 +10,10 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         // '@nuxtjs/axios',
     ],
+    app: {
+        head: {
+            link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }]
+        }
+    },
     css: ['@/assets/style.css'],
 })
