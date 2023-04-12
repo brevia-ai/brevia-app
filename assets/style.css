@@ -45,9 +45,18 @@
     }
 
     .loading:after {
-        @apply inline-block text-2xl font-bold;
+        @apply inline-block text-2xl font-bold leading-none;
         content: '\00a0 ';
         animation: ellipsis steps(1, end) 1s infinite;
+    }
+    button.loading {
+        @apply relative text-transparent;
+    }
+    button.loading:after {
+        position: absolute;
+    left: calc(50% - (1em * .5));
+    top: calc(50% - (1em * .5));
+        color: white;
     }
 
     @keyframes ellipsis {

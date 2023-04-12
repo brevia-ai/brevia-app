@@ -1,6 +1,6 @@
 <template>
     <ClientOnly>
-        <head> <title>Chatlas</title> </head>
+        <head> <title>Chatbot - Chatlas</title> </head>
     </ClientOnly>
     <main class="space-y-8">
         <div class="p-4 bg-white shadow-md rounded space-y-3">

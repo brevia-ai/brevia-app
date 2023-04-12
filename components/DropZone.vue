@@ -1,6 +1,9 @@
 <template>
-    <label class="block p-8 bg-slate-700 border border-slate-900 hover:bg-slate-600 hover:border-slate-600 text-white rounded-lg text-lg cursor-pointer text-center"
-        :class="{ '!bg-slate-600 !border-slate-600': isDragging }"
+    <label class="block p-8 bg-slate-700 border border-slate-900 hover:bg-slate-600 hover:border-slate-600 text-white rounded-lg text-lg text-center select-none cursor-pointer"
+        :class="{
+            '!bg-slate-600 !border-slate-600': isDragging,
+            '!bg-neutral-500 !border-neutral-500 !text-neutral-300 !cursor-not-allowed pointer-events-none': disabled,
+        }"
         @dragover="onDragOver"
         @dragleave="onDragLeave"
         @drop="onDrop">
@@ -11,12 +14,19 @@
             <input type="file" name="file" id="fileInput" ref="fileInput"
                 class="opacity-0 w-px h-px absolute overflow-hidden"
                 accept=".pdf"
+                :disabled="disabled"
                 @change="onChangeFile" />
     </label>
 </template>
 
 <script>
 export default {
+    props: {
+        disabled: {
+            type: Boolean,
+            default: false,
+        },
+    },
     data() {
         return {
             isDragging: false,
