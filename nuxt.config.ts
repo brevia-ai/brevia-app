@@ -4,6 +4,24 @@ export default defineNuxtConfig({
         apiSecret: '123', // unused
         public: {
             apiUrl: process.env.API_BASE_URL || '',
+            aclMenu: [
+                {
+                    password: 'doorway',
+                    menu: [
+                        {link : '/chatbot/doorway', title: "Doorway"},
+                        {link : '/chatbot/wiseair-doorway', title: "Wiseair deal"},
+                    ],
+                },
+                {
+                    password: 'chatlas',
+                    menu: [
+                        {link : '/summary', title: ""},
+                        {link : '/chatbot/storia-novecento', title: "Storia 900"},
+                        {link : '/chatbot/wiseair-doorway', title: "Wiseair deal"},
+                        {link : '/chatbot/biologia', title: "Biologia"},
+                    ],
+                },
+            ],
         },
     },
     modules: [
