@@ -82,7 +82,7 @@ export default {
             this.isBusy = true;
             this.summary = null;
             let formData = new FormData();
-            formData.append('num_items', 4);
+            formData.append('num_items', 5);
             formData.append('summ_prompt', this.summaryType);
             formData.append('file', this.file);
             const uploadUrl = this.apiUrl + '/upload_summarize';
