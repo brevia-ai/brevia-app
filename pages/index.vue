@@ -30,7 +30,7 @@
             > -->
             <input class="text-lg p-4 border-sky-500 mb-3" type="text"
                 placeholder="Codice di accesso"
-                v-model="password">
+                v-model="code">
 
                 <button class="p-4 button shadow-md mb-3"
                 @click="login" >
@@ -47,7 +47,7 @@ export default {
     data() {
         return {
             menu: [],
-            password: '',
+            code: '',
             logged: false,
             failed: false,
         }
@@ -68,7 +68,7 @@ export default {
             this.failed = false;
             const acl = this.$config.public?.aclMenu || [];
             const found = acl.find(
-                (i) => (i.password == this.password)
+                (i) => (i.code == this.code)
             );
             this.menu = found?.menu || [];
             if (this.menu.length > 0) {

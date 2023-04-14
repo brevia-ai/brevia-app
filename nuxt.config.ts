@@ -6,14 +6,14 @@ export default defineNuxtConfig({
             apiUrl: process.env.API_BASE_URL || '',
             aclMenu: [
                 {
-                    password: 'doorway',
+                    code: 'doorway',
                     menu: [
                         {link : '/chatbot/doorway', title: "Doorway"},
                         {link : '/chatbot/wiseair-doorway', title: "Wiseair deal"},
                     ],
                 },
                 {
-                    password: 'chatlas',
+                    code: 'chatlas',
                     menu: [
                         {link : '/summary', title: ""},
                         {link : '/chatbot/storia-novecento', title: "Storia 900"},
