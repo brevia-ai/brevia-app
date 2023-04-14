@@ -23,21 +23,16 @@
             </NuxtLink>
         </div>
 
-        <div class="max-w-sm mx-auto flex flex-col space-y-3" v-if="!logged">
-            <!-- <input class="text-lg p-2 border-sky-500 mb-3" type="text"
-                placeholder="Username"
-                v-model="user"
-            > -->
-            <input class="text-lg p-4 border-sky-500 mb-3" type="text"
+        <!-- LOGIN WITH CODE -->
+        <div class="mt-8 max-w-sm mx-auto flex flex-col space-y-4" v-if="!logged">
+            <input class="text-lg p-4 border border-sky-800 rounded" type="text"
                 placeholder="Codice di accesso"
-                v-model="code">
+                v-model="code"
+                @keydown.enter="login">
 
-                <button class="p-4 button shadow-md mb-3"
-                @click="login" >
-                <span>Entra</span>
-            </button>
+            <button class="p-4 button text-lg" @click="login">ENTER</button>
 
-            <p class="p-2 text-red-600 text-lg font-bold text-center" v-if="failed">Codice errato</p>
+            <p class="text-red-600 text-lg font-bold text-center" v-if="failed">Codice non valido</p>
         </div>
     </main>
 </template>
@@ -67,13 +62,12 @@ export default {
         login() {
             this.failed = false;
             const acl = this.$config.public?.aclMenu || [];
-            const found = acl.find(
-                (i) => (i.code == this.code)
-            );
+            const found = acl.find(i => i.code == this.code);
             this.menu = found?.menu || [];
             if (this.menu.length > 0) {
                 localStorage.setItem('menu', JSON.stringify(this.menu))
                 this.logged = true;
+                this.failed = false;
             } else {
                 this.failed = true;
             }
