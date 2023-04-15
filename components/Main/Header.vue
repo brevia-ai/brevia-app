@@ -12,15 +12,22 @@
         </div>
     </div>
 
-    <NuxtLink class="w-8 h-8 button" to="/"
-        v-if="$route.name === 'about'">⌂</NuxtLink>
+    <div class="flex space-x-2">
+        <NuxtLink class="w-10 h-10 button border-none" to="/" v-if="$route.name === 'about'">⌂</NuxtLink>
+        <NuxtLink class="w-10 h-10 button" to="/about" v-else>?</NuxtLink>
 
-    <NuxtLink class="w-8 h-8 button" to="/about" v-else>
-        ?</NuxtLink>
+        <button class="h-10 px-4 button text-sm leading-none bg-black hover:bg-red-800" @click="logout" v-if="isLogged">
+            <span class="sm:hidden">⍈</span>
+            <span class="hidden sm:inline">Logout</span>
+        </button>
+    </div>
 </header>
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useStatesStore } from '~~/store/states';
+
 export default {
     props: {
         route: {
@@ -28,5 +35,16 @@ export default {
             default: {},
         }
     },
+
+    computed: {
+        ...mapState(useStatesStore, ['isLogged']),
+    },
+
+    methods: {
+        logout() {
+            const store = useStatesStore();
+            store.userLogout();
+        }
+    }
 }
 </script>
