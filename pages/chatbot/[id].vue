@@ -1,7 +1,4 @@
 <template>
-    <ClientOnly>
-        <head> <title>Chatbot - Chatlas</title> </head>
-    </ClientOnly>
     <main class="space-y-8">
         <div class="p-4 bg-white shadow-md rounded space-y-3">
             <div class="text-sm text-neutral-600" v-if="hasCollection">
@@ -40,6 +37,10 @@
         </div>
    </main>
 </template>
+
+<script setup>
+    useHead({ title: 'Chatbot | Chatlas', });
+</script>
 
 <script>
 import { useRoute } from 'vue-router';

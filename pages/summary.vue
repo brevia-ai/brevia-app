@@ -43,11 +43,12 @@
             </div>
         </div>
 
-        <ClientOnly>
-            <head> <title>Document summary</title> </head>
-        </ClientOnly>
     </div>
 </template>
+
+<script setup>
+    useHead({ title: 'Document summary | Chatlas', });
+</script>
 
 <script>
 export default {
