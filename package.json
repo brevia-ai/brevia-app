@@ -14,6 +14,9 @@
     "nuxt": "^3.3.3"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.13.6"
+    "@nuxtjs/axios": "^5.13.6",
+    "@pinia/nuxt": "^0.4.8",
+    "pinia": "^2.0.34",
+    "vue": "^3.2.47"
   }
 }
