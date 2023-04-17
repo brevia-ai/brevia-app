@@ -154,9 +154,7 @@ export default {
             }
             console.log('DOCUMENTI TROVATI per "' + this.lastPrompt + '"')
             this.docs.forEach((doc, i) => {
-                // const src = doc?.metadata?.source || '';
-                // const p = doc?.metadata?.page || '';
-                console.log('\n\n' + (i +1) + ').');
+                console.log('\n\n' + (i + 1) + ').');
                 console.log(doc.page_content);
                 console.log(doc.metadata);
             });
