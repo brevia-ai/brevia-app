@@ -8,23 +8,32 @@ export const useStatesStore = defineStore('states', {
 
     actions: {
         userLogin(menu) {
-            if (!process.client) return;
-
-            localStorage.setItem('menu', JSON.stringify(menu));
+            this.setMenu(menu);
             this.isLogged = true;
             navigateTo('/');
         },
 
         userLogout() {
-            if (!process.client) return;
-
-            localStorage.removeItem('menu');
+            this.setMenu(null);
             this.isLogged = false;
             navigateTo('/auth');
         },
 
         setIsLogged(value = true) {
             this.isLogged = value;
-        }
+        },
+
+        getMenu() {
+            return JSON.parse(localStorage.getItem('chatlas-menu') || '[]');
+        },
+
+        setMenu(menu) {
+            if (!menu) {
+                localStorage.removeItem('chatlas-menu');
+                return;
+            }
+
+            localStorage.setItem('chatlas-menu', JSON.stringify(menu));
+        },
     },
 });

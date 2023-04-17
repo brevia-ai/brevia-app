@@ -24,6 +24,8 @@
 </script>
 
 <script>
+import { useStatesStore } from '~~/store/states';
+
 export default {
     data() {
         return {
@@ -32,9 +34,8 @@ export default {
     },
 
     created() {
-        if (!process.client) return;
-
-        this.menu = JSON.parse(localStorage.getItem('menu') || '[]');
+        const store = useStatesStore();
+        this.menu = store.getMenu();
     },
 }
 </script>

@@ -27,10 +27,9 @@ export default {
     },
 
     created() {
-        if (!process.client) return;
-
-        this.menu = JSON.parse(localStorage.getItem('menu') || '[]');
-        if(this.menu.length > 0) {
+        const store = useStatesStore();
+        const menu = store.getMenu();
+        if(menu.length > 0) {
             navigateTo('/');
         }
     },
