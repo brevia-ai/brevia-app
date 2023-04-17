@@ -44,6 +44,7 @@
 
 <script>
 import { useRoute } from 'vue-router';
+import { useStatesStore } from '~~/store/states';
 
 export default {
     data() {
@@ -55,6 +56,9 @@ export default {
             collectionDescription: '', // collection
             isBusy: false,
             hasAnswer: false,
+            lastPrompt: '',
+            sourceDocs: false,
+            docs: [],
             dialog: [],
             collections: [],
         }
@@ -72,6 +76,9 @@ export default {
             const route = useRoute();
             this.collection = route.params.id;
         }
+        const store = useStatesStore();
+        store.readOptions();
+        this.sourceDocs = Boolean(store.options?.['chatbotDocs']);
     },
 
     mounted() {
@@ -95,14 +102,14 @@ export default {
 
     methods: {
         async submit() {
-            const prompt = this.$refs['prompt']?.value?.trim();
+            this.lastPrompt = this.$refs['prompt']?.value?.trim();
             this.$refs['prompt'].value = '';
-            if (!prompt || !this.apiUrl) {
+            if (!this.lastPrompt || !this.apiUrl) {
                 return;
             }
             this.isBusy = true;
 
-            this.dialog.push( this.dialogItem('YOU', prompt) );
+            this.dialog.push( this.dialogItem('YOU', this.lastPrompt) );
             const promptUrl = this.apiUrl + '/prompt';
 
             try {
@@ -113,14 +120,17 @@ export default {
                         'X-Chat-Session': this.sessionId,
                     },
                     body: JSON.stringify({
-                        question: prompt,
+                        question: this.lastPrompt,
                         collection: this.collection,
+                        source_docs: this.sourceDocs,
                     })
                 });
 
                 if (response.ok) {
                     const data = await response.json();
                     const parsedData = data.bot.trim();
+                    this.docs = data.docs || [];
+                    this.viewDocs();
                     this.dialog.push( this.dialogItem('CHATLAS', parsedData) );
                 } else {
                     const err = await response.text();
@@ -136,6 +146,20 @@ export default {
                 this.isBusy = false;
                 console.log(error);
             }
+        },
+
+        viewDocs() {
+            if (!this.sourceDocs) {
+                return;
+            }
+            console.log('DOCUMENTI TROVATI per "' + this.lastPrompt + '"')
+            this.docs.forEach((doc, i) => {
+                // const src = doc?.metadata?.source || '';
+                // const p = doc?.metadata?.page || '';
+                console.log('\n\n' + (i +1) + ').');
+                console.log(doc.page_content);
+                console.log(doc.metadata);
+            });
         },
 
         async readCollections() {
