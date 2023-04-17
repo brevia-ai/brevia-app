@@ -1,5 +1,7 @@
 <template>
-    <label class="flex items-center p-8 min-h-[5rem] justify-center bg-slate-700 border border-slate-900 hover:bg-sky-800 hover:border-sky-800 text-white rounded-lg text-lg text-center select-none cursor-pointer"
+    <label class="flex items-center p-8 min-h-[5rem] justify-center bg-slate-700 border border-slate-900 hover:bg-sky-800 hover:border-sky-800 text-white rounded-lg text-lg text-center select-none cursor-pointer
+
+    focus-within:outline-double focus-within:outline-4 focus-within:outline-sky-800"
         :class="{
             '!bg-sky-800 !border-sky-800': isDragging,
             '!bg-neutral-500 !border-neutral-500 !text-neutral-300 !cursor-not-allowed pointer-events-none': disabled,
@@ -30,6 +32,7 @@ export default {
             default: false,
         },
     },
+
     data() {
         return {
             isDragging: false,

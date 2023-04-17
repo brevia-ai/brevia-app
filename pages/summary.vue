@@ -16,15 +16,15 @@
                     <div class="flex flex-col space-y-1"
                         :class="{'text-neutral-400' : isBusy}">
                         <label class="space-x-2 cursor-pointer">
-                            <input type="radio" :value="'summarize'" v-model="summaryType" :disabled="isBusy">
+                            <input type="radio" name="type" :value="'summarize'" v-model="summaryType" :disabled="isBusy">
                             <span :class="{ 'font-bold': summaryType === 'summarize' }">Text summary</span>
                         </label>
                         <label class="space-x-2 cursor-pointer">
-                            <input type="radio" :value="'summarize_point'" v-model="summaryType" :disabled="isBusy">
+                            <input type="radio" name="type" :value="'summarize_point'" v-model="summaryType" :disabled="isBusy">
                             <span :class="{ 'font-bold': summaryType === 'summarize_point' }">Bullet list summary</span>
                         </label>
                         <label class="space-x-2 cursor-pointer">
-                            <input type="radio" :value="'classificate'" v-model="summaryType" :disabled="isBusy">
+                            <input type="radio" name="type" :value="'classificate'" v-model="summaryType" :disabled="isBusy">
                             <span :class="{ 'font-bold': summaryType === 'classificate' }">Categorize content</span>
                         </label>
                     </div>
@@ -35,15 +35,15 @@
                     <div class="flex flex-col space-y-1"
                         :class="{'text-neutral-400' : isBusy}">
                         <label class="space-x-2 cursor-pointer">
-                            <input type="radio" :value="null" v-model="summaryLanguage" :disabled="isBusy">
+                            <input type="radio" name="language" :value="null" v-model="summaryLanguage" :disabled="isBusy">
                             <span :class="{ 'font-bold': !summaryLanguage }">Same language</span>
                         </label>
                         <label class="space-x-2 cursor-pointer">
-                            <input type="radio" :value="'ita'" v-model="summaryLanguage" :disabled="isBusy">
+                            <input type="radio" name="language" :value="'ita'" v-model="summaryLanguage" :disabled="isBusy">
                             <span :class="{ 'font-bold': summaryLanguage === 'ita' }">Italian</span>
                         </label>
                         <label class="space-x-2 cursor-pointer">
-                            <input type="radio" :value="'eng'" v-model="summaryLanguage" :disabled="isBusy">
+                            <input type="radio" name="language" :value="'eng'" v-model="summaryLanguage" :disabled="isBusy">
                             <span :class="{ 'font-bold': summaryLanguage === 'eng' }">English</span>
                         </label>
                     </div>
