@@ -30,7 +30,7 @@ export default {
         const store = useStatesStore();
         const menu = store.getMenu();
         store.readOptions();
-        if(menu.length > 0) {
+        if(menu?.length > 0) {
             navigateTo('/');
         }
     },
@@ -40,7 +40,7 @@ export default {
             this.failed = false;
             const acl = this.$config.public?.aclMenu || []
             const found = acl.find(i => i.code === this.code);
-            if (!found || !found.menu.length) {
+            if (!found?.menu?.length) {
                 this.code = '';
                 this.failed = true;
                 return;
