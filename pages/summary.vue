@@ -1,38 +1,60 @@
 <template>
     <div class="rounded space-y-3">
         <h2 class="text-2xl font-bold">Document summary</h2>
-        <div class="space-y-6 sm:space-y-8">
+        <div class="space-y-6 md:space-y-8">
             <p>
                 Upload a PDF document, even one with many pages, to get a textual summary, a list summary or a potential categorization.
             </p>
 
-            <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
-                <div class="sm:col-span-2">
-                    <DropZone @file-change="file = $event" :disabled="isBusy" ref="fileDrop"/>
+            <div class="col-span-full md:col-span-5">
+                <DropZone @file-change="file = $event" :disabled="isBusy" ref="fileDrop"/>
+            </div>
+
+            <div class="flex justify-around">
+                <div class="flex items- gap-4">
+                    <div class="hidden sm:block">TYPE</div>
+                    <div class="flex flex-col space-y-1"
+                        :class="{'text-neutral-400' : isBusy}">
+                        <label class="space-x-2 cursor-pointer">
+                            <input type="radio" :value="'summarize'" v-model="summaryType" :disabled="isBusy">
+                            <span :class="{ 'font-bold': summaryType === 'summarize' }">Text summary</span>
+                        </label>
+                        <label class="space-x-2 cursor-pointer">
+                            <input type="radio" :value="'summarize_point'" v-model="summaryType" :disabled="isBusy">
+                            <span :class="{ 'font-bold': summaryType === 'summarize_point' }">Bullet list summary</span>
+                        </label>
+                        <label class="space-x-2 cursor-pointer">
+                            <input type="radio" :value="'classificate'" v-model="summaryType" :disabled="isBusy">
+                            <span :class="{ 'font-bold': summaryType === 'classificate' }">Categorize content</span>
+                        </label>
+                    </div>
                 </div>
 
-                <div class="sm:self-center justify-self-center sm:justify-self-start flex flex-col space-y-1 text-lg"
-                    :class="{'text-neutral-400' : isBusy}">
-                    <label class="space-x-2 cursor-pointer">
-                        <input type="radio" :value="'summarize'" v-model="summaryType" :disabled="isBusy">
-                        <span :class="{ 'font-bold': summaryType === 'summarize' }">Text summary</span>
-                    </label>
-                    <label class="space-x-2 cursor-pointer">
-                        <input type="radio" :value="'summarize_point'" v-model="summaryType" :disabled="isBusy">
-                        <span :class="{ 'font-bold': summaryType === 'summarize_point' }">Bullet list summary</span>
-                    </label>
-                    <label class="space-x-2 cursor-pointer">
-                        <input type="radio" :value="'classificate'" v-model="summaryType" :disabled="isBusy">
-                        <span :class="{ 'font-bold': summaryType === 'classificate' }">Categorize content</span>
-                    </label>
+                <div class="flex items- gap-4">
+                    <div class="hidden sm:block">ANSWER IN</div>
+                    <div class="flex flex-col space-y-1"
+                        :class="{'text-neutral-400' : isBusy}">
+                        <label class="space-x-2 cursor-pointer">
+                            <input type="radio" :value="null" v-model="summaryLanguage" :disabled="isBusy">
+                            <span :class="{ 'font-bold': !summaryLanguage }">Same language</span>
+                        </label>
+                        <label class="space-x-2 cursor-pointer">
+                            <input type="radio" :value="'ita'" v-model="summaryLanguage" :disabled="isBusy">
+                            <span :class="{ 'font-bold': summaryLanguage === 'ita' }">Italian</span>
+                        </label>
+                        <label class="space-x-2 cursor-pointer">
+                            <input type="radio" :value="'eng'" v-model="summaryLanguage" :disabled="isBusy">
+                            <span :class="{ 'font-bold': summaryLanguage === 'eng' }">English</span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
-            <div class="text-center sm:text-left">
-                <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
+            <div class="text-center">
+                <button class="w-full md:w-auto px-8 py-2 md:py-4 button"
                     :class="{'loading' : isBusy}"
                     :disabled="!file || isBusy" @click="submit">Upload and analyze file</button>
-                <button class="mt-4 sm:ml-6 sm:mt-0 px-8 py-2 sm:py-4 bg-red-900 hover:bg-red-700 button"
+                <button class="mt-4 md:ml-6 md:mt-0 px-8 py-2 md:py-4 bg-red-900 hover:bg-red-700 button"
                     :disabled="!file || isBusy" @click="reset" v-if="summary">Reset</button>
             </div>
 
@@ -55,6 +77,7 @@ export default {
     data() {
         return {
             summaryType: 'summarize',
+            summaryLanguage: null,
             file: null,
             isBusy: false,
             summary: null,
