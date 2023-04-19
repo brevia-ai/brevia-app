@@ -29,6 +29,7 @@ export default {
     created() {
         const store = useStatesStore();
         const menu = store.getMenu();
+        store.readOptions();
         if(menu?.length > 0) {
             navigateTo('/');
         }
@@ -47,6 +48,7 @@ export default {
 
             const store = useStatesStore();
             store.userLogin(found.menu);
+            store.setOptions(found.options);
         }
     }
 }

@@ -8,18 +8,22 @@ export default defineNuxtConfig({
                 {
                     code: 'doorway',
                     menu: [
-                        {link : '/chatbot/doorway', title: "Doorway"},
-                        {link : '/chatbot/wiseair-doorway', title: "Wiseair deal"},
+                        {link : '/chatbot/doorway', title: 'Doorway'},
+                        {link : '/chatbot/wiseair-doorway', title: 'Wiseair deal'},
                     ],
                 },
                 {
                     code: 'chatlas',
                     menu: [
-                        {link : '/summary', title: ""},
-                        {link : '/chatbot/storia-novecento', title: "Storia 900"},
-                        {link : '/chatbot/wiseair-doorway', title: "Wiseair deal"},
-                        {link : '/chatbot/biologia', title: "Biologia"},
+                        {link : '/summary', title: ''},
+                        {link : '/chatbot/storia-novecento', title: 'Storia 900'},
+                        {link : '/chatbot/doorway', title: 'Doorway'},
+                        {link : '/chatbot/wiseair-doorway', title: 'Wiseair deal'},
+                        {link : '/chatbot/biologia', title: 'Biologia'},
                     ],
+                    options: {
+                        chatbotDocs: true,
+                    },
                 },
             ],
         },
