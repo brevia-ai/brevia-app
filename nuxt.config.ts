@@ -8,8 +8,10 @@ export default defineNuxtConfig({
                 {
                     code: 'doorway',
                     menu: [
-                        {link : '/chatbot/doorway', title: 'Doorway'},
-                        {link : '/chatbot/wiseair-doorway', title: 'Wiseair deal'},
+                        {link : '/chatbot/doorway-nltk-1000', title: 'Doorway 1000'},
+                        {link : '/chatbot/doorway-nltk-2000', title: 'Doorway 2000'},
+                        {link : '/chatbot/doorway-wiseair-1000', title: 'Wiseair deal 1000'},
+                        {link : '/chatbot/doorway-wiseair-2000', title: 'Wiseair deal 2000'},
                     ],
                 },
                 {
@@ -17,8 +19,10 @@ export default defineNuxtConfig({
                     menu: [
                         {link : '/summary', title: ''},
                         {link : '/chatbot/storia-novecento', title: 'Storia 900'},
-                        {link : '/chatbot/doorway', title: 'Doorway'},
-                        {link : '/chatbot/wiseair-doorway', title: 'Wiseair deal'},
+                        {link : '/chatbot/doorway-nltk-1000', title: 'Doorway 1000'},
+                        {link : '/chatbot/doorway-nltk-2000', title: 'Doorway 2000'},
+                        {link : '/chatbot/doorway-wiseair-1000', title: 'Wiseair deal 1000'},
+                        {link : '/chatbot/doorway-wiseair-2000', title: 'Wiseair deal 2000'},
                         {link : '/chatbot/biologia', title: 'Biologia'},
                     ],
                     options: {
