@@ -134,7 +134,7 @@ export default {
                     this.dialog.push( this.dialogItem('CHATLAS', parsedData) );
                 } else {
                     const err = await response.text();
-                    this.dialog.push( this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true) );
+                    this.showErrorMessage();
                     console.log(err);
                 }
 
@@ -144,6 +144,7 @@ export default {
                 }, 100);
             } catch (error) {
                 this.isBusy = false;
+                this.showErrorMessage();
                 console.log(error);
             }
         },
@@ -171,7 +172,7 @@ export default {
                 if (!response.ok) {
                     const err = await response.text();
                     this.isBusy = false;
-                    this.dialog.push(this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true) );
+                    this.showErrorMessage();
                     console.log(err);
 
                     return;
@@ -188,6 +189,10 @@ export default {
                 this.isBusy = false;
                 console.log(error);
             }
+        },
+
+        showErrorMessage() {
+            this.dialog.push(this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true) );
         },
 
         dialogItem(who, message, error = false) {
