@@ -113,7 +113,7 @@ export default {
             const promptUrl = this.apiUrl + '/prompt';
 
             try {
-                const response = await fetch(promptUrl, {
+                const data = await $fetch('/api/prompt', {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json',
@@ -123,21 +123,12 @@ export default {
                         question: this.lastPrompt,
                         collection: this.collection,
                         source_docs: this.sourceDocs,
-                    })
+                    }),
                 });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    const parsedData = data.bot.trim();
-                    this.docs = data.docs || [];
-                    this.viewDocs();
-                    this.dialog.push( this.dialogItem('CHATLAS', parsedData) );
-                } else {
-                    const err = await response.text();
-                    this.showErrorMessage();
-                    console.log(err);
-                }
-
+                const parsedData = data.bot.trim();
+                this.docs = data.docs || [];
+                this.viewDocs();
+                this.dialog.push( this.dialogItem('CHATLAS', parsedData) );
                 this.isBusy = false;
                 setTimeout(() => {
                     this.$refs['prompt'].focus();
@@ -163,22 +154,8 @@ export default {
 
         async readCollections() {
             this.isBusy = true;
-            const collectionsUrl = this.apiUrl + '/collections';
             try {
-                const response = await fetch(collectionsUrl, {
-                    method: 'GET',
-                });
-
-                if (!response.ok) {
-                    const err = await response.text();
-                    this.isBusy = false;
-                    this.showErrorMessage();
-                    console.log(err);
-
-                    return;
-                }
-
-                const data = await response.json();
+                const data = await $fetch('/api/collections');
                 this.collections = data;
                 const coll = this.collections.find((x) => x.name === this.collection);
                 this.hasCollection = !!coll;
