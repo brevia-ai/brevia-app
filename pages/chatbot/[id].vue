@@ -88,13 +88,6 @@ export default {
     },
 
     computed: {
-        apiUrl() {
-            const apiUrl = this.$config.public?.apiUrl?.trim();
-            if (!apiUrl) {
-                console.error('API url not set via `API_BASE_URL` env var');
-            }
-            return apiUrl;
-        },
         isReady() {
             return !this.isBusy && this.hasCollection;
         },
@@ -104,13 +97,12 @@ export default {
         async submit() {
             this.lastPrompt = this.$refs['prompt']?.value?.trim();
             this.$refs['prompt'].value = '';
-            if (!this.lastPrompt || !this.apiUrl) {
+            if (!this.lastPrompt) {
                 return;
             }
             this.isBusy = true;
 
             this.dialog.push( this.dialogItem('YOU', this.lastPrompt) );
-            const promptUrl = this.apiUrl + '/prompt';
 
             try {
                 const data = await $fetch('/api/prompt', {
