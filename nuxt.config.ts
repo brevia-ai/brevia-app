@@ -15,6 +15,15 @@ export default defineNuxtConfig({
                     ],
                 },
                 {
+                    code: 'enpacl',
+                    menu: [
+                        {link : '/chatbot/enpacl', title: 'Enpacl FAQ'},
+                        {link : '/summary', title: ''},
+                        {link : '/chatbot/doorway-nltk-2000', title: 'Doorway 2000'},
+                        {link : '/chatbot/biologia', title: 'Biologia'},
+                    ],
+                },
+                {
                     code: 'chatlas',
                     menu: [
                         {link : '/summary', title: ''},
