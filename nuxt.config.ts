@@ -23,6 +23,9 @@ export default defineNuxtConfig({
                         {link : '/chatbot/doorway-nltk-2000', title: 'Doorway 2000'},
                         {link : '/chatbot/biologia', title: 'Biologia'},
                     ],
+                    options: {
+                        chatbotDocs: true,
+                    },
                 },
                 {
                     code: 'chatlas',
