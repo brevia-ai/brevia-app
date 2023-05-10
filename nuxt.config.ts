@@ -8,6 +8,7 @@ export default defineNuxtConfig({
                 {
                     code: 'doorway',
                     menu: [
+                        {link : '/chatbot/doorway-new', title: 'Doorway New'},
                         {link : '/chatbot/doorway-nltk-1000', title: 'Doorway 1000'},
                         {link : '/chatbot/doorway-nltk-2000', title: 'Doorway 2000'},
                         {link : '/chatbot/doorway-wiseair-1000', title: 'Wiseair deal 1000'},
