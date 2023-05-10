@@ -33,13 +33,17 @@
                     :class="{'loading' : isBusy}"
                     :disabled="!file || isBusy" @click="submit">Upload and analyze file</button>
                 <button class="mt-4 sm:ml-6 sm:mt-0 px-8 py-2 sm:py-4 bg-red-900 hover:bg-red-700 button"
-                    :disabled="!file || isBusy" @click="reset" v-if="summary">Reset</button>
+                    :disabled="!file || isBusy" @click="reset" v-if="summary || error">Reset</button>
             </div>
 
             <hr class="border-neutral-300" v-if="summary">
             <div class="space-y-4" v-if="summary">
-                <h2 class="text-xl leading-tight">Result for document<span class="block md:inline font-bold">{{ file.name }}</span></h2>
+                <h2 class="text-xl leading-tight">Result for document <span class="block md:inline font-bold">{{ file.name }}</span></h2>
                 <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ summary }}</p>
+            </div>
+
+            <div class="space-y-4" v-if="error">
+                <p class="block p-8 bg-red-900 border border-red-900 text-white rounded-lg text-lg whitespace-pre-line">{{ error }}</p>
             </div>
         </div>
 
@@ -58,6 +62,7 @@ export default {
             file: null,
             isBusy: false,
             summary: null,
+            error: null,
         }
     },
 
@@ -75,6 +80,7 @@ export default {
         reset() {
             this.file = null;
             this.summary = null;
+            this.error = null;
             this.isBusy = false;
             this.$refs.fileDrop.reset();
         },
@@ -101,9 +107,11 @@ export default {
                     this.summary = data.summary.trim();
                 } else {
                     const err = await response.text();
+                    this.error = `There has been an error\n${response.status} - ${err}`;
                     console.log(err);
                 }
             } catch (error) {
+                this.error = error;
                 console.log(error);
             }
             this.isBusy = false;
