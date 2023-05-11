@@ -20,7 +20,7 @@ export default defineNuxtConfig({
                     menu: [
                         {link : '/chatbot/enpacl', title: 'Enpacl FAQ'},
                         {link : '/summary', title: ''},
-                        {link : '/chatbot/doorway-nltk-2000', title: 'Doorway 2000'},
+                        {link : '/chatbot/doorway-new', title: 'Doorway New'},
                         {link : '/chatbot/biologia', title: 'Biologia'},
                     ],
                     options: {
