@@ -35,7 +35,18 @@
                 <span class="hidden md:inline">invia</span>
             </button>
         </div>
-   </main>
+
+        <div class="flex flex-col space-y-3" v-if="!isBusy && docs.length > 0">
+            <div class="text-xl">
+                <p>Documenti</p>
+            </div>
+            <div v-for="(doc, n) in docs" :key="n">
+                <p class="text-xs">{{ (n + 1) }}.</p>
+                <p>{{ doc.page_content }}</p>
+                <p class="text-xs italic">{{ doc.metadata }}</p>
+            </div>
+        </div>
+    </main>
 </template>
 
 <script setup>
