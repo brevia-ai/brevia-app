@@ -4,7 +4,6 @@ export default defineNuxtConfig({
         apiSecret: process.env.API_SECRET || '',
         apiBaseUrl: process.env.API_BASE_URL || '',
         public: {
-            apiUrl: process.env.API_BASE_URL || '',
             aclMenu: [
                 {
                     code: 'doorway',
