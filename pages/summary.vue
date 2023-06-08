@@ -94,15 +94,11 @@ export default {
                     body: formData,
                 });
 
-                this.summary = data.summary.trim();
-                // if (response.ok) {
-                //     const data = await response.json();
-                //     this.summary = data.summary.trim();
-                // } else {
-                //     const err = await response.text();
-                //     this.error = `There has been an error\n${response.status} - ${err}`;
-                //     console.log(err);
-                // }
+                this.summary = data.summary?.trim() || '';
+                if (data.error) {
+                    this.error = `There has been an error\n${data.error}`;
+                    console.log(data.error);
+                }
             } catch (error) {
                 this.error = error;
                 console.log(error);

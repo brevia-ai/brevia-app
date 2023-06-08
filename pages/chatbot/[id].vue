@@ -128,10 +128,15 @@ export default {
                         source_docs: this.sourceDocs,
                     }),
                 });
-                const parsedData = data.bot.trim();
+                if (data.error) {
+                    console.log(data.error);
+                    this.showErrorMessage(data.error);
+                } else {
+                    const parsedData = data.bot?.trim() || '';
+                    this.dialog.push( this.dialogItem('CHATLAS', parsedData) );
+                }
                 this.docs = data.docs || [];
-                this.viewDocs();
-                this.dialog.push( this.dialogItem('CHATLAS', parsedData) );
+                this.logDocs();
                 this.isBusy = false;
                 setTimeout(() => {
                     this.$refs['prompt'].focus();
@@ -143,7 +148,7 @@ export default {
             }
         },
 
-        viewDocs() {
+        logDocs() {
             if (!this.sourceDocs) {
                 return;
             }
@@ -171,8 +176,8 @@ export default {
             }
         },
 
-        showErrorMessage() {
-            this.dialog.push(this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true) );
+        showErrorMessage(msg) {
+            this.dialog.push(this.dialogItem('CHATLAS', msg || 'Qualcosa è andato storto', true) );
         },
 
         dialogItem(who, message, error = false) {
