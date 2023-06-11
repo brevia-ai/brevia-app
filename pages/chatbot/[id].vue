@@ -122,7 +122,7 @@ export default {
             this.isBusy = true;
 
             this.dialog.push( this.dialogItem('YOU', this.lastPrompt) );
-            const promptUrl = this.apiUrl + '/prompt_stream';
+            const promptUrl = this.apiUrl + '/prompt';
             this.dialog.push( this.dialogItem('CHATLAS', '') );
             const currIdx = this.dialog.length - 1;
             try {
@@ -136,6 +136,7 @@ export default {
                         question: this.lastPrompt,
                         collection: this.collection,
                         source_docs: this.sourceDocs,
+                        streaming: true,
                     }),
 
                     onmessage: (event) => {
@@ -143,7 +144,7 @@ export default {
                     },
                     onerror: (event) => {
                         console.error(event);
-                        this.dialog[currIdx] = this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true);
+                        this.showErrorMessage(currIdx);
                     },
                 })
 
@@ -165,7 +166,7 @@ export default {
                 }, 100);
             } catch (error) {
                 this.isBusy = false;
-                this.showErrorMessage();
+                this.showErrorMessage(currIdx);
                 console.log(error);
             }
         },
@@ -212,8 +213,12 @@ export default {
             }
         },
 
-        showErrorMessage() {
-            this.dialog.push(this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true) );
+        showErrorMessage(index) {
+            if (index) {
+                this.dialog[index] = this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true);
+            } else {
+                this.dialog.push(this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true) );
+            }
         },
 
         dialogItem(who, message, error = false) {
