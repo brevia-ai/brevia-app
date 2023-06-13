@@ -56,6 +56,7 @@
 <script>
 import { useRoute } from 'vue-router';
 import { useStatesStore } from '~~/store/states';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
 
 export default {
     data() {
@@ -114,9 +115,11 @@ export default {
             this.isBusy = true;
 
             this.dialog.push( this.dialogItem('YOU', this.lastPrompt) );
+            this.dialog.push( this.dialogItem('CHATLAS', '') );
+            const currIdx = this.dialog.length - 1;
 
             try {
-                const data = await $fetch('/api/prompt', {
+                await fetchEventSource('/api/prompt', {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json',
@@ -126,24 +129,37 @@ export default {
                         question: this.lastPrompt,
                         collection: this.collection,
                         source_docs: this.sourceDocs,
+                        streaming: true,
                     }),
-                });
-                if (data.error) {
-                    console.log(data.error);
-                    this.showErrorMessage(data.error);
-                } else {
-                    const parsedData = data.bot?.trim() || '';
-                    this.dialog.push( this.dialogItem('CHATLAS', parsedData) );
-                }
-                this.docs = data.docs || [];
-                this.logDocs();
+
+                    onmessage: (event) => {
+                        this.dialog[currIdx].message += event.data;
+                    },
+                    onerror: (event) => {
+                        console.error(event);
+                        this.showErrorMessage(currIdx);
+                    },
+                })
+
+                // if (response.ok) {
+                //     const data = await response.json();
+                //     const parsedData = data.bot.trim();
+                //     this.docs = data.docs || [];
+                //     this.logDocs();
+                //     this.dialog.push( this.dialogItem('CHATLAS', parsedData) );
+                // } else {
+                //     const err = await response.text();
+                //     this.showErrorMessage();
+                //     console.log(err);
+                // }
+
                 this.isBusy = false;
                 setTimeout(() => {
                     this.$refs['prompt'].focus();
                 }, 100);
             } catch (error) {
                 this.isBusy = false;
-                this.showErrorMessage();
+                this.showErrorMessage(currIdx);
                 console.log(error);
             }
         },
@@ -176,8 +192,12 @@ export default {
             }
         },
 
-        showErrorMessage(msg) {
-            this.dialog.push(this.dialogItem('CHATLAS', msg || 'Qualcosa è andato storto', true) );
+        showErrorMessage(index) {
+            if (index) {
+                this.dialog[index] = this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true);
+            } else {
+                this.dialog.push(this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true) );
+            }
         },
 
         dialogItem(who, message, error = false) {
