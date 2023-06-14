@@ -14,7 +14,6 @@
     "nuxt": "^3.3.3"
   },
   "dependencies": {
-    "@microsoft/fetch-event-source": "^2.0.1",
     "@nuxtjs/axios": "^5.13.6",
     "@pinia/nuxt": "^0.4.8",
     "pinia": "^2.0.34",
