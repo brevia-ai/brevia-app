@@ -28,12 +28,18 @@ export default defineNuxtConfig({
                     },
                 },
                 {
+                    code: 'iseo',
+                    menu: [
+                        {link : '/chatbot/iseo', title: 'ISEO Tech documents'},
+                        {link : '/summary', title: ''},
+                    ],
+                },
+                {
                     code: 'chatlas',
                     menu: [
                         {link : '/summary', title: ''},
+                        {link : '/chatbot/doorway-new', title: 'Doorway New'},
                         {link : '/chatbot/storia-novecento', title: 'Storia 900'},
-                        {link : '/chatbot/doorway-nltk-1000', title: 'Doorway 1000'},
-                        {link : '/chatbot/doorway-nltk-2000', title: 'Doorway 2000'},
                         {link : '/chatbot/doorway-wiseair-1000', title: 'Wiseair deal 1000'},
                         {link : '/chatbot/doorway-wiseair-2000', title: 'Wiseair deal 2000'},
                         {link : '/chatbot/biologia', title: 'Biologia'},
