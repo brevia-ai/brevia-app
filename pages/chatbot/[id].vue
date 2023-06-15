@@ -56,7 +56,6 @@
 <script>
 import { useRoute } from 'vue-router';
 import { useStatesStore } from '~~/store/states';
-import { fetchEventSource } from '@microsoft/fetch-event-source';
 
 export default {
     data() {
@@ -126,7 +125,7 @@ export default {
             this.dialog.push( this.dialogItem('CHATLAS', '') );
             const currIdx = this.dialog.length - 1;
             try {
-                await fetchEventSource(promptUrl, {
+                await fetch(promptUrl, {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json',
@@ -138,15 +137,15 @@ export default {
                         source_docs: this.sourceDocs,
                         streaming: true,
                     }),
+                }).then(async (response) => {
+                    // response.body is a ReadableStream
+                    const reader = response?.body?.getReader();
+                    for await (const chunk of this.readChunks(reader)) {
+                        const text = new TextDecoder().decode(chunk);
+                        this.dialog[currIdx].message += text;
+                    }
+                });
 
-                    onmessage: (event) => {
-                        this.dialog[currIdx].message += event.data;
-                    },
-                    onerror: (event) => {
-                        console.error(event);
-                        this.showErrorMessage(currIdx);
-                    },
-                })
 
                 // if (response.ok) {
                 //     const data = await response.json();
@@ -181,6 +180,18 @@ export default {
                 console.log(doc.page_content);
                 console.log(doc.metadata);
             });
+        },
+
+        readChunks(reader) {
+            return {
+                async* [Symbol.asyncIterator]() {
+                    let readResult = await reader.read();
+                    while (!readResult.done) {
+                        yield readResult.value;
+                        readResult = await reader.read();
+                    }
+                },
+            };
         },
 
         async readCollections() {
