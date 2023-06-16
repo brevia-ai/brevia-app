@@ -174,8 +174,6 @@ export default {
                 });
         },
 
-
-
         async syncFetchRequest(currIdx) {
             const promptUrl = this.apiUrl + '/prompt_sync';
             const response = await fetch(promptUrl, {
