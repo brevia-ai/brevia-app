@@ -121,11 +121,29 @@ export default {
             this.isBusy = true;
 
             this.dialog.push( this.dialogItem('YOU', this.lastPrompt) );
-            const promptUrl = this.apiUrl + '/prompt';
             this.dialog.push( this.dialogItem('CHATLAS', '') );
             const currIdx = this.dialog.length - 1;
             try {
-                await fetch(promptUrl, {
+                if (this.$config.public.streaming == 'true') {
+                    await this.streamingFetchRequest(currIdx);
+                } else {
+                    await this.syncFetchRequest(currIdx);
+                }
+
+                this.isBusy = false;
+                setTimeout(() => {
+                    this.$refs['prompt'].focus();
+                }, 100);
+            } catch (error) {
+                this.isBusy = false;
+                this.showErrorMessage(currIdx);
+                console.log(error);
+            }
+        },
+
+        async streamingFetchRequest(currIdx) {
+            const promptUrl = this.apiUrl + '/prompt';
+            await fetch(promptUrl, {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json',
@@ -145,28 +163,31 @@ export default {
                         this.dialog[currIdx].message += text;
                     }
                 });
+        },
 
+        async syncFetchRequest(currIdx) {
+            const promptUrl = this.apiUrl + '/prompt_sync';
+            const response = await fetch(promptUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'X-Chat-Session': this.sessionId,
+                    },
+                    body: JSON.stringify({
+                        question: this.lastPrompt,
+                        collection: this.collection,
+                        source_docs: this.sourceDocs,
+                    })
+                });
 
-                // if (response.ok) {
-                //     const data = await response.json();
-                //     const parsedData = data.bot.trim();
-                //     this.docs = data.docs || [];
-                //     this.viewDocs();
-                //     this.dialog.push( this.dialogItem('CHATLAS', parsedData) );
-                // } else {
-                //     const err = await response.text();
-                //     this.showErrorMessage();
-                //     console.log(err);
-                // }
-
-                this.isBusy = false;
-                setTimeout(() => {
-                    this.$refs['prompt'].focus();
-                }, 100);
-            } catch (error) {
-                this.isBusy = false;
+            if (response.ok) {
+                const data = await response.json();
+                const parsedData = data.bot.trim();
+                this.dialog[currIdx].message = parsedData;
+            } else {
+                const err = await response.text();
+                console.log(err);
                 this.showErrorMessage(currIdx);
-                console.log(error);
             }
         },
 
