@@ -184,6 +184,8 @@ export default {
                 const data = await response.json();
                 const parsedData = data.bot.trim();
                 this.dialog[currIdx].message = parsedData;
+                this.docs = data.docs || [];
+                this.viewDocs();
             } else {
                 const err = await response.text();
                 console.log(err);
