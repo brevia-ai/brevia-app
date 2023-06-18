@@ -160,7 +160,16 @@ export default {
                     const reader = response?.body?.getReader();
                     for await (const chunk of this.readChunks(reader)) {
                         const text = new TextDecoder().decode(chunk);
-                        this.dialog[currIdx].message += text;
+                        if (text.startsWith('[{"page_content":')) {
+                            try {
+                                this.docs = JSON.parse(text);
+                                this.viewDocs();
+                            } catch (e) {
+                                return console.error(e); // error in the above string (in this case, yes)!
+                            }
+                        } else {
+                            this.dialog[currIdx].message += text;
+                        }
                     }
                 });
         },
