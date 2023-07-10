@@ -39,6 +39,7 @@ export default defineNuxtConfig({
                     code: 'chatlas',
                     menu: [
                         {link : '/summary', title: ''},
+                        {link : '/transcription', title: ''},
                         {link : '/chatbot/doorway-new', title: 'Doorway New'},
                         {link : '/chatbot/storia-novecento', title: 'Storia 900'},
                         {link : '/chatbot/doorway-wiseair-1000', title: 'Wiseair deal 1000'},
