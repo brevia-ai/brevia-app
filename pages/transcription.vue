@@ -5,6 +5,10 @@
             <p>
                 Upload an audio file to get a textual transcription.
             </p>
+            <ul>
+                <li>Max file size 25 MB</li>
+                <li>Supported types: mp3, mp4, mpeg, mpga, m4a, wav, and webm</li>
+            </ul>
 
             <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
                 <div class="sm:col-span-2">
@@ -88,7 +92,7 @@ export default {
             let formData = new FormData();
             formData.append('file', this.file);
             formData.append('language', this.language);
-            const uploadUrl = this.apiUrl + '/audio/transcriptions';
+            const uploadUrl = this.apiUrl + '/transcribe';
             try {
                 // 'multipart/form-data' Content-type header
                 // intentionally not set to avoid boundary error
