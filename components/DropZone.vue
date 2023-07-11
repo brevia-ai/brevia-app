@@ -10,24 +10,34 @@
         @dragleave="onDragLeave"
         @drop="onDrop">
             <div class="max-w-full text-sm font-mono text-green-300 overflow-hidden text-ellipsis" v-if="file">{{ file.name }}</div>
-            <div v-else-if="isFileError">Please drop a PDF file</div>
+            <div v-else-if="isFileError">{{ fileErrorLabel }}</div>
             <div v-else-if="isDragging">Drop file</div>
-            <div v-else>Drop a PDF file here or click to open dialog</div>
+            <div v-else>{{ dropLabel }}</div>
 
             <input type="file" name="file" id="fileInput" ref="fileInput"
                 class="opacity-0 w-px h-px absolute overflow-hidden"
-                accept=".pdf"
+                :accept="acceptType"
                 :disabled="disabled"
                 @change="onChangeFile" />
     </label>
 </template>
 
-<script>
+<script lang="ts">
+
+enum FileTypes {
+    pdf = 'pdf',
+    audio = 'audio',
+}
+
 export default {
     props: {
         disabled: {
             type: Boolean,
             default: false,
+        },
+        fileType: {
+            type: String as () => FileTypes, // cast it
+            default: FileTypes.pdf,
         },
     },
     data() {
@@ -37,13 +47,37 @@ export default {
             file: null,
         };
     },
+    computed: {
+        fileErrorLabel() {
+            if (this.fileType === FileTypes.pdf) {
+                return 'Drop a PDF file here or click to open dialog';
+            }
+
+            return 'Drop an audio file here or click to open dialog';
+        },
+        dropLabel() {
+            if (this.fileType === FileTypes.pdf) {
+                return 'Please drop a PDF file';
+            }
+
+            return 'Please drop an audio file';
+        },
+
+        acceptType() {
+            if (this.fileType === FileTypes.pdf) {
+                return '.pdf';
+            }
+
+            return 'audio/*';
+        },
+    },
 
     methods: {
         reset() {
             this.isDragging = false;
             this.file = null;
         },
-        onChangeFile(e) {
+        onChangeFile() {
             this.file = [...this.$refs.fileInput.files][0];
             this.$emit('fileChange', this.file);
         },
