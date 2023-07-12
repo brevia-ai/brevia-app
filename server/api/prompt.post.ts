@@ -31,7 +31,14 @@ export default defineEventHandler(async (event) => {
             // response.body is a ReadableStream
             const reader = response?.body?.getReader();
             for await (const chunk of readChunks(reader)) {
-                event.node.res.write(chunk);
+                let writeNext = event.node.res.write(chunk);
+                if (writeNext) {
+                    continue;
+                }
+                event.node.res.once('drain', () => writeNext = true);
+                do {
+                    console.log('wating...');
+                } while (!writeNext);
             }
 
             event.node.res.end();
