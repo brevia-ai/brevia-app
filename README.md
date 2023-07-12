@@ -48,3 +48,8 @@ npm run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Environment variables
+
+API_BASE_URL={chatlas api base url}
+API_SECRET={chatlas api secret token}
