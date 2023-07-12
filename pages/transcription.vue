@@ -91,13 +91,11 @@ export default {
                     body: formData,
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    this.transcription = data.text.trim();
-                } else {
-                    const err = await response.text();
-                    this.error = `There has been an error\n${response.status} - ${err}`;
-                    console.log(err);
+                const data = await response.json();
+                this.transcription = data?.text?.trim() || '';
+                if (data.error) {
+                    this.error = `There has been an error\n${data.error}`;
+                    console.log(data.error);
                 }
             } catch (error) {
                 this.error = error;
