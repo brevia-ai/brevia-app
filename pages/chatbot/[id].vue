@@ -156,7 +156,7 @@ export default {
                         if (text.startsWith('[{"page_content":')) {
                             try {
                                 this.docs = JSON.parse(text);
-                                this.viewDocs();
+                                this.logDocs();
                             } catch (e) {
                                 return console.error(e); // error in the above string (in this case, yes)!
                             }
@@ -186,7 +186,7 @@ export default {
                 const parsedData = data.bot.trim();
                 this.dialog[currIdx].message = parsedData;
                 this.docs = data.docs || [];
-                this.viewDocs();
+                this.logDocs();
             } else {
                 const err = await response.text();
                 console.log(err);
