@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
 
     } catch (err) {
         console.log(err);
-        return {error: err?.message || 'Unknown error'};
+        return JSON.stringify({error: err?.message || 'Unknown error'});
     }
 
 });

@@ -153,18 +153,30 @@ export default {
                     const reader = response?.body?.getReader();
                     for await (const chunk of this.readChunks(reader)) {
                         const text = new TextDecoder().decode(chunk);
-                        if (text.startsWith('[{"page_content":')) {
-                            try {
-                                this.docs = JSON.parse(text);
-                                this.logDocs();
-                            } catch (e) {
-                                return console.error(e); // error in the above string (in this case, yes)!
-                            }
-                        } else {
-                            this.dialog[currIdx].message += text;
-                        }
+                        this.handleStreamText(text, currIdx)
                     }
                 });
+        },
+
+        handleStreamText(text, currIdx) {
+            if (text.startsWith('[{"page_content":')) {
+                try {
+                    this.docs = JSON.parse(text);
+                    this.logDocs();
+                } catch (e) {
+                    return console.error(e);
+                }
+            } else if (text.startsWith('{"error":')) {
+                try {
+                    const err = JSON.parse(text);
+                    console.error(`Error response from API "${err?.error}"`);
+                    this.showErrorMessage(currIdx);
+                } catch (e) {
+                    return console.error(e);
+                }
+            } else {
+                this.dialog[currIdx].message += text;
+            }
         },
 
         async syncFetchRequest(currIdx) {
@@ -189,7 +201,7 @@ export default {
                 this.logDocs();
             } else {
                 const err = await response.text();
-                console.log(err);
+                console.error(err);
                 this.showErrorMessage(currIdx);
             }
         },
