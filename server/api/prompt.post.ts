@@ -35,7 +35,10 @@ export default defineEventHandler(async (event) => {
                 if (writeNext) {
                     continue;
                 }
-                event.node.res.once('drain', () => writeNext = true);
+                event.node.res.once('drain', () => {
+                    event.node.res.write(chunk);
+                    writeNext = true;
+                })
                 do {
                     console.log('wating...');
                 } while (!writeNext);
