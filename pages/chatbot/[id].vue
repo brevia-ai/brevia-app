@@ -5,7 +5,7 @@
                 <p>{{ collectionDescription }}</p>
             </div>
             <div class="text-sm text-red-600" v-else-if="!isBusy && !hasCollection">
-                <p>COLLECTION non trovata.</p>
+                <p>COLLECTION not found.</p>
             </div>
 
             <div v-if="dialog.length">
@@ -118,7 +118,25 @@ export default {
             const currIdx = this.dialog.length - 1;
 
             try {
-                await fetch('/api/prompt', {
+                if (this.$config.public.streaming == 'true') {
+                    await this.streamingFetchRequest(currIdx);
+                } else {
+                    await this.syncFetchRequest(currIdx);
+                }
+
+                this.isBusy = false;
+                setTimeout(() => {
+                    this.$refs['prompt'].focus();
+                }, 100);
+            } catch (error) {
+                this.isBusy = false;
+                this.showErrorMessage(currIdx);
+                console.log(error);
+            }
+        },
+
+        async streamingFetchRequest(currIdx) {
+            await fetch('/api/prompt', {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json',
@@ -135,30 +153,44 @@ export default {
                     const reader = response?.body?.getReader();
                     for await (const chunk of this.readChunks(reader)) {
                         const text = new TextDecoder().decode(chunk);
-                        this.dialog[currIdx].message += text;
+                        if (text.startsWith('[{"page_content":')) {
+                            try {
+                                this.docs = JSON.parse(text);
+                                this.viewDocs();
+                            } catch (e) {
+                                return console.error(e); // error in the above string (in this case, yes)!
+                            }
+                        } else {
+                            this.dialog[currIdx].message += text;
+                        }
                     }
-            });
+                });
+        },
 
-                // if (response.ok) {
-                //     const data = await response.json();
-                //     const parsedData = data.bot.trim();
-                //     this.docs = data.docs || [];
-                //     this.logDocs();
-                //     this.dialog.push( this.dialogItem('CHATLAS', parsedData) );
-                // } else {
-                //     const err = await response.text();
-                //     this.showErrorMessage();
-                //     console.log(err);
-                // }
+        async syncFetchRequest(currIdx) {
+            const response = await fetch('/api/prompt_sync', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'X-Chat-Session': this.sessionId,
+                    },
+                    body: JSON.stringify({
+                        question: this.lastPrompt,
+                        collection: this.collection,
+                        source_docs: this.sourceDocs,
+                    })
+                });
 
-                this.isBusy = false;
-                setTimeout(() => {
-                    this.$refs['prompt'].focus();
-                }, 100);
-            } catch (error) {
-                this.isBusy = false;
+            if (response.ok) {
+                const data = await response.json();
+                const parsedData = data.bot.trim();
+                this.dialog[currIdx].message = parsedData;
+                this.docs = data.docs || [];
+                this.viewDocs();
+            } else {
+                const err = await response.text();
+                console.log(err);
                 this.showErrorMessage(currIdx);
-                console.log(error);
             }
         },
 
