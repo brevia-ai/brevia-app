@@ -5,7 +5,7 @@
                 <p>{{ collectionDescription }}</p>
             </div>
             <div class="text-sm text-red-600" v-else-if="!isBusy && !hasCollection">
-                <p>COLLECTION non trovata.</p>
+                <p>COLLECTION not found.</p>
             </div>
 
             <div v-if="dialog.length">
@@ -99,13 +99,6 @@ export default {
     },
 
     computed: {
-        apiUrl() {
-            const apiUrl = this.$config.public?.apiUrl?.trim();
-            if (!apiUrl) {
-                console.error('API url not set via `API_BASE_URL` env var');
-            }
-            return apiUrl;
-        },
         isReady() {
             return !this.isBusy && this.hasCollection;
         },
@@ -115,7 +108,7 @@ export default {
         async submit() {
             this.lastPrompt = this.$refs['prompt']?.value?.trim();
             this.$refs['prompt'].value = '';
-            if (!this.lastPrompt || !this.apiUrl) {
+            if (!this.lastPrompt) {
                 return;
             }
             this.isBusy = true;
@@ -123,6 +116,7 @@ export default {
             this.dialog.push( this.dialogItem('YOU', this.lastPrompt) );
             this.dialog.push( this.dialogItem('CHATLAS', '') );
             const currIdx = this.dialog.length - 1;
+
             try {
                 if (this.$config.public.streaming == 'true') {
                     await this.streamingFetchRequest(currIdx);
@@ -142,8 +136,7 @@ export default {
         },
 
         async streamingFetchRequest(currIdx) {
-            const promptUrl = this.apiUrl + '/prompt';
-            await fetch(promptUrl, {
+            await fetch('/api/prompt', {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json',
@@ -160,23 +153,34 @@ export default {
                     const reader = response?.body?.getReader();
                     for await (const chunk of this.readChunks(reader)) {
                         const text = new TextDecoder().decode(chunk);
-                        if (text.startsWith('[{"page_content":')) {
-                            try {
-                                this.docs = JSON.parse(text);
-                                this.viewDocs();
-                            } catch (e) {
-                                return console.error(e); // error in the above string (in this case, yes)!
-                            }
-                        } else {
-                            this.dialog[currIdx].message += text;
-                        }
+                        this.handleStreamText(text, currIdx)
                     }
                 });
         },
 
+        handleStreamText(text, currIdx) {
+            if (text.startsWith('[{"page_content":')) {
+                try {
+                    this.docs = JSON.parse(text);
+                    this.logDocs();
+                } catch (e) {
+                    return console.error(e);
+                }
+            } else if (text.startsWith('{"error":')) {
+                try {
+                    const err = JSON.parse(text);
+                    console.error(`Error response from API "${err?.error}"`);
+                    this.showErrorMessage(currIdx);
+                } catch (e) {
+                    return console.error(e);
+                }
+            } else {
+                this.dialog[currIdx].message += text;
+            }
+        },
+
         async syncFetchRequest(currIdx) {
-            const promptUrl = this.apiUrl + '/prompt_sync';
-            const response = await fetch(promptUrl, {
+            const response = await fetch('/api/prompt_sync', {
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json',
@@ -194,15 +198,15 @@ export default {
                 const parsedData = data.bot.trim();
                 this.dialog[currIdx].message = parsedData;
                 this.docs = data.docs || [];
-                this.viewDocs();
+                this.logDocs();
             } else {
                 const err = await response.text();
-                console.log(err);
+                console.error(err);
                 this.showErrorMessage(currIdx);
             }
         },
 
-        viewDocs() {
+        logDocs() {
             if (!this.sourceDocs) {
                 return;
             }
@@ -228,22 +232,8 @@ export default {
 
         async readCollections() {
             this.isBusy = true;
-            const collectionsUrl = this.apiUrl + '/collections';
             try {
-                const response = await fetch(collectionsUrl, {
-                    method: 'GET',
-                });
-
-                if (!response.ok) {
-                    const err = await response.text();
-                    this.isBusy = false;
-                    this.showErrorMessage();
-                    console.log(err);
-
-                    return;
-                }
-
-                const data = await response.json();
+                const data = await $fetch('/api/collections');
                 this.collections = data;
                 const coll = this.collections.find((x) => x.name === this.collection);
                 this.hasCollection = !!coll;

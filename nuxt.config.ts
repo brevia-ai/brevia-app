@@ -1,9 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     runtimeConfig: {
-        apiSecret: '123', // unused
+        apiSecret: process.env.API_SECRET || '',
+        apiBaseUrl: process.env.API_BASE_URL || '',
         public: {
-            apiUrl: process.env.API_BASE_URL || '',
             streaming: process.env.STREAMING || 'true', // streaming support
             aclMenu: [
                 {

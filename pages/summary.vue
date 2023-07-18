@@ -67,13 +67,6 @@ export default {
     },
 
     computed: {
-        apiUrl() {
-            const apiUrl = this.$config.public?.apiUrl?.trim();
-            if (!apiUrl) {
-                console.error('API url not set via `API_BASE_URL` env var');
-            }
-            return apiUrl;
-        }
     },
 
     methods: {
@@ -92,23 +85,19 @@ export default {
             formData.append('num_items', 5);
             formData.append('summ_prompt', this.summaryType);
             formData.append('file', this.file);
-            const uploadUrl = this.apiUrl + '/upload_summarize';
             try {
                 // 'multipart/form-data' Content-type header
                 // intentionally not set to avoid boundary error
                 // https://stackoverflow.com/questions/39280438/fetch-missing-boundary-in-multipart-form-data-post/39281156#39281156
-                const response = await fetch(uploadUrl, {
+                const data = await $fetch('/api/upload_summarize', {
                     method: 'POST',
                     body: formData,
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    this.summary = data.summary.trim();
-                } else {
-                    const err = await response.text();
-                    this.error = `There has been an error\n${response.status} - ${err}`;
-                    console.log(err);
+                this.summary = data.summary?.trim() || '';
+                if (data.error) {
+                    this.error = `There has been an error\n${data.error}`;
+                    console.log(data.error);
                 }
             } catch (error) {
                 this.error = error;
