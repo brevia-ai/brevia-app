@@ -1,8 +1,7 @@
 <template>
     <main class="space-y-8">
         <div class="p-4 bg-white shadow-md rounded space-y-3">
-            <div class="text-sm text-neutral-600" v-if="hasCollection">
-                <p>{{ collectionDescription }}</p>
+            <div class="text-sm text-neutral-600" v-if="hasCollection" v-html="collectionDescription">
             </div>
             <div class="text-sm text-red-600" v-else-if="!isBusy && !hasCollection">
                 <p>COLLECTION not found.</p>
@@ -233,11 +232,11 @@ export default {
         async readCollections() {
             this.isBusy = true;
             try {
-                const data = await $fetch('/api/collections');
+                const data = await $fetch(`/api/collections?name=${this.collection}`);
                 this.collections = data;
                 const coll = this.collections.find((x) => x.name === this.collection);
                 this.hasCollection = !!coll;
-                this.collectionDescription = coll?.description;
+                this.collectionDescription = coll?.cmetadata?.description || '';
 
                 this.isBusy = false;
             } catch (error) {
