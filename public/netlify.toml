@@ -1,0 +1,5 @@
+# Redirect with a 301
+[[redirects]]
+from = "/*"
+to = "https://chatlas-demo.atlasconsulting.it"
+status = 301
