@@ -3,3 +3,10 @@
 from = "/"
 to = "https://chatlas-demo.atlasconsulting.it"
 status = 301
+force = true
+
+[[redirects]]
+from = "/auth"
+to = "https://chatlas-demo.atlasconsulting.it"
+status = 301
+force = true
