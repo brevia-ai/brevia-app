@@ -2,14 +2,20 @@
     <main>
         <div class="mt-6 max-w-sm mx-auto flex flex-col space-y-4">
             <input class="text-lg p-4 border border-sky-800 rounded" type="text"
-                placeholder="Codice di accesso"
-                v-model="code"
-                ref="input"
-                @keydown.enter="login">
+                autocomplete="username" autocorrect="off" autocapitalize="none"
+                placeholder="Enter your username"
+                v-model="username"
+                @keydown.enter="login" required>
+
+            <input class="text-lg p-4 border border-sky-800 rounded" type="password"
+                autocomplete="current-password" autocorrect="off" autocapitalize="none"
+                placeholder="Enter your password"
+                v-model="password"
+                @keydown.enter="login" required>
 
             <button class="p-4 button text-lg" @click="login">ENTER</button>
 
-            <p class="text-red-600 text-lg font-bold text-center" v-if="failed">Codice non valido</p>
+            <p class="text-red-600 text-lg font-bold text-center" v-if="failed">Credenziali errate</p>
         </div>
     </main>
 </template>
@@ -21,7 +27,8 @@ export default {
     data() {
         return {
             menu: [],
-            code: '',
+            username: '',
+            password: '',
             failed: false,
         }
     },
@@ -36,20 +43,63 @@ export default {
     },
 
     methods: {
-        login() {
-            this.failed = false;
-            const acl = this.$config.public?.aclMenu || []
-            const found = acl.find(i => i.code === this.code);
-            if (!found?.menu?.length) {
-                this.code = '';
-                this.failed = true;
+        async login() {
+            if (!this.username || !this.password) {
                 return;
             }
+            this.failed = false;
+            this.isBusy = true;
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        username: this.username,
+                        password: this.password,
+                    }),
+                });
+                const data = await response.json();
+                if (data.error) {
+                    this.error = `There has been an error\n${data.error}`;
+                    console.log(data.error);
+                    this.failed = true;
+                } else if (data) {
+                    this.setUserMenu(data);
+                }
+            } catch (error) {
+                this.error = error;
+                console.log(error);
+                this.failed = true;
+            }
+            this.isBusy = false;
+        },
 
+        setUserMenu(data) {
+            const menu = this.menuItems(data);
             const store = useStatesStore();
-            store.userLogin(found.menu);
-            store.setOptions(found.options);
-        }
-    }
+            store.userLogin(menu);
+            // TODO: user options
+            // store.setOptions(found.options);
+        },
+
+        menuItems(data) {
+            const included = data?.included || [];
+            let items = [];
+            for (const item of included) {
+                if (item?.type === 'features') {
+                    items.push({
+                        link: `/${item?.attributes?.feature_type}`,
+                        title: item?.attributes?.title,
+                    })
+                } else if (item?.type === 'collections') {
+                    items.push({
+                        link: `/chatbot/${item?.attributes?.uname}`,
+                        title: item?.attributes?.title,
+                    })
+                }
+            }
+
+            return items;
+        },
+    },
 }
 </script>
