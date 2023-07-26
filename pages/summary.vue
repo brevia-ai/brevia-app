@@ -1,10 +1,8 @@
 <template>
     <div class="rounded space-y-3">
-        <h2 class="text-2xl font-bold">Document summary</h2>
+        <h2 class="text-2xl font-bold">{{ menuItem?.title }}</h2>
         <div class="space-y-6 sm:space-y-8">
-            <p>
-                Upload a PDF document, even one with many pages, to get a textual summary, a list summary or a potential categorization.
-            </p>
+            <div v-html="menuItem?.description"></div>
 
             <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
                 <div class="sm:col-span-2">
@@ -50,11 +48,9 @@
     </div>
 </template>
 
-<script setup>
-    useHead({ title: 'Document summary | Chatlas', });
-</script>
-
 <script>
+import { useStatesStore } from '~~/store/states';
+
 export default {
     data() {
         return {
@@ -63,7 +59,16 @@ export default {
             isBusy: false,
             summary: null,
             error: null,
+            menuItem: {},
         }
+    },
+
+    created() {
+        const store = useStatesStore();
+        const link = '/summary';
+        store.userAccess(link);
+        this.menuItem = store.getMenuItem(link);
+        useHead({ title: `${this.menuItem?.title} | Chatlas`});
     },
 
     computed: {

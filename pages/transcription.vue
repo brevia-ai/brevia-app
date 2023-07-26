@@ -1,14 +1,9 @@
 <template>
     <div class="rounded space-y-3">
-        <h2 class="text-2xl font-bold">Audio transcription</h2>
+        <h2 class="text-2xl font-bold">{{ menuItem?.title }}</h2>
         <div class="space-y-6 sm:space-y-8">
-            <p>
-                Upload an audio file to get a textual transcription.
-            </p>
-            <ul>
-                <li>Max file size 25 MB</li>
-                <li>Supported types: mp3, mp4, mpeg, mpga, m4a, wav, and webm</li>
-            </ul>
+            <div v-html="menuItem?.description"></div>
+
 
             <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
                 <div class="sm:col-span-2">
@@ -51,11 +46,9 @@
     </div>
 </template>
 
-<script setup>
-    useHead({ title: 'Audio transcription | Chatlas', });
-</script>
-
 <script>
+import { useStatesStore } from '~~/store/states';
+
 export default {
     data() {
         return {
@@ -64,7 +57,16 @@ export default {
             isBusy: false,
             transcription: null,
             error: null,
+            menuItem: {},
         }
+    },
+
+    created() {
+        const store = useStatesStore();
+        const link = '/transcription';
+        store.userAccess(link);
+        this.menuItem = store.getMenuItem(link);
+        useHead({ title: `${this.menuItem?.title} | Chatlas`});
     },
 
     methods: {
