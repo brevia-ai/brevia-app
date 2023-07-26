@@ -4,7 +4,6 @@ export default defineNuxtConfig({
         apiSecret: process.env.API_SECRET || '',
         apiBaseUrl: process.env.API_BASE_URL || '',
         public: {
-            streaming: process.env.STREAMING || 'true', // streaming support
             aclMenu: [
                 {
                     code: 'doorway',
