@@ -81,19 +81,20 @@ export default {
     },
 
     created() {
+        const store = useStatesStore();
         if (process.client) {
             this.sessionId = self.crypto.randomUUID();
             const route = useRoute();
             this.collection = route.params.id;
+            store.userAccess(`/chatbot/${this.collection}`);
         }
-        const store = useStatesStore();
         store.readOptions();
         this.sourceDocs = Boolean(store.options?.['chatbotDocs']);
     },
 
     mounted() {
         setTimeout(() => {
-            this.$refs['prompt'].focus();
+            this.$refs['prompt']?.focus();
         }, 100);
     },
 

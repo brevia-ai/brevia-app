@@ -85,16 +85,16 @@ export default {
             const included = data?.included || [];
             let items = [];
             for (const item of included) {
+                const title = item?.attributes?.title;
+                const description = item?.attributes?.description;
+                let link = null;
                 if (item?.type === 'features') {
-                    items.push({
-                        link: `/${item?.attributes?.feature_type}`,
-                        title: item?.attributes?.title,
-                    })
+                    link = `/${item?.attributes?.feature_type}`;
                 } else if (item?.type === 'collections') {
-                    items.push({
-                        link: `/chatbot/${item?.attributes?.uname}`,
-                        title: item?.attributes?.title,
-                    })
+                    link = `/chatbot/${item?.attributes?.uname}`;
+                }
+                if (link) {
+                    items.push({link, title, description});
                 }
             }
 
