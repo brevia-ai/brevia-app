@@ -117,12 +117,7 @@ export default {
             const currIdx = this.dialog.length - 1;
 
             try {
-                if (this.$config.public.streaming == 'true') {
-                    await this.streamingFetchRequest(currIdx);
-                } else {
-                    await this.syncFetchRequest(currIdx);
-                }
-
+                await this.streamingFetchRequest(currIdx);
                 this.isBusy = false;
                 setTimeout(() => {
                     this.$refs['prompt'].focus();
@@ -175,33 +170,6 @@ export default {
                 }
             } else {
                 this.dialog[currIdx].message += text;
-            }
-        },
-
-        async syncFetchRequest(currIdx) {
-            const response = await fetch('/api/prompt_sync', {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json',
-                        'X-Chat-Session': this.sessionId,
-                    },
-                    body: JSON.stringify({
-                        question: this.lastPrompt,
-                        collection: this.collection,
-                        source_docs: this.sourceDocs,
-                    })
-                });
-
-            if (response.ok) {
-                const data = await response.json();
-                const parsedData = data.bot.trim();
-                this.dialog[currIdx].message = parsedData;
-                this.docs = data.docs || [];
-                this.logDocs();
-            } else {
-                const err = await response.text();
-                console.error(err);
-                this.showErrorMessage(currIdx);
             }
         },
 
