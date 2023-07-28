@@ -35,6 +35,14 @@
             </button>
         </div>
 
+        <div class="flex space-x-4">
+            <label class="grow text-lg space-x-2 cursor-pointer">
+                <input type="checkbox" v-model="sourceDocs" :disabled="isBusy">
+                <span>Mostra i documenti trovati</span>
+            </label>
+        </div>
+
+
         <div class="flex flex-col space-y-3" v-if="!isBusy && docs.length > 0">
             <div class="text-xl">
                 <p>Documenti</p>
@@ -89,7 +97,6 @@ export default {
             store.userAccess(`/chatbot/${this.collection}`);
         }
         store.readOptions();
-        this.sourceDocs = Boolean(store.options?.['chatbotDocs']);
     },
 
     mounted() {
