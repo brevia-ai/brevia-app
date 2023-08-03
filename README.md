@@ -4,7 +4,7 @@ Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introdu
 
 ## Setup
 
-Make sure to install the dependencies:
+Make sure to install the dependencies (using `yarn`, `npm` or `pnpm`):
 
 ```bash
 # yarn
@@ -17,7 +17,14 @@ npm install
 pnpm install
 ```
 
-Copy `.env.sample` in `.env` and set Chatlas `API_BASE_URL` env var
+## Environment variables
+
+Copy `.env.sample` in `.env` and set
+
+* `API_BASE_URL` Chatlas API base URL
+* `API_SECRET` Chatlas API secret
+* `BEDITA_API_BASE_URL` BEdita API base URL
+* `BEDITA_API_KEY` BEdita API KEY
 
 ## Development Server
 
@@ -49,7 +56,3 @@ npm run preview
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
-## Environment variables
-
-API_BASE_URL={chatlas api base url}
-API_SECRET={chatlas api secret token}
