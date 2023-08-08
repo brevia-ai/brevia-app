@@ -34,6 +34,11 @@
                     :disabled="!file || isBusy" @click="reset" v-if="summary || error">Reset</button>
             </div>
 
+            <hr class="border-neutral-300" v-if="jobData">
+            <div class="space-y-4" v-if="jobData">
+                <h2 class="text-xl leading-tight">Job status <span class="block md:inline font-bold">{{ jobStatus }}</span></h2>
+            </div>
+
             <hr class="border-neutral-300" v-if="summary">
             <div class="space-y-4" v-if="summary">
                 <h2 class="text-xl leading-tight">Result for document <span class="block md:inline font-bold">{{ file.name }}</span></h2>
@@ -51,6 +56,8 @@
 <script>
 import { useStatesStore } from '~~/store/states';
 
+const INTERVAL = 15000; // 15 seconds in ms
+
 export default {
     data() {
         return {
@@ -58,6 +65,9 @@ export default {
             file: null,
             isBusy: false,
             summary: null,
+            jobId: null,
+            jobData: null,
+            pollingId: null,
             error: null,
             menuItem: {},
         }
@@ -69,9 +79,21 @@ export default {
         store.userAccess(link);
         this.menuItem = store.getMenuItem(link);
         useHead({ title: `${this.menuItem?.title} | Chatlas`});
+        this.jobId = store.getLastJob();
+        this.startPolling();
     },
 
     computed: {
+        jobStatus() {
+            if (this.jobData?.completed) {
+                return 'completed';
+            }
+            if (this.jobData?.locked_until) {
+                return 'in progress';
+            }
+
+            return 'idle';
+        },
     },
 
     methods: {
@@ -80,12 +102,33 @@ export default {
             this.summary = null;
             this.error = null;
             this.isBusy = false;
+            this.jobId = null;
+            this.jobData = null;
+            this.stopPolling();
             this.$refs.fileDrop.reset();
+        },
+
+        startPolling() {
+            if (!this.jobId) {
+                return;
+            }
+            // read first after 1 sec, then every 15 sec
+            setTimeout(() => this.readJobData(), 1000);
+            this.pollingId = setInterval(() => this.readJobData(), INTERVAL);
+        },
+
+        stopPolling() {
+            if (this.pollingId) {
+                clearInterval(this.pollingId);
+            }
+            this.pollingId = null;
         },
 
         async submit() {
             this.isBusy = true;
             this.summary = null;
+            this.jobId = null;
+            this.jobData = null;
             let formData = new FormData();
             formData.append('num_items', 5);
             formData.append('summ_prompt', this.summaryType);
@@ -99,17 +142,48 @@ export default {
                     body: formData,
                 });
 
-                this.summary = data.summary?.trim() || '';
                 if (data.error) {
+                    this.isBusy = false;
                     this.error = `There has been an error\n${data.error}`;
                     console.log(data.error);
+                } else {
+                    this.jobId = data.job?.trim() || '';
+                    useStatesStore().setLastJob(this.jobId);
+                    this.startPolling();
                 }
             } catch (error) {
                 this.error = error;
                 console.log(error);
             }
-            this.isBusy = false;
         },
+
+        async readJobData() {
+            if (!this.jobId) {
+                return;
+            }
+            try {
+                const data = await $fetch(`/api/jobs/${this.jobId}`);
+                const err = data?.error || data.result?.error || null;
+                if (err) {
+                    this.isBusy = false;
+                    this.error = `There has been an error\n${err}`;
+                    console.log(err);
+                    this.stopPolling();
+                } else {
+                    this.jobData = data;
+                    if (data?.result?.summary) {
+                        this.summary = data?.result?.summary;
+                        this.stopPolling();
+                        useStatesStore().setLastJob(null);
+                        this.jobId = null;
+                        this.isBusy = false;
+                    }
+                }
+            } catch (error) {
+                this.error = error;
+                console.log(error);
+            }
+        }
     }
 }
 </script>
