@@ -47,6 +47,18 @@ export const useStatesStore = defineStore('states', {
             return JSON.parse(localStorage.getItem('chatlas-menu') || '[]');
         },
 
+        getJobInfo(name) {
+            return JSON.parse(localStorage.getItem(name)) || null;
+        },
+
+        setJobInfo(name, value) {
+            if (!value) {
+                localStorage.removeItem(name);
+                return;
+            }
+            localStorage.setItem(name, JSON.stringify(value));
+        },
+
         readOptions() {
             this.options = JSON.parse(localStorage.getItem('chatlas-options') || '{}');
         },
