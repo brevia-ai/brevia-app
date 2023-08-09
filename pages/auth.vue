@@ -88,13 +88,18 @@ export default {
                 const title = item?.attributes?.title;
                 const description = item?.attributes?.description;
                 let link = null;
+                let type = null;
+                let params = null;
                 if (item?.type === 'features') {
                     link = `/${item?.attributes?.feature_type}`;
+                    type = item?.attributes?.feature_type;
+                    params = item?.attributes?.feature_params;
                 } else if (item?.type === 'collections') {
                     link = `/chatbot/${item?.attributes?.uname}`;
+                    type = 'chatbot';
                 }
                 if (link) {
-                    items.push({link, title, description});
+                    items.push({link, type, title, description, params});
                 }
             }
 
