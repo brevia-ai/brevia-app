@@ -8,22 +8,6 @@
                 <div class="sm:col-span-2">
                     <DropZone @file-change="file = $event" :disabled="isBusy" ref="fileDrop"/>
                 </div>
-
-                <div class="sm:self-center justify-self-center sm:justify-self-start flex flex-col space-y-1 text-lg"
-                    :class="{'text-neutral-400' : isBusy}">
-                    <label class="space-x-2 cursor-pointer">
-                        <input type="radio" :value="'summarize'" v-model="summaryType" :disabled="isBusy">
-                        <span :class="{ 'font-bold': summaryType === 'summarize' }">Text summary</span>
-                    </label>
-                    <label class="space-x-2 cursor-pointer">
-                        <input type="radio" :value="'summarize_point'" v-model="summaryType" :disabled="isBusy">
-                        <span :class="{ 'font-bold': summaryType === 'summarize_point' }">Bullet list summary</span>
-                    </label>
-                    <label class="space-x-2 cursor-pointer">
-                        <input type="radio" :value="'classificate'" v-model="summaryType" :disabled="isBusy">
-                        <span :class="{ 'font-bold': summaryType === 'classificate' }">Categorize content</span>
-                    </label>
-                </div>
             </div>
 
             <div class="text-center sm:text-left">
@@ -37,12 +21,12 @@
 
             <hr class="border-neutral-300" v-if="jobData">
             <div class="space-y-4" v-if="jobData">
-                <h2 class="text-xl leading-tight"><span class="block md:inline font-bold">{{ file.name }}</span> summarization <span class="block md:inline font-bold">{{ jobStatus }}</span></h2>
+                <h2 class="text-xl leading-tight"><span class="block md:inline font-bold">{{ file.name }}</span> analysis <span class="block md:inline font-bold">{{ jobStatus }}</span></h2>
             </div>
 
-            <hr class="border-neutral-300" v-if="summary">
-            <div class="space-y-4" v-if="summary">
-                <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ summary }}</p>
+            <hr class="border-neutral-300" v-if="result">
+            <div class="space-y-4" v-if="result">
+                <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ result.output }}</p>
             </div>
 
             <div class="space-y-4" v-if="error">
@@ -61,12 +45,12 @@ const INTERVAL = 15000; // 15 seconds in ms
 export default {
     data() {
         return {
-            summaryType: 'summarize',
             file: null,
             isBusy: false,
-            summary: null,
+            result: null,
             jobId: null,
             jobData: null,
+            jobName: null,
             pollingId: null,
             error: null,
             menuItem: {},
@@ -75,11 +59,12 @@ export default {
 
     created() {
         const store = useStatesStore();
-        const link = '/summary';
+        const link = this.$route.path;
         store.userAccess(link);
         this.menuItem = store.getMenuItem(link);
         useHead({ title: `${this.menuItem?.title} | Chatlas`});
-        const info = store.getJobInfo('summary');
+        this.jobName = this.menuItem?.title?.toLowerCase()?.replace(' ', '-') || 'analysis';
+        const info = store.getJobInfo(this.jobName);
         this.jobId = info?.id || null;
         this.file = info?.file || null;
         this.startPolling();
@@ -106,14 +91,18 @@ export default {
     methods: {
         reset() {
             this.file = null;
-            this.summary = null;
+            this.result = null;
             this.error = null;
             this.isBusy = false;
-            this.jobId = null;
+            this.clearJob();
             this.jobData = null;
-            useStatesStore().setJobInfo('summary', null);
-            this.stopPolling();
             this.$refs.fileDrop.reset();
+        },
+
+        clearJob() {
+            this.jobId = null;
+            useStatesStore().setJobInfo(this.jobName, null);
+            this.stopPolling();
         },
 
         startPolling() {
@@ -134,18 +123,15 @@ export default {
 
         async submit() {
             this.isBusy = true;
-            this.summary = null;
+            this.result = null;
             this.jobId = null;
             this.jobData = null;
             let formData = new FormData();
-            formData.append('num_items', 5);
-            formData.append('summ_prompt', this.summaryType);
+            formData.append('service', this.menuItem?.params?.service || '');
+            formData.append('payload', JSON.stringify(this.menuItem?.params?.payload || ''));
             formData.append('file', this.file);
             try {
-                // 'multipart/form-data' Content-type header
-                // intentionally not set to avoid boundary error
-                // https://stackoverflow.com/questions/39280438/fetch-missing-boundary-in-multipart-form-data-post/39281156#39281156
-                const data = await $fetch('/api/upload_summarize', {
+                const data = await $fetch('/api/upload_analyze', {
                     method: 'POST',
                     body: formData,
                 });
@@ -156,7 +142,7 @@ export default {
                     console.log(data.error);
                 } else {
                     this.jobId = data.job?.trim() || '';
-                    useStatesStore().setJobInfo('summary', {id: this.jobId, file: {name: this.file?.name}});
+                    useStatesStore().setJobInfo(this.jobName, {id: this.jobId, file: {name: this.file?.name}});
                     this.startPolling();
                 }
             } catch (error) {
@@ -176,15 +162,13 @@ export default {
                     this.isBusy = false;
                     this.error = `There has been an error\n${err}`;
                     console.log(err);
-                    this.stopPolling();
+                    this.clearJob();
                 } else {
                     this.jobData = data;
                     if (this.jobData?.completed) {
-                        this.summary = data?.result?.output;
-                        this.stopPolling();
-                        useStatesStore().setJobInfo('summary', null);
-                        this.jobId = null;
                         this.isBusy = false;
+                        this.result = this.jobData?.result;
+                        this.clearJob();
                     }
                 }
             } catch (error) {
