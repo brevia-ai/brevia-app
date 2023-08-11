@@ -1,4 +1,5 @@
 variables:
+  APP: chatlas_app
   DOCKER_IMAGE_URL: "registry.gitlab.com/atlasconsulting/devops/atlas-aws-test"
   DOCKER_IMAGE_TAG: "v3.2"
   DOCKER_NAME: "build-$CI_COMMIT_SHORT_SHA"
