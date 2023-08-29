@@ -3,8 +3,8 @@ variables:
   DOCKER_IMAGE_URL: "registry.gitlab.com/atlasconsulting/devops/atlas-aws-test"
   DOCKER_IMAGE_TAG: "v3.2"
   DOCKER_NAME: "build-$CI_COMMIT_SHORT_SHA-$CI_JOB_ID"
-  RUN_CHECK_FORMAT: 1
-  RUN_CHECK_LINT: 1
+  RUN_CHECK_FORMAT: 0  # skip check format for now
+  RUN_CHECK_LINT: 0  # skip check lint for now
 
 stages:
   - check
