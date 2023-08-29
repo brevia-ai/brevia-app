@@ -2,7 +2,7 @@ variables:
   APP: chatlas_app
   DOCKER_IMAGE_URL: "registry.gitlab.com/atlasconsulting/devops/atlas-aws-test"
   DOCKER_IMAGE_TAG: "v3.2"
-  DOCKER_NAME: "build-$CI_COMMIT_SHORT_SHA"
+  DOCKER_NAME: "build-$CI_COMMIT_SHORT_SHA-$CI_JOB_ID"
   RUN_CHECK_FORMAT: 1
   RUN_CHECK_LINT: 1
 
@@ -33,7 +33,7 @@ build_package:
     - cd /opt/ansible/atlas_aws_chatlas
     - |
       venv/bin/ansible-playbook package-apps.yml \
-      -i inventory/test.aws_ec2.yml \
+      -i inventory/test.hosts \
       -e "target=test" \
       -e "docker_image_url=$DOCKER_IMAGE_URL" \
       -e "docker_image_tag=$DOCKER_IMAGE_TAG" \
@@ -55,7 +55,7 @@ deploy_test:
     - cd /opt/ansible/atlas_aws_chatlas
     - |
       venv/bin/ansible-playbook s3-deploy-apps.yml \
-      -i inventory/test.aws_ec2.yml \
+      -i inventory/test.hosts \
       -e "target=test" \
       -e "pack_suffix=$CI_COMMIT_SHORT_SHA" \
       -e "{\"deploy\": [\"$APP\"], \"archive\":\"yes\"}"
