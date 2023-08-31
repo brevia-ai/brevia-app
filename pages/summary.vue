@@ -45,6 +45,10 @@
             <div class="space-y-4" v-if="summary">
                 <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ summary }}</p>
             </div>
+            <div class="text-center sm:text-left" v-if="summary">
+                <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
+                @click="downloadPdf">Download summary</button>
+            </div>
 
             <div class="space-y-4" v-if="error">
                 <p class="block p-8 bg-red-900 border border-red-900 text-white rounded-lg text-lg whitespace-pre-line">{{ error }}</p>
@@ -56,6 +60,7 @@
 
 <script>
 import { useStatesStore } from '~~/store/states';
+import { jsPDF } from 'jspdf';
 
 const INTERVAL = 15000; // 15 seconds in ms
 
@@ -168,6 +173,14 @@ export default {
                 this.error = error;
                 console.log(error);
             }
+        },
+
+        downloadPdf() {
+            const doc = new jsPDF();
+            let date = new Date().toISOString().split('T')[0];
+            const pdfTitle = `Summary-${this.file?.name}-${date}.pdf`;
+            doc.text(this.summary, 10, 10);
+            doc.save(pdfTitle);
         },
 
         async readJobData() {

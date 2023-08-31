@@ -17,6 +17,7 @@
     "@atlasconsulting/bedita-sdk": "^2.1.0",
     "@nuxtjs/axios": "^5.13.6",
     "@pinia/nuxt": "^0.4.8",
+    "jspdf": "^2.5.1",
     "pinia": "^2.0.34",
     "vue": "^3.2.47"
   }
