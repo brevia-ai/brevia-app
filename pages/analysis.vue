@@ -124,6 +124,7 @@ export default {
         async submit() {
             this.isBusy = true;
             this.result = null;
+            this.error = null;
             this.jobId = null;
             this.jobData = null;
             let formData = new FormData();
