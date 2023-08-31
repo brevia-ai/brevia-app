@@ -44,7 +44,6 @@
 
 <script>
 import { useStatesStore } from '~~/store/states';
-import { jsPDF } from 'jspdf';
 
 const INTERVAL = 15000; // 15 seconds in ms
 
@@ -163,10 +162,9 @@ export default {
         },
 
         downloadPdf() {
-            const doc = new jsPDF();
+            const doc = this.$createPdf(this.result?.output || '');
             let date = new Date().toISOString().split('T')[0];
             const pdfTitle = `Analysis-${this.file?.name}-${date}.pdf`;
-            doc.text(this.result?.output || '', 10, 10);
             doc.save(pdfTitle);
         },
 
