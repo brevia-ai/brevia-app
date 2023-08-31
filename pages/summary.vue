@@ -41,14 +41,12 @@
             </div>
 
             <hr class="border-neutral-300" v-if="summary">
-            <div v-if="summary">
-                <div class="space-y-4">
-                    <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ summary }}</p>
-                </div>
-                <div class="text-center sm:text-left">
-                    <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
-                    @click="downloadPdf">Download summary</button>
-                </div>
+            <div class="space-y-4" v-if="summary">
+                <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ summary }}</p>
+            </div>
+            <div class="text-center sm:text-left" v-if="summary">
+                <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
+                @click="downloadPdf">Download summary</button>
             </div>
 
             <div class="space-y-4" v-if="error">

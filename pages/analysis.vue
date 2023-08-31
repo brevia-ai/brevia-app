@@ -25,14 +25,12 @@
             </div>
 
             <hr class="border-neutral-300" v-if="result">
-            <div v-if="result">
-                <div class="space-y-4">
-                    <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ result.output }}</p>
-                </div>
-                <div class="text-center sm:text-left">
-                    <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
+            <div class="space-y-4" v-if="result">
+                <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ result.output }}</p>
+            </div>
+            <div class="space-y-2 text-center sm:text-left" v-if="result">
+                <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
                     @click="downloadPdf">Download analysis</button>
-                </div>
             </div>
 
             <div class="space-y-4" v-if="error">
@@ -163,7 +161,7 @@ export default {
             const doc = new jsPDF();
             let date = new Date().toISOString().split('T')[0];
             const pdfTitle = `Analysis-${this.file?.name}-${date}.pdf`;
-            doc.text(this.result, 10, 10);
+            doc.text(this.result?.output || '', 10, 10);
             doc.save(pdfTitle);
         },
 
