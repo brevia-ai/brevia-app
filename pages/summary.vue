@@ -6,7 +6,8 @@
 
             <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
                 <div class="sm:col-span-2">
-                    <DropZone @file-change="file = $event" :disabled="isBusy" ref="fileDrop"/>
+                    <DropZone @file-change="file = $event"
+                        :disabled="isBusy" :accept-type="acceptType" ref="fileDrop"/>
                 </div>
 
                 <div class="sm:self-center justify-self-center sm:justify-self-start flex flex-col space-y-1 text-lg"
@@ -100,6 +101,9 @@ export default {
 
         resetDisabled() {
             return !this.file || (this.isBusy && !this.pollingId);
+        },
+        acceptType() {
+            return this.menuItem?.params?.accept || '.pdf';
         },
     },
 
