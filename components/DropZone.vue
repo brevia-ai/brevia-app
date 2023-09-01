@@ -79,9 +79,23 @@ export default {
             if (!file || !file.type) {
                 return false;
             }
-            const types = this.acceptTypes.split(',');
+            const acceptList = this.acceptTypes.split(',');
 
-            return types.includes(file.type);
+            const itemParts = file.type.split('/');
+            const fileType = itemParts[0];
+            const fileSubtype = itemParts?.[1];
+            let found = false;
+            acceptList.forEach((item) => {
+                const parts = item.split('/');
+                if (
+                    parts[0] === fileType &&
+                    (parts?.[1] === '*' || parts?.[1] === fileSubtype)
+                ) {
+                    found = true;
+                }
+            });
+
+            return found;
         }
     },
 };
