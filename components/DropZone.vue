@@ -16,7 +16,7 @@
 
             <input type="file" name="file" id="fileInput" ref="fileInput"
                 class="opacity-0 w-px h-px absolute overflow-hidden"
-                :accept="acceptType"
+                :accept="acceptTypes"
                 :disabled="disabled"
                 @change="onChangeFile" />
     </label>
@@ -30,9 +30,10 @@ export default {
             type: Boolean,
             default: false,
         },
-        acceptType: {
+        acceptTypes: {
+            // comma separated lists of accepted mime types
             type: String,
-            default: '.pdf',
+            default: 'application/pdf',
         },
     },
     data() {
@@ -59,10 +60,11 @@ export default {
         onDragLeave() {
             this.isDragging = false;
         },
-        onDrop(e) {
+        onDrop(e: DragEvent) {
             e.preventDefault();
-            const file = [...e.dataTransfer.files][0] || null;
-            if (!file || !file.type || file.type !== 'application/pdf') {
+            const file = [...e.dataTransfer?.files][0] || null;
+            if (!this.isFileAccepted(file)) {
+                this.file = null;
                 this.isDragging = false;
                 this.isFileError = true;
                 setTimeout(() => { this.isFileError = false; }, 2000);
@@ -70,9 +72,17 @@ export default {
             }
 
             this.file = file;
-            this.$emit('fileChange', [...e.dataTransfer.files][0]);
+            this.$emit('fileChange', [...e.dataTransfer?.files][0]);
             this.isDragging = false;
         },
+        isFileAccepted(file: File) {
+            if (!file || !file.type) {
+                return false;
+            }
+            const types = this.acceptTypes.split(',');
+
+            return types.includes(file.type);
+        }
     },
 };
 </script>
