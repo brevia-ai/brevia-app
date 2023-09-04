@@ -92,8 +92,12 @@ export default {
                 let params = null;
                 if (item?.type === 'features') {
                     link = `/${item?.attributes?.feature_type}`;
-                    type = item?.attributes?.feature_type;
-                    params = item?.attributes?.feature_params;
+                    type = item?.attributes?.feature_type || '';
+                    params = item?.attributes?.feature_params || {};
+                    if (!('payload' in params)) {
+                        params['payload'] = {};
+                    }
+                    params['payload']['prompts'] = item?.attributes?.prompts || null;
                 } else if (item?.type === 'collections') {
                     link = `/chatbot/${item?.attributes?.uname}`;
                     type = 'chatbot';
