@@ -4,17 +4,11 @@ Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introdu
 
 ## Setup
 
-Make sure to install the dependencies (using `yarn`, `npm` or `pnpm`):
+Make sure to install the dependencies (using `npm`):
 
 ```bash
-# yarn
-yarn install
-
 # npm
 npm install
-
-# pnpm
-pnpm install
 ```
 
 ## Environment variables
