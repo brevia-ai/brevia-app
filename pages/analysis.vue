@@ -24,6 +24,9 @@
             <div class="space-y-4" v-if="jobData">
                 <h2 class="text-xl leading-tight"><span class="block md:inline font-bold">{{ file.name }}</span> analysis <span class="block md:inline font-bold">{{ jobStatus }}</span></h2>
             </div>
+            <div class="space-y-4" v-if="jobData">
+                <p class="text-xl leading-tight">Elapsed time: {{ elapsedTime }}</p>
+            </div>
 
             <hr class="border-neutral-300" v-if="result">
             <div class="space-y-4" v-if="result">
@@ -94,6 +97,18 @@ export default {
 
         acceptTypes() {
             return this.menuItem?.params?.accept || 'application/pdf';
+        },
+
+        elapsedTime() {
+            const dt = Date.parse(this.jobData?.created + 'Z');
+            const now = new Date().getTime();
+            const seconds = Math.round((now - dt) / 1000);
+            if (seconds < 60) {
+                return `${seconds} sec`
+            }
+            const minutes = Math.round((now - dt) / 60000);
+
+            return `${minutes} min`
         },
     },
 
