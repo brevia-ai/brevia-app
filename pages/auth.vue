@@ -1,6 +1,6 @@
 <template>
     <main>
-        <div class="mt-6 max-w-sm mx-auto flex flex-col space-y-4" v-if="!logged">
+        <div class="mt-6 max-w-sm mx-auto flex flex-col space-y-4" v-if="!logged || !store?.isLogged">
             <input class="text-lg p-4 border border-sky-800 rounded" type="text"
                 autocomplete="username" autocorrect="off" autocapitalize="none"
                 placeholder="Enter your username"
@@ -35,6 +35,7 @@ export default {
             password: '',
             failed: false,
             logged: false,
+            store: null,
         }
     },
 
@@ -45,6 +46,10 @@ export default {
         if(menu?.length > 0) {
             navigateTo('/');
         }
+    },
+
+    mounted() {
+        this.store = useStatesStore();
     },
 
     methods: {
