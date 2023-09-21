@@ -1,6 +1,6 @@
 <template>
     <main>
-        <div class="mt-6 max-w-sm mx-auto flex flex-col space-y-4">
+        <div class="mt-6 max-w-sm mx-auto flex flex-col space-y-4" v-if="!logged">
             <input class="text-lg p-4 border border-sky-800 rounded" type="text"
                 autocomplete="username" autocorrect="off" autocapitalize="none"
                 placeholder="Enter your username"
@@ -18,6 +18,9 @@
 
             <p class="text-red-600 text-lg font-bold text-center" v-if="failed">Wrong Credentials</p>
         </div>
+        <div v-else>
+            Welcome {{ logged.name }} {{ logged.surname }} ({{ logged.email }})
+        </div>
     </main>
 </template>
 
@@ -31,6 +34,7 @@ export default {
             username: '',
             password: '',
             failed: false,
+            logged: false,
         }
     },
 
@@ -65,6 +69,11 @@ export default {
                     this.failed = true;
                 } else if (data) {
                     this.setUserMenu(data);
+                    this.logged = {
+                        name: data?.data?.attributes?.name || '',
+                        surname: data?.data?.attributes?.surname || '',
+                        email: data?.data?.attributes?.email || '',
+                    };
                 }
             } catch (error) {
                 this.error = error;
