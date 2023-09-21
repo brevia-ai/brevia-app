@@ -1,6 +1,6 @@
 <template>
     <main>
-        <div class="mt-6 max-w-sm mx-auto flex flex-col space-y-4">
+        <div class="mt-6 max-w-sm mx-auto flex flex-col space-y-4" v-if="!logged || !store?.isLogged">
             <input class="text-lg p-4 border border-sky-800 rounded" type="text"
                 autocomplete="username" autocorrect="off" autocapitalize="none"
                 placeholder="Enter your username"
@@ -14,8 +14,12 @@
                 @keydown.enter="login" required>
 
             <button class="p-4 button text-lg" @click="login">ENTER</button>
+            <p>Not a member? <a class="text-sky-800" href="/signup" @click.prevent.stop="signupUser">Sign Up Here</a></p>
 
-            <p class="text-red-600 text-lg font-bold text-center" v-if="failed">Credenziali errate</p>
+            <p class="text-red-600 text-lg font-bold text-center" v-if="failed">Wrong Credentials</p>
+        </div>
+        <div v-else>
+            Welcome {{ logged.name }} {{ logged.surname }} ({{ logged.email }})
         </div>
     </main>
 </template>
@@ -30,6 +34,8 @@ export default {
             username: '',
             password: '',
             failed: false,
+            logged: false,
+            store: null,
         }
     },
 
@@ -40,6 +46,10 @@ export default {
         if(menu?.length > 0) {
             navigateTo('/');
         }
+    },
+
+    mounted() {
+        this.store = useStatesStore();
     },
 
     methods: {
@@ -64,6 +74,11 @@ export default {
                     this.failed = true;
                 } else if (data) {
                     this.setUserMenu(data);
+                    this.logged = {
+                        name: data?.data?.attributes?.name || '',
+                        surname: data?.data?.attributes?.surname || '',
+                        email: data?.data?.attributes?.email || '',
+                    };
                 }
             } catch (error) {
                 this.error = error;
@@ -71,6 +86,12 @@ export default {
                 this.failed = true;
             }
             this.isBusy = false;
+        },
+
+        signupUser(){
+            const store = useStatesStore();
+            console.log("signing up...");
+            store.userSignup();
         },
 
         setUserMenu(data) {

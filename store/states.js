@@ -19,6 +19,11 @@ export const useStatesStore = defineStore('states', {
             navigateTo('/auth');
         },
 
+        userSignup(){
+            console.log("redirecting");
+            navigateTo('/signup');
+        },
+
         /**
          * Verify if user has access to internal link, redirect to `/` if not
          * @param {string} link
