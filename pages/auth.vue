@@ -14,8 +14,9 @@
                 @keydown.enter="login" required>
 
             <button class="p-4 button text-lg" @click="login">ENTER</button>
+            <p>Not a member? <a class="text-sky-800" href="/signup" @click.prevent.stop="signupUser">Sign Up Here</a></p>
 
-            <p class="text-red-600 text-lg font-bold text-center" v-if="failed">Credenziali errate</p>
+            <p class="text-red-600 text-lg font-bold text-center" v-if="failed">Wrong Credentials</p>
         </div>
     </main>
 </template>
@@ -71,6 +72,12 @@ export default {
                 this.failed = true;
             }
             this.isBusy = false;
+        },
+
+        signupUser(){
+            const store = useStatesStore();
+            console.log("signing up...");
+            store.userSignup();
         },
 
         setUserMenu(data) {
