@@ -10,9 +10,9 @@
         @dragleave="onDragLeave"
         @drop="onDrop">
             <div class="max-w-full text-sm font-mono text-green-300 overflow-hidden text-ellipsis" v-if="file">{{ file.name }}</div>
-            <div v-else-if="isFileError">Please drop a supported file type</div>
-            <div v-else-if="isDragging">Drop file</div>
-            <div v-else>Please drop a file</div>
+            <div v-else-if="isFileError">{{ $t('PLEASE_DROP_A_FILE') }}</div>
+            <div v-else-if="isDragging">{{ $t('DROP_FILE') }}</div>
+            <div v-else>{{ $t('PLEASE_DROP_A_FILE') }}</div>
 
             <input type="file" name="file" id="fileInput" ref="fileInput"
                 class="opacity-0 w-px h-px absolute overflow-hidden"

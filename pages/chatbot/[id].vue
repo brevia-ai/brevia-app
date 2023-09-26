@@ -4,7 +4,7 @@
             <div class="text-sm text-neutral-600" v-if="hasCollection" v-html="collectionDescription">
             </div>
             <div class="text-sm text-red-600" v-else-if="!isBusy && !hasCollection">
-                <p>COLLECTION not found.</p>
+                <p>{{ $t('COLLECTION_NOT_FOUND') }}</p>
             </div>
 
             <div v-if="dialog.length">
@@ -31,21 +31,21 @@
                 :disabled="!isReady"
                 @click="submit">
                 <span class="md:hidden">›</span>
-                <span class="hidden md:inline">invia</span>
+                <span class="hidden md:inline">{{ $t('SEND') }}</span>
             </button>
         </div>
 
         <div class="flex space-x-4">
             <label class="grow text-lg space-x-2 cursor-pointer">
                 <input type="checkbox" v-model="sourceDocs" :disabled="isBusy">
-                <span>Mostra i documenti trovati</span>
+                <span>{{ $t('SHOW_DOCUMENTS_FOUND') }}</span>
             </label>
         </div>
 
 
         <div class="flex flex-col space-y-3" v-if="!isBusy && docs.length > 0">
             <div class="text-xl">
-                <p>Documenti</p>
+                <p>{{ $t('DOCUMENTS') }}</p>
             </div>
             <div v-for="(doc, n) in docs" :key="n">
                 <p class="text-xs">{{ (n + 1) }}.</p>
@@ -223,9 +223,9 @@ export default {
 
         showErrorMessage(index) {
             if (index) {
-                this.dialog[index] = this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true);
+                this.dialog[index] = this.dialogItem('CHATLAS', this.$i18n.t('SOMETHING_WENT_WRONG'), true);
             } else {
-                this.dialog.push(this.dialogItem('CHATLAS', 'Qualcosa è andato storto', true) );
+                this.dialog.push(this.dialogItem('CHATLAS', this.$i18n.t('SOMETHING_WENT_WRONG'), true) );
             }
         },
 

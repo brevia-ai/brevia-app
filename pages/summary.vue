@@ -14,15 +14,15 @@
                     :class="{'text-neutral-400' : isBusy}">
                     <label class="space-x-2 cursor-pointer">
                         <input type="radio" :value="'summarize'" v-model="summaryType" :disabled="isBusy">
-                        <span :class="{ 'font-bold': summaryType === 'summarize' }">Text summary</span>
+                        <span :class="{ 'font-bold': summaryType === 'summarize' }">{{ $t('TEXT_SUMMARY') }}</span>
                     </label>
                     <label class="space-x-2 cursor-pointer">
                         <input type="radio" :value="'summarize_point'" v-model="summaryType" :disabled="isBusy">
-                        <span :class="{ 'font-bold': summaryType === 'summarize_point' }">Bullet list summary</span>
+                        <span :class="{ 'font-bold': summaryType === 'summarize_point' }">{{ $t('BULLET_LIST_SUMMARY') }}</span>
                     </label>
                     <label class="space-x-2 cursor-pointer">
                         <input type="radio" :value="'classificate'" v-model="summaryType" :disabled="isBusy">
-                        <span :class="{ 'font-bold': summaryType === 'classificate' }">Categorize content</span>
+                        <span :class="{ 'font-bold': summaryType === 'classificate' }">{{ $t('CATEGORIZE_CONTENT') }}</span>
                     </label>
                 </div>
             </div>
@@ -30,15 +30,15 @@
             <div class="text-center sm:text-left">
                 <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
                     :class="{'loading' : isBusy}"
-                    :disabled="!file || isBusy" @click="submit">Upload and analyze file</button>
+                    :disabled="!file || isBusy" @click="submit">{{ $t('UPLOAD_AND_ANALYZE_FILE') }}</button>
                 <button class="mt-4 sm:ml-6 sm:mt-0 px-8 py-2 sm:py-4 bg-red-900 button"
                     :class="{'hover:bg-red-700' : !resetDisabled}"
-                    :disabled="resetDisabled" @click="reset">Reset</button>
+                    :disabled="resetDisabled" @click="reset">{{ $t('RESET') }}</button>
             </div>
 
             <hr class="border-neutral-300" v-if="jobData">
             <div class="space-y-4" v-if="jobData">
-                <h2 class="text-xl leading-tight"><span class="block md:inline font-bold">{{ file.name }}</span> summarization <span class="block md:inline font-bold">{{ jobStatus }}</span></h2>
+                <h2 class="text-xl leading-tight"><span class="block md:inline font-bold">{{ file.name }}</span> {{ $t('SUMMARIZATION') }} <span class="block md:inline font-bold">{{ jobStatus }}</span></h2>
             </div>
 
             <hr class="border-neutral-300" v-if="summary">
@@ -47,7 +47,7 @@
             </div>
             <div class="text-center sm:text-left" v-if="summary">
                 <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
-                @click="downloadPdf">Download summary</button>
+                @click="downloadPdf">{{ $t('DOWNLOAD_SUMMARY') }}</button>
             </div>
 
             <div class="space-y-4" v-if="error">
