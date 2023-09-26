@@ -14,7 +14,7 @@
                 {{ $t('ACCOUNT_ACTIVATED') }}!<br>
                 {{ $t('CAN_ACCESS_NOW') }}.<br>
                 <div class="text-center mt-10">
-                    <a class="p-4 button text-sm rounded-md" href="/auth" @click.prevent.stop="loginUser">{{ t('GO_TO_LOGIN_PAGE') }}</a>
+                    <a class="p-4 button text-sm rounded-md" href="/auth" @click.prevent.stop="loginUser">{{ $t('GO_TO_LOGIN_PAGE') }}</a>
                 </div>
             </p>
         </div>
