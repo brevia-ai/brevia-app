@@ -14,18 +14,18 @@
             <div class="text-center sm:text-left">
                 <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
                     :class="{'loading' : isBusy}"
-                    :disabled="!file || isBusy" @click="submit">Upload and analyze file</button>
+                    :disabled="!file || isBusy" @click="submit">{{ $t('UPLOAD_AND_ANALYZE_FILE') }}</button>
                 <button class="mt-4 sm:ml-6 sm:mt-0 px-8 py-2 sm:py-4 bg-red-900 button"
                     :class="{'hover:bg-red-700' : !resetDisabled}"
-                    :disabled="resetDisabled" @click="reset">Reset</button>
+                    :disabled="resetDisabled" @click="reset">{{ $t('RESET') }}</button>
             </div>
 
             <hr class="border-neutral-300" v-if="jobData">
             <div class="space-y-4" v-if="jobData">
-                <h2 class="text-xl leading-tight"><span class="block md:inline font-bold">{{ file.name }}</span> analysis <span class="block md:inline font-bold">{{ jobStatus }}</span></h2>
+                <h2 class="text-xl leading-tight"><span class="block md:inline font-bold">{{ file.name }}</span> {{ $t('ANALYSIS') }} <span class="block md:inline font-bold">{{ jobStatus }}</span></h2>
             </div>
             <div class="space-y-4" v-if="jobData">
-                <p class="text-xl leading-tight">Elapsed time: {{ elapsedTime }}</p>
+                <p class="text-xl leading-tight">{{ $t('ELAPSED_TIME') }}: {{ elapsedTime }}</p>
             </div>
 
             <hr class="border-neutral-300" v-if="result">
@@ -34,7 +34,7 @@
             </div>
             <div class="space-y-2 text-center sm:text-left" v-if="result">
                 <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
-                    @click="downloadPdf">Download analysis</button>
+                    @click="downloadPdf">{{ $t('DOWNLOAD_ANALYSIS') }}</button>
             </div>
 
             <div class="space-y-4" v-if="error">

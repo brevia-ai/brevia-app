@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
         '@pinia/nuxt',
-        // '@nuxtjs/axios',
+        '@nuxtjs/i18n',
     ],
     app: {
         head: {
@@ -18,4 +18,7 @@ export default defineNuxtConfig({
         }
     },
     css: ['@/assets/style.css'],
+    i18n: {
+        vueI18n: './i18n.config.ts',
+    },
 })

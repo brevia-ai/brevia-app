@@ -3,23 +3,23 @@
         <div class="mt-6 max-w-sm mx-auto flex flex-col space-y-4" v-if="!logged || !store?.isLogged">
             <input class="text-lg p-4 border border-sky-800 rounded" type="text"
                 autocomplete="username" autocorrect="off" autocapitalize="none"
-                placeholder="Enter your username"
+                :placeholder="$t('LOGIN_PLACEHOLDER')"
                 v-model="username"
                 @keydown.enter="login" required>
 
             <input class="text-lg p-4 border border-sky-800 rounded" type="password"
                 autocomplete="current-password" autocorrect="off" autocapitalize="none"
-                placeholder="Enter your password"
+                :placeholder="$t('PASSWORD_PLACEHOLDER')"
                 v-model="password"
                 @keydown.enter="login" required>
 
-            <button class="p-4 button text-lg" @click="login">ENTER</button>
-            <p>Not a member? <a class="text-sky-800" href="/signup" @click.prevent.stop="signupUser">Sign Up Here</a></p>
+            <button class="p-4 button text-lg" @click="login">{{ $t('SIGN_IN') }}</button>
+            <p>{{ $t('NOT_A_MEMBER') }} <a class="text-sky-800" href="/signup" @click.prevent.stop="signup">{{ $t('SIGN_UP_HERE') }}</a></p>
 
-            <p class="text-red-600 text-lg font-bold text-center" v-if="failed">Wrong Credentials</p>
+            <p class="text-red-600 text-lg font-bold text-center" v-if="error">{{ $t('WRONG_CREDENTIALS') }}</p>
         </div>
         <div v-else>
-            Welcome {{ logged.name }} {{ logged.surname }} ({{ logged.email }})
+            <h1>{{ $t('HELLO', { name: `${logged.name} ${logged.surname} (${logged.email})` }) }}</h1>
         </div>
     </main>
 </template>
@@ -30,10 +30,10 @@ import { useStatesStore } from '~~/store/states';
 export default {
     data() {
         return {
+            error: false,
             menu: [],
             username: '',
             password: '',
-            failed: false,
             logged: false,
             store: null,
         }
@@ -57,78 +57,71 @@ export default {
             if (!this.username || !this.password) {
                 return;
             }
-            this.failed = false;
-            this.isBusy = true;
+            this.error = false;
             try {
-                const response = await fetch('/api/login', {
+                const data = await $fetch('/api/login', {
                     method: 'POST',
-                    body: JSON.stringify({
+                    body: {
                         username: this.username,
                         password: this.password,
-                    }),
+                    },
                 });
-                const data = await response.json();
-                if (data.error) {
-                    this.error = `There has been an error\n${data.error}`;
-                    console.log(data.error);
-                    this.failed = true;
-                } else if (data) {
-                    this.setUserMenu(data);
-                    this.logged = {
-                        name: data?.data?.attributes?.name || '',
-                        surname: data?.data?.attributes?.surname || '',
-                        email: data?.data?.attributes?.email || '',
-                    };
-                }
+
+                this.setUserMenu(data);
+                this.logged = {
+                    name: data?.data?.attributes?.name || '',
+                    surname: data?.data?.attributes?.surname || '',
+                    email: data?.data?.attributes?.email || '',
+                };
             } catch (error) {
-                this.error = error;
-                console.log(error);
-                this.failed = true;
+                this.error = true;
             }
-            this.isBusy = false;
         },
 
-        signupUser(){
+        signup() {
             const store = useStatesStore();
-            console.log("signing up...");
             store.userSignup();
         },
 
         setUserMenu(data) {
-            const menu = this.menuItems(data);
             const store = useStatesStore();
-            store.userLogin(menu);
-            // TODO: user options
-            // store.setOptions(found.options);
+            const included = data?.included || [];
+            if (included?.length === 0) {
+                store.userLogin([]);
+
+                return;
+            }
+            let items = [];
+            const collections = included.filter(item => item?.type === 'collections');
+            for (const item of collections) {
+                items.push({
+                    link: `/chatbot/${item?.attributes?.uname}`,
+                    type: 'chatbot',
+                    title: this.field(item, 'title'),
+                    description: this.field(item, 'description'),
+                    params: null
+                });
+            }
+            const features = included.filter(item => item?.type === 'features');
+            for (const item of features) {
+                const params = item?.attributes?.feature_params || {};
+                if (!('payload' in params)) {
+                    params['payload'] = {};
+                }
+                params['payload']['prompts'] = item?.attributes?.prompts || null;
+                items.push({
+                    link: `/${item?.attributes?.feature_type}`,
+                    type: item?.attributes?.feature_type || '',
+                    title: this.field(item, 'title'),
+                    description: this.field(item, 'description'),
+                    params
+                });
+            }
+            store.userLogin(items);
         },
 
-        menuItems(data) {
-            const included = data?.included || [];
-            let items = [];
-            for (const item of included) {
-                const title = item?.attributes?.title;
-                const description = item?.attributes?.description;
-                let link = null;
-                let type = null;
-                let params = null;
-                if (item?.type === 'features') {
-                    link = `/${item?.attributes?.feature_type}`;
-                    type = item?.attributes?.feature_type || '';
-                    params = item?.attributes?.feature_params || {};
-                    if (!('payload' in params)) {
-                        params['payload'] = {};
-                    }
-                    params['payload']['prompts'] = item?.attributes?.prompts || null;
-                } else if (item?.type === 'collections') {
-                    link = `/chatbot/${item?.attributes?.uname}`;
-                    type = 'chatbot';
-                }
-                if (link) {
-                    items.push({link, type, title, description, params});
-                }
-            }
-
-            return items;
+        field(obj, field) {
+            return obj?.attributes?.[field] || obj?.meta?.[field] || '';
         },
     },
 }
