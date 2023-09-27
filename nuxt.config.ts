@@ -23,5 +23,7 @@ export default defineNuxtConfig({
     css: ['@/assets/style.css'],
     i18n: {
         vueI18n: './i18n.config.ts',
+        strategy: 'no_prefix',
+        locales: ['it', 'en'],
     },
 })
