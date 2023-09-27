@@ -10,11 +10,11 @@
                 </div>
 
                 <div class="flex items-center space-x-2 text-sky-300 opacity-90">
-                    <Icon class="opacity-70" name="carbon:chat-bot" :size="28" v-if="item.type === 'chatbot'" />
-                    <Icon class="opacity-70" name="carbon:search-locate" :size="28" v-else-if="item.type === 'analysis'" />
-                    <Icon class="opacity-70" name="carbon:license-maintenance" :size="28" v-else-if="item.type === 'summary'" />
-                    <Icon class="opacity-70" name="carbon:document-audio" :size="28" v-else-if="item.type === 'transcription'" />
-                    <Icon class="opacity-70" name="carbon:idea" :size="28" v-else />
+                    <Icon class="opacity-70" name="carbon:chat-bot" size="28" v-if="item.type === 'chatbot'" />
+                    <Icon class="opacity-70" name="carbon:search-locate" size="28" v-else-if="item.type === 'analysis'" />
+                    <Icon class="opacity-70" name="carbon:license-maintenance" size="28" v-else-if="item.type === 'summary'" />
+                    <Icon class="opacity-70" name="carbon:document-audio" size="28" v-else-if="item.type === 'transcription'" />
+                    <Icon class="opacity-70" name="carbon:idea" size="28" v-else />
                     <span class="text-xs uppercase tracking-wider">{{ item.type }}</span>
                 </div>
 
