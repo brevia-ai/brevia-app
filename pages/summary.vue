@@ -1,6 +1,6 @@
 <template>
-    <div class="rounded space-y-3">
-        <h2 class="text-2xl font-bold">{{ menuItem?.title }}</h2>
+    <div class="space-y-6">
+        <h2 class="text-2xl md:text-3xl lg:text-4xl leading-tight font-bold">{{ menuItem?.title }}</h2>
         <div class="space-y-6 sm:space-y-8">
             <div v-html="menuItem?.description"></div>
 
