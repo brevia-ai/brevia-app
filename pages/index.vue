@@ -12,9 +12,10 @@
                 <div class="text-center space-y-1.5 text-sky-400 opacity-80">
                     <div class="text-xs uppercase tracking-wide">{{ item.type }}</div>
                     <Icon class="opacity-70" name="carbon:chat-bot" :size="42" v-if="item.type === 'chatbot'" />
-                    <Icon class="opacity-70" name="carbon:search-locate" :size="42" v-if="item.type === 'analysis'" />
-                    <Icon class="opacity-70" name="carbon:license-maintenance" :size="42" v-if="item.type === 'summary'" />
-                    <Icon class="opacity-70" name="carbon:document-audio" :size="42" v-if="item.type === 'transcription'" />
+                    <Icon class="opacity-70" name="carbon:search-locate" :size="42" v-else-if="item.type === 'analysis'" />
+                    <Icon class="opacity-70" name="carbon:license-maintenance" :size="42" v-else-if="item.type === 'summary'" />
+                    <Icon class="opacity-70" name="carbon:document-audio" :size="42" v-else-if="item.type === 'transcription'" />
+                    <Icon class="opacity-70" name="carbon:idea" :size="42" v-else />
                 </div>
 
             </NuxtLink>
