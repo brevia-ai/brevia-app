@@ -11,7 +11,7 @@
 </ClientOnly>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const { locale, t } = useI18n();
 
 useHead({
