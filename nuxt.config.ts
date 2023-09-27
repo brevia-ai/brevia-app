@@ -11,6 +11,7 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         '@pinia/nuxt',
         '@nuxtjs/i18n',
+        'nuxt-icon',
     ],
     build: {
         transpile: ['tslib']

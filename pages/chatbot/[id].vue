@@ -16,7 +16,7 @@
                         <p>{{ item.message }}</p>
                     </div>
 
-                    <div class="loading" v-if="isBusy"></div>
+                    <div class="ellipsis-loading" v-if="isBusy"></div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,25 @@
+@layer components {
+    .button {
+        @apply inline-flex items-center justify-center
+            bg-sky-700 hover:bg-sky-600 text-white rounded
+            disabled:bg-neutral-500 disabled:cursor-not-allowed;
+    }
+
+    .button.loading {
+        @apply relative text-transparent;
+    }
+    .button.loading:after {
+        position: absolute;
+        left: calc(50% - (1em * .5));
+        top: calc(50% - (1em * .5));
+        color: white;
+    }
+
+    .big-button {
+        @apply pt-4 pb-6 px-6 flex items-center justify-center flex-col space-y-2 sm:aspect-square
+            bg-slate-800 hover:bg-sky-700 text-white
+            focus:outline outline-offset-4 outline-sky-700
+            shadow-xl hover:shadow-2xl hover:shadow-sky-800
+            rounded-lg;
+    }
+}

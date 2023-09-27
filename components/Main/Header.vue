@@ -8,14 +8,11 @@
                     <span class="leading-none">CHATLAS</span>
                 </NuxtLink>
             </h1>
-            <h2 class="pl-1 leading-tight">{{ $t('ATLAS_AI_POWERED_TOOLS') }}</h2>
+            <h2 class="pl-1 leading-none">{{ $t('ATLAS_AI_POWERED_TOOLS') }}</h2>
         </div>
     </div>
 
-    <div class="flex space-x-2">
-        <NuxtLink class="w-10 h-10 button border-none" to="/" v-if="$route.name === 'about'">⌂</NuxtLink>
-        <NuxtLink class="w-10 h-10 button" to="/about" v-else-if="!isLogged">?</NuxtLink>
-
+    <div class="flex space-x-4 md:space-x-6">
         <form>
             <select id="locale-select" class="w-10 h-10 button" v-model="$i18n.locale">
                 <option value="en">en</option>
@@ -23,10 +20,13 @@
             </select>
         </form>
 
-        <button class="h-10 px-4 button text-sm leading-none bg-black hover:bg-red-800" @click="logout" v-if="isLogged">
+        <button class="h-10 px-8 button text-sm leading-none bg-slate-950 hover:bg-red-800" @click="logout" v-if="isLogged">
             <span class="sm:hidden">⍈</span>
             <span class="hidden sm:inline">{{ $t('LOGOUT') }}</span>
         </button>
+
+        <NuxtLink class="w-10 h-10 button border-none" to="/" v-if="$route.name === 'about'">⌂</NuxtLink>
+        <NuxtLink class="w-10 h-10 button" to="/about" v-else-if="!isLogged">?</NuxtLink>
     </div>
 </header>
 </template>
