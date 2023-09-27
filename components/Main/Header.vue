@@ -42,31 +42,4 @@ function logout() {
     stateStore.userLogout();
 }
 
-
-
-// import { mapState } from 'pinia'
-// import { useStatesStore } from '~~/store/states';
-
-
-
-
-// export default {
-//     props: {
-//         route: {
-//             type: Object,
-//             default: {},
-//         }
-//     },
-
-//     computed: {
-//         ...mapState(useStatesStore, ['isLogged']),
-//     },
-
-//     methods: {
-//         logout() {
-//             const store = useStatesStore();
-//             store.userLogout();
-//         }
-//     }
-// }
 </script>
