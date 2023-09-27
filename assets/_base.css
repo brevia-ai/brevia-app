@@ -1,0 +1,7 @@
+body {
+    @apply text-neutral-900 bg-slate-100 scroll-smooth;
+}
+
+html {
+    @apply scroll-smooth;
+}

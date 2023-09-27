@@ -1,13 +1,23 @@
 <template>
     <main>
-        <div class="grid sm:grid-cols-2 gap-8">
-            <NuxtLink class="big-button shadow-xl hover:shadow-2xl hover:shadow-sky-800"
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-6 lg:gap-8 xl:gap-10 2xl:gap-12">
+            <NuxtLink class="big-button flex-row justify-between sm:flex-col sm:justify-center gap-6 lg:gap-10"
                 v-for="(item, i) in menu" :key="i"
                 :to="item.link">
-                <div class="text-4xl font-bold">{{ capitalLetters(item.title, item.type) }}</div>
-                <div class="text-center leading-tight">
-                    {{ itemTitle(item.title, item.type) }} <span class="font-bold">{{ item.type }}</span>
+                <div class="grow sm:pt-16 flex flex-col justify-center sm:items-center sm:text-center">
+                    <div class="text-5xl leading-tight font-semibold">{{ capitalLetters(item.title, item.type) }}</div>
+                    <div class="text-lg lg:text-xl leading-tight">{{ itemTitle(item.title, item.type) }}</div>
                 </div>
+
+                <div class="flex items-center space-x-2 text-sky-300 opacity-90">
+                    <Icon class="opacity-70" name="carbon:chat-bot" size="28" v-if="item.type === 'chatbot'" />
+                    <Icon class="opacity-70" name="carbon:search-locate" size="28" v-else-if="item.type === 'analysis'" />
+                    <Icon class="opacity-70" name="carbon:license-maintenance" size="28" v-else-if="item.type === 'summary'" />
+                    <Icon class="opacity-70" name="carbon:document-audio" size="28" v-else-if="item.type === 'transcription'" />
+                    <Icon class="opacity-70" name="carbon:idea" size="28" v-else />
+                    <span class="text-xs uppercase tracking-wider">{{ item.type }}</span>
+                </div>
+
             </NuxtLink>
         </div>
     </main>
