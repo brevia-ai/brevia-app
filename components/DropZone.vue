@@ -48,12 +48,13 @@ export default {
         reset() {
             this.isDragging = false;
             this.file = null;
+            (this.$refs.fileInput as any).value = '';
         },
         onChangeFile() {
-            this.file = [...this.$refs.fileInput.files][0];
+            this.file = [...(this.$refs.fileInput as any).files][0];
             this.$emit('fileChange', this.file);
         },
-        onDragOver(e) {
+        onDragOver(e: DragEvent) {
             e.preventDefault();
             this.isDragging = true;
         },
@@ -62,7 +63,7 @@ export default {
         },
         onDrop(e: DragEvent) {
             e.preventDefault();
-            const file = [...e.dataTransfer?.files][0] || null;
+            const file = [...(e.dataTransfer?.files as any)][0] || null;
             if (!this.isFileAccepted(file)) {
                 this.file = null;
                 this.isDragging = false;
@@ -72,7 +73,7 @@ export default {
             }
 
             this.file = file;
-            this.$emit('fileChange', [...e.dataTransfer?.files][0]);
+            this.$emit('fileChange', [...(e.dataTransfer?.files as any)][0]);
             this.isDragging = false;
         },
         isFileAccepted(file: File) {
