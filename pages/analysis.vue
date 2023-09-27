@@ -4,18 +4,16 @@
         <div class="space-y-6 sm:space-y-8">
             <div v-html="menuItem?.description"></div>
 
-            <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
-                <div class="sm:col-span-2">
-                    <DropZone @file-change="file = $event"
-                        :disabled="isBusy" :accept-types="acceptTypes" ref="fileDrop"/>
-                </div>
+            <div>
+                <DropZone @file-change="file = $event"
+                    :disabled="isBusy" :accept-types="acceptTypes" ref="fileDrop"/>
             </div>
 
-            <div class="text-center sm:text-left">
+            <div class="flex flex-col sm:flex-row justify-between">
                 <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
                     :class="{'loading' : isBusy}"
                     :disabled="!file || isBusy" @click="submit">{{ $t('UPLOAD_AND_ANALYZE_FILE') }}</button>
-                <button class="mt-4 sm:ml-6 sm:mt-0 px-8 py-2 sm:py-4 bg-red-900 button"
+                <button class="w-full sm:w-auto mt-4 sm:ml-6 sm:mt-0 px-8 py-2 sm:py-4 bg-red-900 button"
                     :class="{'hover:bg-red-700' : !resetDisabled}"
                     :disabled="resetDisabled" @click="reset">{{ $t('RESET') }}</button>
             </div>
