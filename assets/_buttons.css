@@ -1,6 +1,6 @@
 @layer components {
     .button {
-        @apply inline-flex items-center justify-center
+        @apply p-4 inline-flex items-center justify-center
             bg-sky-700 hover:bg-sky-600 text-white rounded
             disabled:bg-neutral-500 disabled:cursor-not-allowed;
     }

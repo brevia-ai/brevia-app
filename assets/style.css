@@ -5,4 +5,4 @@
 @import "tailwindcss/components";
 @import "_components.css";
 @import "_buttons.css";
-@tailwind utilities;
+@import "tailwindcss/utilities";

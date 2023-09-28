@@ -6,7 +6,6 @@
     "ALREADY_REGISTERED": "Sei già registrato?",
     "ANALYSIS": "Analisi",
     "AN_ERROR_OCCURRED": "Si è verificato un errore",
-    "ATLAS_AI_POWERED_TOOLS": "Atlas AI-powered tools",
     "BULLET_LIST_SUMMARY": "Sommario",
     "CAN_ACCESS_NOW": "Puoi accedere ora con il tuo nuovo account",
     "CATEGORIZE_CONTENT": "Categorizza il contenuto",
@@ -35,15 +34,15 @@
     "LOGOUT": "Esci",
     "NOT_A_MEMBER": "Non sei ancora registrato?",
     "PASSWORD": "Password",
-    "PASSWORD_MISMATCH": "Le Password non coincidono",
-    "PASSWORD_PLACEHOLDER": "Inserisci la password",
+    "PASSWORD_MISMATCH": "Le password non coincidono",
+    "PASSWORD_PLACEHOLDER": "Inserisci password",
     "PLEASE_DROP_A_FILE": "Trascina qui un file o clicca per selezionarlo",
-    "REGISTER_ACCOUNT": "Registrati",
     "RESET": "Resetta",
     "SEND": "Invia",
     "SHOW_DOCUMENTS_FOUND": "Mostra i documenti trovati",
-    "SHOW_PASSWORD": "Mostra la Password",
+    "SHOW_PASSWORD": "Mostra password",
     "SIGN_IN": "Accedi",
+    "SIGN_UP": "Registrati",
     "SIGN_UP_HERE": "Registrati qui",
     "SOMETHING_WENT_WRONG": "Qualcosa è andato storto",
     "SUCCESS": "Ok",
@@ -52,5 +51,10 @@
     "TRANSCRIPTION_OF_FILE": "Trascrizione del file",
     "UPLOAD_AND_ANALYZE_FILE": "Carica e analizza un file",
     "UPLOAD_AND_TRANSCRIBE_FILE": "Carica e trascrivi un file",
-    "WRONG_CREDENTIALS": "Credenziali errate"
+    "WRONG_CREDENTIALS": "Credenziali errate",
+    "TITLES": {
+        "ATLAS_AI_POWERED_TOOLS": "Atlas AI-powered tools",
+        "REGISTER_ACCOUNT": "Crea utente",
+        "REGISTER_CONFIRM_EMAIL": "Conferma la tua email"
+    }
 }
