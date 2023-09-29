@@ -5,14 +5,15 @@
         <Icon name="carbon:star-filled" size="12" class="text-red-600" v-if="required" />
     </label>
 
-    <input :type="type" class="block w-full rounded-md border px-3.5 py-2 shadow-sm sm:text-sm sm:leading-6"
+    <input :type="type" class="w-full"
         :id="uniqueId"
         :autocapitalize="autocapitalize"
         :autocorrect="autocorrect"
         :autocomplete="autocomplete"
         :placeholder="placeholder"
         :required="required"
-        @input="handleInput">
+        @input="handleInput"
+        @change="handleChange">
 </div>
 </template>
 
@@ -50,6 +51,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    noTrim: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const emit = defineEmits<{
@@ -60,6 +65,14 @@ const handleInput = (event: Event) => {
     const target = event.target as HTMLInputElement;
     emit('update:modelValue', target.value);
 };
+
+const handleChange = (event: Event) => {
+    if (props.noTrim) return;
+
+    const target = event.target as HTMLInputElement;
+    target.value = target.value.trim();
+    emit('update:modelValue', target.value);
+}
 
 const uniqueId = computed(() => 'input-text-' + Date.now().toString(36) + Math.random().toString(36).substring(2));
 const type = computed(() => props.password? 'password' : 'text');

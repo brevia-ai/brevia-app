@@ -12,6 +12,7 @@
     "CHECKING": "Controllo in corso",
     "CHECK_YOUR_INBOX": "Controlla la tua casella di posta e segui le istruzioni per completare la registrazione",
     "COLLECTION_NOT_FOUND": "Collezione non trovata",
+    "COMPILE_SUBSCRIPTION_FORM": "Fill out the registration form, all fields are required",
     "CONFIRMATION_MAIL_TO": "Un'email di conferma è stata inviata a {email}",
     "CONFIRM_PASSWORD": "Conferma la Password",
     "CONFIRM_PASSWORD_PLACEHOLDER": "Conferma la password",
