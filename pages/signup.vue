@@ -32,20 +32,20 @@
                         autocomplete="username" required
                         v-model="userMail" />
 
-                    <div class="flex flex-col space-y-1">
+                    <div class="flex flex-col space-y-1.5">
                         <UIXInput
                             :label="$t('PASSWORD')" :placeholder="$t('PASSWORD_PLACEHOLDER')"
                             :password="!showPassword" :no-trim="true"
                             autocomplete="new-password" required
                             v-model="userPass" />
 
-                        <label class="flex items-center space-x-2">
+                        <label class="flex items-center space-x-2 cursor-pointer">
                             <input type="checkbox" @click="showPassword = !showPassword">
                             <span class="text-sm ml-2">{{ $t('SHOW_PASSWORD') }}</span>
                         </label>
                     </div>
 
-                    <div class="flex flex-col space-y-1">
+                    <div class="flex flex-col space-y-1.5">
                         <UIXInput
                             :label="$t('CONFIRM_PASSWORD')" :placeholder="$t('CONFIRM_PASSWORD_PLACEHOLDER')"
                             :password="!showPassword" :no-trim="true"
