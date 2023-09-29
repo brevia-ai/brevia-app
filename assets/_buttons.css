@@ -1,6 +1,6 @@
 @layer components {
     .button {
-        @apply p-4 inline-flex items-center justify-center
+        @apply px-4 py-3.5 inline-flex items-center justify-center
             bg-sky-700 hover:bg-sky-600 text-white rounded
             disabled:bg-neutral-500 disabled:cursor-not-allowed;
     }
@@ -13,6 +13,25 @@
         left: calc(50% - (1em * .5));
         top: calc(50% - (1em * .5));
         color: white;
+    }
+
+    .button.is-loading:not(.disabled) {
+        @apply relative !text-transparent text-[1px];
+        &:after {
+            content: "";
+            @apply absolute left-1/2 top-1/2 -ml-2 -mt-2 w-4 h-4 border-2 rounded-full;
+            animation: buttonSpinAround .5s linear infinite;
+            border-color: transparent transparent #fff #fff;
+        }
+    }
+
+    @keyframes buttonSpinAround {
+        0% {
+            transform:rotate(0deg)
+        }
+        to {
+            transform:rotate(359deg)
+        }
     }
 
     .big-button {

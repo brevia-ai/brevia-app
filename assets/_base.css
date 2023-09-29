@@ -8,7 +8,7 @@
     }
 
     input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
-        @apply text-lg p-4 border border-sky-800 rounded;
+        @apply text-lg px-4 py-3.5 border border-sky-800 rounded;
     }
 
     label[for] {

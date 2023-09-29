@@ -2,7 +2,7 @@
     <main>
         <div class="mt-6 max-w-sm mx-auto space-y-8">
 
-            <form class="flex flex-col space-y-4" @submit.stop.prevent>
+            <form class="flex flex-col space-y-6" @submit.stop.prevent>
                 <input type="text"
                     autocomplete="username" autocorrect="off" autocapitalize="none"
                     :placeholder="$t('LOGIN_PLACEHOLDER')"

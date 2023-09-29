@@ -12,30 +12,30 @@
                     <p>{{ $t('CHECK_YOUR_INBOX') }}.</p>
                 </div>
 
-                <div class="rich-text" v-else>Compila il modulo di iscrizione. Tutti i campi sono obbligatori.</div>
+                <div class="rich-text" v-else>{{ $t('COMPILE_SUBSCRIPTION_FORM') }}.</div>
             </header>
 
             <form class="space-y-4" ref="signupForm" @submit.prevent v-if="!done">
                 <div class="grid sm:grid-cols-2 gap-6">
-                    <UIXInputText
+                    <UIXInput
                         :label="$t('FIRST_NAME')" :placeholder="$t('FIRST_NAME_PLACEHOLDER')"
                         autocomplete="given-name" required
                         v-model="firstName" />
 
-                    <UIXInputText
+                    <UIXInput
                         :label="$t('LAST_NAME')" :placeholder="$t('LAST_NAME_PLACEHOLDER')"
                         autocomplete="family-name" required
                         v-model="lastName" />
 
-                    <UIXInputText class="sm:col-span-2"
+                    <UIXInput class="sm:col-span-2"
                         :label="$t('EMAIL')" :placeholder="$t('EMAIL_PLACEHOLDER')"
                         autocomplete="username" required
                         v-model="userMail" />
 
                     <div class="flex flex-col space-y-1">
-                        <UIXInputText
+                        <UIXInput
                             :label="$t('PASSWORD')" :placeholder="$t('PASSWORD_PLACEHOLDER')"
-                            :password="!showPassword"
+                            :password="!showPassword" :no-trim="true"
                             autocomplete="new-password" required
                             v-model="userPass" />
 
@@ -46,9 +46,9 @@
                     </div>
 
                     <div class="flex flex-col space-y-1">
-                        <UIXInputText
+                        <UIXInput
                             :label="$t('CONFIRM_PASSWORD')" :placeholder="$t('CONFIRM_PASSWORD_PLACEHOLDER')"
-                            :password="!showPassword"
+                            :password="!showPassword" :no-trim="true"
                             autocomplete="off" required
                             v-model="confirmPass" />
 
@@ -56,13 +56,12 @@
                     </div>
                 </div>
 
-                <div v-if="loading">...</div>
                 <div v-if="error">{{ $t('AN_ERROR_OCCURRED') }}</div>
 
                 <div class="pt-2">
-                    <button type="submit" class="block w-full max-w-xs mx-auto button text-lg"
-                        @click.prevent.stop="validateRegitration"
-                        :disabled="disableSignup">
+                    <button type="submit" class="block w-full sm:max-w-xs mx-auto button text-lg"
+                        @click.prevent.stop="signup"
+                        :disabled="!formIsValid">
                         {{ $t('SIGN_UP') }}
                     </button>
                 </div>
@@ -95,11 +94,12 @@
             }
         },
         computed: {
-            disableSignup() {
-                return !this.firstName || !this.lastName || !this.userMail || !this.userPass || !this.confirmPass || (this.userPass !== this.confirmPass);
+            formIsValid() {
+                const completed = this.firstName && this.lastName && this.userMail && this.userPass && this.confirmPass && (this.userPass === this.confirmPass);
+                return completed && this.emailIsValid;
             },
 
-            isValidEmail() {
+            emailIsValid() {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
                 return emailRegex.test(this.userMail);
@@ -115,35 +115,30 @@
         },
 
         methods: {
-            async validateRegitration() {
+            async signup() {
                 this.error = false;
                 this.loading = true;
+
                 // Register user
                 try {
-                    const data = await $fetch('/api/signup', {
+                    await $fetch('/api/signup', {
                         method: 'POST',
                         body: {
                             name: this.firstName,
                             surname: this.lastName,
                             username: this.userMail,
                             password: this.userPass,
-                            email: this.userMail
+                            email: this.userMail,
                         },
                     });
 
-                    console.log("DATA:");
-                    console.log(data);
                     this.done = true;
                 } catch (error) {
-                    console.log(error.data);
+                    console.error(error.data);
                     this.error = true;
                 }
-                this.loading = false;
-            },
 
-            loginUser(){
-                const store = useStatesStore();
-                store.userLogout();
+                this.loading = false;
             },
         },
     }
