@@ -12,8 +12,9 @@
                 :placeholder="$t('PASSWORD_PLACEHOLDER')"
                 v-model="password"
                 @keydown.enter="login" required>
-
+            <NuxtLink to="/forgot-password" class="text-xs text-end mt-0 pt-0 text-sky-600">{{ $t('FORGOT_PASS') }}</NuxtLink>
             <button class="p-4 button text-lg" @click="login">{{ $t('SIGN_IN') }}</button>
+
             <p>{{ $t('NOT_A_MEMBER') }} <a class="text-sky-800" href="/signup" @click.prevent.stop="signup">{{ $t('SIGN_UP_HERE') }}</a></p>
 
             <p class="text-red-600 text-lg font-bold text-center" v-if="error">{{ $t('WRONG_CREDENTIALS') }}</p>

@@ -52,5 +52,17 @@
     "TRANSCRIPTION_OF_FILE": "Trascrizione del file",
     "UPLOAD_AND_ANALYZE_FILE": "Carica e analizza un file",
     "UPLOAD_AND_TRANSCRIBE_FILE": "Carica e trascrivi un file",
-    "WRONG_CREDENTIALS": "Credenziali errate"
+    "WRONG_CREDENTIALS": "Credenziali errate",
+    "PASSWORD_RESET": "Reimposta la Password",
+    "FORGOT_PASS": "Password dimenticata?",
+    "RESET_INSTRUCTIONS": "Inserisci il tuo indirizzo email, riceverai le istruzioni per reimpostare la tua password.",
+    "MAIL_TO": "Una email è stata inviata all'indirizzo ",
+    "CHECK_YOUR_INBOX_RESET": "Controlla la tua casella di posta e segui le istruzioni per resettare la tua password",
+    "NOT_VALID_EMAIL": "L'indirizzo di e-mail inserito non è valido.",
+    "NEW_PASSWORD": "Nuova password",
+    "CHOOSE_NEW_PASSWORD": "Scegli una nuova Password",
+    "CONFIRM_NEW_PASSWORD": "Conferma la nuova Password",
+    "SET_NEW_PASSWORD": "Applica la nuova Password",
+    "PASSWORD_MATCH": "La Password è valida",
+    "PASSWORD_CHANGED": "La tua password è stata reimpostata con successo. Effettua di nuovo il log in con la nuova password. "
 }

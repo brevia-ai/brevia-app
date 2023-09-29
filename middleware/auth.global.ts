@@ -3,7 +3,7 @@ import { useStatesStore } from '~~/store/states';
 export default defineNuxtRouteMiddleware(async (to) => {
     if (!process.client) return;
 
-    const publicPages = ['/auth', '/about', '/signup', '/signup-activation'];
+    const publicPages = ['/auth', '/about', '/signup', '/signup-activation', '/forgot-password', '/reset-password'];
     if (publicPages.includes(to.path)) {
         return;
     }
