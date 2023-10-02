@@ -11,6 +11,7 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         '@pinia/nuxt',
         '@nuxtjs/i18n',
+        'nuxt-icon',
     ],
     build: {
         transpile: ['tslib']
@@ -22,6 +23,7 @@ export default defineNuxtConfig({
     },
     css: ['@/assets/style.css'],
     i18n: {
-        vueI18n: './i18n.config.ts',
+        strategy: 'no_prefix',
+        locales: ['it', 'en'],
     },
 })

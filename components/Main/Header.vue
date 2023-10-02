@@ -8,50 +8,38 @@
                     <span class="leading-none">CHATLAS</span>
                 </NuxtLink>
             </h1>
-            <h2 class="pl-1 leading-tight">{{ $t('ATLAS_AI_POWERED_TOOLS') }}</h2>
+            <h2 class="pl-1 leading-none">{{ $t('ATLAS_AI_POWERED_TOOLS') }}</h2>
         </div>
     </div>
 
-    <div class="flex space-x-2">
-        <NuxtLink class="w-10 h-10 button border-none" to="/" v-if="$route.name === 'about'">⌂</NuxtLink>
-        <NuxtLink class="w-10 h-10 button" to="/about" v-else-if="!isLogged">?</NuxtLink>
+    <div class="flex space-x-4 md:space-x-5">
+        <button class="w-10 h-10 button border-none text-xs uppercase"
+            v-for="(lang, i) in availableLocales" :key="i"
+            @click="setLocale(lang as string)">{{ lang }}</button>
 
-        <form>
-            <select id="locale-select" class="w-10 h-10 button" v-model="$i18n.locale">
-                <option value="en">en</option>
-                <option value="it">it</option>
-            </select>
-        </form>
-
-        <button class="h-10 px-4 button text-sm leading-none bg-black hover:bg-red-800" @click="logout" v-if="isLogged">
+        <button class="h-10 px-5 sm:px-8 button text-sm leading-none bg-slate-950 hover:bg-red-800" @click="logout" v-if="stateStore.isLogged">
             <span class="sm:hidden">⍈</span>
             <span class="hidden sm:inline">{{ $t('LOGOUT') }}</span>
         </button>
+
+        <NuxtLink class="w-10 h-10 button border-none" to="/" v-if="$route.name === 'about'">⌂</NuxtLink>
+        <NuxtLink class="w-10 h-10 button" to="/about" v-else-if="!stateStore.isLogged">?</NuxtLink>
     </div>
 </header>
 </template>
 
-<script>
-import { mapState } from 'pinia'
+<script setup lang="ts">
 import { useStatesStore } from '~~/store/states';
 
-export default {
-    props: {
-        route: {
-            type: Object,
-            default: {},
-        }
-    },
+const { locale, locales, setLocale } = useI18n();
+const stateStore = useStatesStore();
 
-    computed: {
-        ...mapState(useStatesStore, ['isLogged']),
-    },
+const availableLocales = computed(() => {
+    return (locales.value as Array<String>).filter(lang => lang !== locale.value);
+});
 
-    methods: {
-        logout() {
-            const store = useStatesStore();
-            store.userLogout();
-        }
-    }
+function logout() {
+    stateStore.userLogout();
 }
+
 </script>
