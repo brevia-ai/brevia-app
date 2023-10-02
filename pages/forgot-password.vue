@@ -3,7 +3,7 @@
         <h2 text-3xl class="font-bold tracking-tight text-gray-900 sm:text-4xl" >{{ $t('PASSWORD_RESET') }}</h2>
         <div class="flex flex-col space-y-4" v-if="mailSent && !error">
             <img class="mx-auto" width="40" height="40" src="/check.png">
-            <p>{{ $t('MAIL_TO') }} <span class="font-semibold"> {{ resetMail }}</span></p>
+            <p>{{ $t('MAIL_TO') }} <span class="font-semibold">{{ resetMail }}</span></p>
             <p>{{ $t('CHECK_YOUR_INBOX') }}</p>
         </div>
         <div class="flex flex-col space-y-4" v-else-if="!mailSent && error">
@@ -56,7 +56,7 @@
                 }
             });
             mailSent.value = true;
-        } catch(err) {
+        } catch (err) {
             console.log(err);
             error.value = true;
         } finally {

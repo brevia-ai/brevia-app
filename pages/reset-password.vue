@@ -59,6 +59,18 @@
 </template>
 
 <script setup>
+
+    definePageMeta({
+        middleware: [
+            function (to) {
+                if (to.query?.uuid == null || to.query?.uuid.length == 0 ) {
+                    return navigateTo('/');
+                }
+            },
+        ],
+    });
+
+
     const newPass = ref('');
     const confirmPass = ref('');
     const loading = ref(false);
@@ -66,12 +78,6 @@
     const passSet = ref(false);
     const showPassword = ref(false);
     const route = useRoute();
-
-    onBeforeMount(() => {
-        if(route.query?.uuid == null || route.query?.uuid.length == 0 ){
-            navigateTo('/');
-        }
-    })
 
     async function resetPassword() {
         loading.value = true;      
@@ -85,7 +91,7 @@
                 }
             });
             passSet.value = true;
-        } catch(err) {
+        } catch (err) {
             console.log(err);
             error.value = true;
         }
