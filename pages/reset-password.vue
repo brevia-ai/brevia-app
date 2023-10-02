@@ -70,7 +70,6 @@
         ],
     });
 
-
     const newPass = ref('');
     const confirmPass = ref('');
     const loading = ref(false);
@@ -80,20 +79,22 @@
     const route = useRoute();
 
     async function resetPassword() {
-        loading.value = true;      
+        loading.value = true;
+        error.value = false;
         try {
             await $fetch('api/auth/change', {
                 method: 'PATCH',
                 body: {
                   uuid: route.query?.uuid,
                   password: newPass.value,
-                  login: false  
+                  login: false,
                 }
             });
             passSet.value = true;
         } catch (err) {
-            console.log(err);
             error.value = true;
+        } finally {
+            loading.value = false;
         }
     }
 

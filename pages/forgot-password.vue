@@ -21,11 +21,11 @@
                 :placeholder="$t('EMAIL_PLACEHOLDER', { email: 'name.surname@email.com' })"
             >
             <p class="text-sm font-bold text-red-600" v-if="resetMail && !isValidEmail()" >{{ $t('NOT_VALID_EMAIL') }}</p>
-            <button 
+            <button
                 :disabled="!resetMail || !isValidEmail()"
                 type="submit"
                 class="p-4  py-2.5 button text-sm font-semibold"
-                :class = " loading.value ? 'loading' : '' " 
+                :class = " loading.value ? 'loading' : '' "
                 @click="sendResetMail">
                 {{ $t('SEND') }} Email
             </button>
@@ -42,14 +42,15 @@
     const mailInput = ref(null);
 
     const isValidEmail = () => {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(resetMail.value);
-            }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(resetMail.value);
+    }
 
     async function sendResetMail() {
         loading.value = true;
+        error.value = false;
         try {
-            const resp = await $fetch('api/auth/reset', {
+            await $fetch('/api/auth/reset', {
                 method: 'POST',
                 body: {
                     contact: resetMail.value,
@@ -57,12 +58,10 @@
             });
             mailSent.value = true;
         } catch (err) {
-            console.log(err);
             error.value = true;
         } finally {
             loading.value = false;
-        } 
-        
+        }
     }
 
     function retry() {
@@ -72,6 +71,4 @@
         mailInput.value = null;
         loading.value = false;
     }
-
-    
 </script>
