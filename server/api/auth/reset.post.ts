@@ -10,7 +10,6 @@ export default defineEventHandler(async (event) => {
         const response = await client.post('/auth/change', body);
         return response.data;
     } catch (error) {
-        console.log(error);
         return handleBeditaApiError(event, error);
     }
 });

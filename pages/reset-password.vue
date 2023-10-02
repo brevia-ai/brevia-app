@@ -67,10 +67,16 @@
     const showPassword = ref(false);
     const route = useRoute();
 
+    onBeforeMount(() => {
+        if(route.query?.uuid == null || route.query?.uuid.length == 0 ){
+            navigateTo('/');
+        }
+    })
+
     async function resetPassword() {
         loading.value = true;      
-        try{
-            await $fetch('api/auth/change',{
+        try {
+            await $fetch('api/auth/change', {
                 method: 'PATCH',
                 body: {
                   uuid: route.query?.uuid,
@@ -79,7 +85,7 @@
                 }
             });
             passSet.value = true;
-        }catch(err){
+        } catch(err) {
             console.log(err);
             error.value = true;
         }

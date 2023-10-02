@@ -56,7 +56,7 @@
     "PASSWORD_RESET": "Reset your Password",
     "FORGOT_PASS": "Forgot password?",
     "RESET_INSTRUCTIONS": "Enter your email address, you will receive the istructions to change your password",
-    "MAIL_TO": "An email has been sent to ",
+    "MAIL_TO": "An email has been sent to",
     "CHECK_YOUR_INBOX_RESET": "Check your inbox and follow the instructions to reset your password",
     "NOT_VALID_EMAIL": "The provided email address is not valid.",
     "NEW_PASSWORD": "New password",
