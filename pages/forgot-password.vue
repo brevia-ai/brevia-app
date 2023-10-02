@@ -34,41 +34,41 @@
     </div>
 </template>
 
-<script setup>
-    const loading = ref(false)
-    const mailSent = ref(false);
-    const error = ref(false);
-    const resetMail = ref('');
-    const mailInput = ref(null);
+<script setup lang="ts">
+const loading = ref(false);
+const mailSent = ref(false);
+const error = ref(false);
+const resetMail = ref('');
+const mailInput = ref(null);
 
-    const isValidEmail = () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(resetMail.value);
-    }
+const isValidEmail = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(resetMail.value);
+}
 
-    async function sendResetMail() {
-        loading.value = true;
-        error.value = false;
-        try {
-            await $fetch('/api/auth/reset', {
-                method: 'POST',
-                body: {
-                    contact: resetMail.value,
-                }
-            });
-            mailSent.value = true;
-        } catch (err) {
-            error.value = true;
-        } finally {
-            loading.value = false;
-        }
-    }
-
-    function retry() {
-        error.value = false;
-        mailSent.value = false;
-        resetMail.value = '';
-        mailInput.value = null;
+async function sendResetMail() {
+    loading.value = true;
+    error.value = false;
+    try {
+        await $fetch('/api/auth/reset', {
+            method: 'POST',
+            body: {
+                contact: resetMail.value,
+            }
+        });
+        mailSent.value = true;
+    } catch (err) {
+        error.value = true;
+    } finally {
         loading.value = false;
     }
+}
+
+function retry() {
+    error.value = false;
+    mailSent.value = false;
+    resetMail.value = '';
+    mailInput.value = null;
+    loading.value = false;
+}
 </script>

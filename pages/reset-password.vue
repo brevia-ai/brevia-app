@@ -58,44 +58,44 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
-    definePageMeta({
-        middleware: [
-            function (to) {
-                if (to.query?.uuid == null || to.query?.uuid.length == 0 ) {
-                    return navigateTo('/');
-                }
-            },
-        ],
-    });
+definePageMeta({
+    middleware: [
+        function (to) {
+            if (to.query?.uuid == null || to.query?.uuid.length == 0 ) {
+                return navigateTo('/');
+            }
+        },
+    ],
+});
 
-    const newPass = ref('');
-    const confirmPass = ref('');
-    const loading = ref(false);
-    const error = ref(false);
-    const passSet = ref(false);
-    const showPassword = ref(false);
-    const route = useRoute();
+const newPass = ref('');
+const confirmPass = ref('');
+const loading = ref(false);
+const error = ref(false);
+const passSet = ref(false);
+const showPassword = ref(false);
+const route = useRoute();
 
-    async function resetPassword() {
-        loading.value = true;
-        error.value = false;
-        try {
-            await $fetch('api/auth/change', {
-                method: 'PATCH',
-                body: {
-                  uuid: route.query?.uuid,
-                  password: newPass.value,
-                  login: false,
-                }
-            });
-            passSet.value = true;
-        } catch (err) {
-            error.value = true;
-        } finally {
-            loading.value = false;
-        }
+async function resetPassword() {
+    loading.value = true;
+    error.value = false;
+    try {
+        await $fetch('api/auth/change', {
+            method: 'PATCH',
+            body: {
+                uuid: route.query?.uuid,
+                password: newPass.value,
+                login: false,
+            }
+        });
+        passSet.value = true;
+    } catch (err) {
+        error.value = true;
+    } finally {
+        loading.value = false;
     }
+}
 
 </script>
