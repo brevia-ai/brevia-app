@@ -22,10 +22,10 @@
             >
             <p class="text-sm font-bold text-red-600" v-if="resetMail && !isValidEmail()" >{{ $t('NOT_VALID_EMAIL') }}</p>
             <button
-                :disabled="!resetMail || !isValidEmail()"
                 type="submit"
-                class="p-4  py-2.5 button text-sm font-semibold"
-                :class = " loading.value ? 'loading' : '' "
+                class="p-4 py-2.5 button text-sm font-semibold"
+                :class="loading ? 'loading' : ''"
+                :disabled="!resetMail || !isValidEmail()"
                 @click="sendResetMail">
                 {{ $t('SEND') }} Email
             </button>
