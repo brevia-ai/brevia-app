@@ -9,4 +9,9 @@ export default defineI18nConfig(() => ({
         en,
         it,
     },
+    detectBrowserLanguage: {
+        useCookie: true,
+        cookieKey: 'i18n_redirected',
+        redirectOn: 'root',
+    }
 }));
