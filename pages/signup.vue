@@ -1,112 +1,75 @@
 <template>
     <main>
-        <div class="mt-6  max-w-lg  mx-auto flex flex-col  space-y-4">
-            <div class="mx-auto max-w-2xl text-center">
-                <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{ $t('REGISTER_ACCOUNT') }}</h2>
-            </div>
-            <div class = "block text-sm text-gray-900 mx-12" v-if="registrationDone">
-                <p>{{ $t('CONFIRMATION_MAIL_TO', { email: userMail }) }}.</p>
-                <p>{{ $t('CHECK_YOUR_INBOX') }}</p>
-            </div>
-            <form action="#" ref="signupForm" method="POST" class="mx-12 mt-16 max-w-xl sm:mt-20" v-if="!registrationDone">
-                <div class="grid  grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-1">
-                    <div class="sm:col-span-2">
-                        <label for="first-name" class="block text-sm font-semibold leading-6 text-gray-900">{{ $t('FIRST_NAME') }} <span class="text-red-400">*</span></label>
-                        <div class="mt-2.5">
-                            <input
-                                v-model="firstName"
-                                type="text"
-                                :placeholder="$t('FIRST_NAME_PLACEHOLDER')"
-                                required
-                                autocapitalize="none"
-                                autocorrect="off"
-                                @focusout="activateSignupButton"
-                                class="block w-full rounded-md border px-3.5 py-2 shadow-sm sm:text-sm sm:leading-6"
-                                :class="firstName ? 'ring-gray-300 ring-1' : 'ring-red-500 ring-1'">
-                        </div>
+        <div class="max-w-lg mx-auto space-y-6">
+            <header class="space-y-4">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                    <span v-if="done">{{ $t('TITLES.REGISTER_CONFIRM_EMAIL') }}</span>
+                    <span v-else>{{ $t('TITLES.REGISTER_ACCOUNT') }}</span>
+                </h2>
+
+                <div class="rich-text text-lg" v-if="done">
+                    <p>{{ $t('CONFIRMATION_MAIL_TO', { email: userMail }) }}.</p>
+                    <p>{{ $t('CHECK_YOUR_INBOX') }}.</p>
+                </div>
+
+                <div class="rich-text" v-else>{{ $t('COMPILE_SUBSCRIPTION_FORM') }}.</div>
+            </header>
+
+            <form class="space-y-4" ref="signupForm" @submit.prevent v-if="!done">
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <UIXInput
+                        :label="$t('FIRST_NAME')" :placeholder="$t('FIRST_NAME_PLACEHOLDER')"
+                        autocomplete="given-name" required
+                        v-model="firstName" />
+
+                    <UIXInput
+                        :label="$t('LAST_NAME')" :placeholder="$t('LAST_NAME_PLACEHOLDER')"
+                        autocomplete="family-name" required
+                        v-model="lastName" />
+
+                    <UIXInput class="sm:col-span-2"
+                        :label="$t('EMAIL')" :placeholder="$t('EMAIL_PLACEHOLDER')"
+                        autocomplete="username" required
+                        v-model="userMail" />
+
+                    <div class="flex flex-col space-y-1.5">
+                        <UIXInput
+                            :label="$t('PASSWORD')" :placeholder="$t('PASSWORD_PLACEHOLDER')"
+                            :password="!showPassword" :no-trim="true"
+                            autocomplete="new-password" required
+                            v-model="userPass" />
+
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" @click="showPassword = !showPassword">
+                            <span class="text-sm ml-2">{{ $t('SHOW_PASSWORD') }}</span>
+                        </label>
                     </div>
-                    <div class="sm:col-span-2">
-                        <label for="last-name" class="block text-sm font-semibold leading-6 text-gray-900">{{ $t('LAST_NAME') }} <span class="text-red-400">*</span></label>
-                        <div class="mt-2.5">
-                            <input
-                                v-model="lastName"
-                                type="text"
-                                :placeholder="$t('LAST_NAME_PLACEHOLDER')"
-                                required
-                                autocapitalize="none"
-                                autocorrect="off"
-                                @focusout="activateSignupButton"
-                                class="block w-full rounded-md border px-3.5 py-2 shadow-sm sm:text-sm sm:leading-6"
-                                :class="lastName ? 'ring-gray-300 ring-1' : 'ring-red-500 ring-1'">
-                        </div>
-                    </div>
-                    <div class="sm:col-span-4">
-                        <label for="company" class="block text-sm font-semibold leading-6 text-gray-900">{{ $t('EMAIL') }} <span class="text-red-400">*</span></label>
-                        <div class="mt-2.5">
-                            <input
-                                v-model="userMail"
-                                type="email"
-                                :placeholder="$t('EMAIL_PLACEHOLDER', { email: 'name.surname@email.com' })"
-                                required
-                                autocapitalize="none"
-                                autocorrect="off"
-                                autocomplete="userMail"
-                                class="block w-full border-0 rounded-md px-3.5 py-2 text-gray-900 shadow-sm ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                :class="isValidEmail ? 'ring-gray-300 ring-1' : 'ring-red-500 ring-1'">
-                        </div>
-                    </div>
-                    <div class="sm:col-span-4">
-                        <label for="email" class="block text-sm font-semibold leading-6 text-gray-900">{{ $t('PASSWORD') }} <span class="text-red-400">*</span></label>
-                        <div class="mt-2.5">
-                            <input
-                                v-model="userPass"
-                                :type="showPassword ? 'text' : 'password'"
-                                :placeholder="$t('PASSWORD_PLACEHOLDER')"
-                                required
-                                autocapitalize="none"
-                                autocorrect="off"
-                                autocomplete="userPass"
-                                class="block w-full rounded-md border px-3.5 py-2 shadow-sm sm:text-sm sm:leading-6"
-                                :class="userPass ? 'ring-gray-300 ring-1' : 'ring-red-500 ring-1'">
-                        </div>
-                        <div class="mx-2.5">
-                            <input
-                                type="checkbox"
-                                class="inline"
-                                @click="showPassword = !showPassword"
-                                >
-                            <span class="inline text-sm ml-2">{{ $t('SHOW_PASSWORD') }}</span>
-                        </div>
-                    </div>
-                    <div class="sm:col-span-4">
-                        <label for="email" class="block text-sm font-semibold leading-6 text-gray-900">{{ $t('CONFIRM_PASSWORD') }}</label>
-                        <div class="mt-2.5">
-                            <input
-                                v-model="confirmPass"
-                                type="password"
-                                :placeholder="$t('CONFIRM_PASSWORD_PLACEHOLDER')"
-                                required
-                                autocapitalize="none"
-                                autocorrect="off"
-                                autocomplete="confirmPass"
-                                class="block w-full rounded-md border px-3.5 py-2 shadow-sm sm:text-sm sm:leading-6">
-                        </div>
-                        <p class="text-red-600 text-sm font-bold" v-if="userPass != confirmPass">{{ $t('PASSWORD_MISMATCH') }}</p>
+
+                    <div class="flex flex-col space-y-1.5">
+                        <UIXInput
+                            :label="$t('CONFIRM_PASSWORD')" :placeholder="$t('CONFIRM_PASSWORD_PLACEHOLDER')"
+                            :password="!showPassword" :no-trim="true"
+                            autocomplete="off" required
+                            v-model="confirmPass" />
+
+                        <p class="text-red-600 text-sm" v-if="userPass != confirmPass">{{ $t('PASSWORD_MISMATCH') }}</p>
                     </div>
                 </div>
-                <div v-if="loading">...</div>
+
                 <div v-if="error">{{ $t('AN_ERROR_OCCURRED') }}</div>
 
-                <div class="mt-10 mx-20">
-                    <button
-                        type="submit"
-                        class="p-4 button w-full rounded-md px-3.5 py-2.5 text-center text-sm font-semibold"
-                        @click.prevent.stop="validateRegitration"
-                        :disabled="disableSignup">
-                        {{ $t('SIGN_UP_HERE') }}
+                <div class="pt-2">
+                    <button type="submit" class="block w-full sm:max-w-xs mx-auto button text-lg"
+                        @click.prevent.stop="signup"
+                        :disabled="!formIsValid">
+                        {{ $t('SIGN_UP') }}
                     </button>
                 </div>
-                <p class="text-center">{{ $t('ALREADY_REGISTERED') }} <a class="text-sky-800" href="/auth" @click.prevent.stop="loginUser" >{{ $t('SIGN_IN') }}</a></p>
+
+                <div class="text-center">
+                    {{ $t('ALREADY_REGISTERED') }}
+                    <NuxtLink class="text-sky-800" to="/auth">{{ $t('SIGN_IN') }}</NuxtLink>
+                </div>
             </form>
         </div>
     </main>
@@ -123,52 +86,59 @@
                 userMail: '',
                 userPass: '',
                 confirmPass: '',
+
+                done: false,
                 showPassword: false,
                 loading: false,
-                registrationDone: false,
                 error: false,
             }
         },
         computed: {
-            disableSignup() {
-                return !this.firstName || !this.lastName || !this.userMail || !this.userPass || !this.confirmPass || (this.userPass !== this.confirmPass);
+            formIsValid() {
+                const completed = this.firstName && this.lastName && this.userMail && this.userPass && this.confirmPass && (this.userPass === this.confirmPass);
+                return completed && this.emailIsValid;
             },
-            isValidEmail() {
+
+            emailIsValid() {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
                 return emailRegex.test(this.userMail);
             },
         },
+
+        created() {
+            const store = useStatesStore();
+            const menu = store.getMenu();
+            store.readOptions();
+            if(menu?.length)
+                navigateTo('/');
+        },
+
         methods: {
-            async validateRegitration() {
+            async signup() {
                 this.error = false;
                 this.loading = true;
+
                 // Register user
                 try {
-                    const data = await $fetch('/api/signup', {
+                    await $fetch('/api/signup', {
                         method: 'POST',
                         body: {
                             name: this.firstName,
                             surname: this.lastName,
                             username: this.userMail,
                             password: this.userPass,
-                            email: this.userMail
+                            email: this.userMail,
                         },
                     });
 
-                    console.log("DATA:");
-                    console.log(data);
-                    this.registrationDone = true;
+                    this.done = true;
                 } catch (error) {
-                    console.log(error.data);
+                    console.error(error.data);
                     this.error = true;
                 }
-                this.loading = false;
-            },
 
-            loginUser(){
-                const store = useStatesStore();
-                store.userLogout();
+                this.loading = false;
             },
         },
     }

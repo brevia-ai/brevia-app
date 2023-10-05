@@ -1,7 +1,17 @@
-body {
-    @apply text-neutral-900 bg-slate-100 scroll-smooth;
-}
+@layer base {
+    body {
+        @apply text-neutral-900 bg-slate-100 scroll-smooth;
+    }
 
-html {
-    @apply scroll-smooth;
+    html {
+        @apply scroll-smooth;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
+        @apply text-lg px-4 py-3.5 border border-sky-800 rounded;
+    }
+
+    label[for] {
+        @apply cursor-pointer leading-tight;
+    }
 }

@@ -1,25 +1,32 @@
 <template>
     <main>
-        <div class="mt-6 max-w-sm mx-auto flex flex-col space-y-4" v-if="!logged || !store?.isLogged">
-            <input class="text-lg p-4 border border-sky-800 rounded" type="text"
-                autocomplete="username" autocorrect="off" autocapitalize="none"
-                :placeholder="$t('LOGIN_PLACEHOLDER')"
-                v-model="username"
-                @keydown.enter="login" required>
+        <div class="mt-6 max-w-sm mx-auto space-y-8">
 
-            <input class="text-lg p-4 border border-sky-800 rounded" type="password"
-                autocomplete="current-password" autocorrect="off" autocapitalize="none"
-                :placeholder="$t('PASSWORD_PLACEHOLDER')"
-                v-model="password"
-                @keydown.enter="login" required>
+            <form class="flex flex-col space-y-6" @submit.stop.prevent>
+                <input type="text"
+                    autocomplete="username" autocorrect="off" autocapitalize="none"
+                    :placeholder="$t('LOGIN_PLACEHOLDER')"
+                    v-model="username"
+                    @keydown.enter="login" required>
 
-            <button class="p-4 button text-lg" @click="login">{{ $t('SIGN_IN') }}</button>
-            <p>{{ $t('NOT_A_MEMBER') }} <a class="text-sky-800" href="/signup" @click.prevent.stop="signup">{{ $t('SIGN_UP_HERE') }}</a></p>
+                <input type="password"
+                    autocomplete="current-password" autocorrect="off" autocapitalize="none"
+                    :placeholder="$t('PASSWORD_PLACEHOLDER')"
+                    v-model="password"
+                    @keydown.enter="login" required>
 
-            <p class="text-red-600 text-lg font-bold text-center" v-if="error">{{ $t('WRONG_CREDENTIALS') }}</p>
-        </div>
-        <div v-else>
-            <h1>{{ $t('HELLO', { name: `${logged.name} ${logged.surname} (${logged.email})` }) }}</h1>
+                <button class="p-4 button text-lg" @click="login">{{ $t('SIGN_IN') }}</button>
+
+                <div class="text-sm text-center">
+                    {{ $t('NOT_A_MEMBER') }}
+                    <NuxtLink class="text-sky-800" to="/signup">{{ $t('SIGN_UP_HERE') }}</NuxtLink>
+                </div>
+            </form>
+
+            <div class="w-full bg-red-100 border border-red-400 rounded text-center" v-if="error">
+                {{ $t('WRONG_CREDENTIALS') }}
+            </div>
+
         </div>
     </main>
 </template>
@@ -43,13 +50,8 @@ export default {
         const store = useStatesStore();
         const menu = store.getMenu();
         store.readOptions();
-        if(menu?.length > 0) {
+        if(menu?.length)
             navigateTo('/');
-        }
-    },
-
-    mounted() {
-        this.store = useStatesStore();
     },
 
     methods: {
@@ -58,6 +60,7 @@ export default {
                 return;
             }
             this.error = false;
+
             try {
                 const data = await $fetch('/api/login', {
                     method: 'POST',
@@ -76,11 +79,6 @@ export default {
             } catch (error) {
                 this.error = true;
             }
-        },
-
-        signup() {
-            const store = useStatesStore();
-            store.userSignup();
         },
 
         setUserMenu(data) {

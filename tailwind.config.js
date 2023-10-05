@@ -1,9 +1,19 @@
 module.exports = {
   theme: {
     extend: {
-        height: {
-            'screen': '100svh',
-        }
+      screens: {
+        '3xl': '1728px',
+        '4xl': '1920px',
+      },
+      height: {
+        'viewport': '100svh',
+      },
+      lineHeight: {
+        '12': '3rem',
+      },
+      listStyleType: {
+        square: 'square',
+      },
     }
   }
 }
