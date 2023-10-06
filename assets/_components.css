@@ -1,4 +1,24 @@
 @layer components {
+    .rich-text {
+        @apply leading-normal;
+
+        a[href] {
+            @apply underline underline-offset-2 hover:underline-offset-4 tracking-wide;
+        }
+
+        ul {
+            @apply list-square list-outside;
+        }
+
+        ol {
+            @apply list-outside;
+        }
+
+        li {
+            @apply list-item ml-4;
+        }
+    }
+
     .bubble {
         @apply relative bg-neutral-800 text-white rounded-md p-3;
         min-width: 30%;

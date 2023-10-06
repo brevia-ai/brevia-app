@@ -8,7 +8,7 @@
                     <span class="leading-none">CHATLAS</span>
                 </NuxtLink>
             </h1>
-            <h2 class="pl-1 leading-none">{{ $t('ATLAS_AI_POWERED_TOOLS') }}</h2>
+            <h2 class="pl-1 leading-none">{{ $t('TITLES.ATLAS_AI_POWERED_TOOLS') }}</h2>
         </div>
     </div>
 

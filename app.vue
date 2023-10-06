@@ -20,7 +20,7 @@ useHead({
     title: 'CHATLAS',
     meta: [{
         name: 'description',
-        content: t('ATLAS_AI_POWERED_TOOLS'),
+        content: t('TITLES.ATLAS_AI_POWERED_TOOLS'),
     }],
     htmlAttrs: {
         lang: locale.value,
