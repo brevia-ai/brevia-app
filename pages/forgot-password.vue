@@ -4,7 +4,7 @@
         <div class="flex flex-col space-y-4" v-if="mailSent && !error">
             <img class="mx-auto" width="40" height="40" src="/check.png">
             <p>{{ $t('MAIL_TO') }} <span class="font-semibold">{{ resetMail }}</span></p>
-            <p>{{ $t('CHECK_YOUR_INBOX') }}</p>
+            <p>{{ $t('CHECK_YOUR_INBOX_RESET') }}</p>
         </div>
         <div class="flex flex-col space-y-4" v-else-if="!mailSent && error">
             <p class="text-lg text-center font-bold text-red-600">{{ $t('AN_ERROR_OCCURRED') }} </p>
