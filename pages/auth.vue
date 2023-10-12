@@ -1,6 +1,6 @@
 <template>
     <main>
-        <div class="mt-6 max-w-sm mx-auto space-y-8">
+        <div class="mt-6 max-w-sm mx-auto space-y-8" v-if="!logged || !store.isLogged">
 
             <form class="flex flex-col space-y-6" @submit.stop.prevent>
                 <input type="text"
@@ -29,6 +29,9 @@
             </div>
 
         </div>
+        <div v-else>
+            Welcome {{ logged.name }} {{ logged.surname }} ({{ logged.email }})
+        </div>
     </main>
 </template>
 
@@ -45,6 +48,10 @@ export default {
             logged: false,
             store: null,
         }
+    },
+
+    mounted() {
+        this.store = useStatesStore();
     },
 
     created() {
