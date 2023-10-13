@@ -161,9 +161,11 @@ export default {
         },
 
         handleStreamText(text, currIdx) {
-            if (text.startsWith('[{"page_content":')) {
+            if (text.includes('[{"page_content":')) {
+                const idx = text.indexOf('[{"page_content":')
+                this.dialog[currIdx].message += text.substr(0, idx);
                 try {
-                    this.docs = JSON.parse(text);
+                    this.docs = JSON.parse(text.substr(idx));
                     this.logDocs();
                 } catch (e) {
                     return console.error(e);
