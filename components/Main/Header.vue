@@ -38,8 +38,11 @@ const availableLocales = computed(() => {
     return (locales.value as Array<String>).filter(lang => lang !== locale.value);
 });
 
-function logout() {
+async function logout() {
+    await $fetch('/api/logout');
     stateStore.userLogout();
+    stateStore.setMenu(null);
+    navigateTo('/auth');
 }
 
 </script>

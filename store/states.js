@@ -4,19 +4,18 @@ export const useStatesStore = defineStore('states', {
     state: () => ({
         isLogged: false,
         options: {},
+        user: null,
     }),
 
     actions: {
-        userLogin(menu) {
-            this.setMenu(menu);
+        userLogin(user) {
             this.isLogged = true;
-            navigateTo('/');
+            this.user = user;
         },
 
         userLogout() {
-            this.setMenu(null);
             this.isLogged = false;
-            navigateTo('/auth');
+            this.user = null;
         },
 
         /**

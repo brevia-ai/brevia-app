@@ -1,17 +1,15 @@
-import { ApiProvider, BEditaApiClient, MapIncludedInterceptor, MemoryStorageAdapter, ApiResponseBodyError } from '@atlasconsulting/bedita-sdk';
+import { BEditaApiClient, MapIncludedInterceptor, ApiResponseBodyError } from '@atlasconsulting/bedita-sdk';
 import { AxiosError, isAxiosError } from 'axios';
 import type { H3Event } from 'h3';
+import SessionStorageAdapter from '~~/lib/services/adapters/session-storage-adapter';
 
-export const beditaApiClient = (): BEditaApiClient => {
-    if (ApiProvider.has('bedita')) {
-        return ApiProvider.get('bedita');
-    }
-
+export const beditaApiClient = async (event: H3Event): Promise<BEditaApiClient> => {
     const config = useRuntimeConfig();
-    const client = ApiProvider.get('bedita', {
+    const session = await useSession(event, config.session);
+    const client = new BEditaApiClient({
         baseUrl: config.beditaApiBaseUrl,
         apiKey: config.beditaApiKey,
-        storageAdapter: new MemoryStorageAdapter(),
+        storageAdapter: new SessionStorageAdapter(session),
     });
     client.addInterceptor(new MapIncludedInterceptor());
 

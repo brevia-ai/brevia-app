@@ -1,6 +1,7 @@
 <template>
     <main>
-        <div class="grid" :class="menu.length > 6? 'grid-dashboard-autofill' : 'grid-dashboard w-full mx-auto max-w-[90rem]'">
+        <div class="grid" :class="menu.length > 6? 'grid-dashboard-autofill' : 'grid-dashboard w-full mx-auto max-w-[90rem]'"
+            v-if="menu.length">
             <NuxtLink class="big-button flex-row justify-between sm:flex-col sm:justify-center gap-6 lg:gap-10"
                 v-for="(item, i) in menu" :key="i"
                 :to="item.link">
@@ -19,6 +20,9 @@
                 </div>
             </NuxtLink>
         </div>
+        <div v-else>
+            Welcome {{ statesStore.user?.name }} {{ statesStore.user?.surname }}
+        </div>
     </main>
 </template>
 
@@ -28,6 +32,7 @@
 
 <script>
 import { useStatesStore } from '~~/store/states';
+import { mapStores } from 'pinia';
 
 export default {
     data() {
@@ -36,9 +41,12 @@ export default {
         }
     },
 
+    computed: {
+        ...mapStores(useStatesStore),
+    },
+
     created() {
-        const store = useStatesStore();
-        this.menu = store.getMenu();
+        this.menu = this.statesStore.getMenu();
     },
 
     methods: {

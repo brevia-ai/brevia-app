@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
             contact: reqBody?.contact,
             change_url: resetUrl,
         }
-        const client = beditaApiClient();
+        const client = await beditaApiClient(event);
         const response = await client.post('/auth/change', body);
         return response.data;
     } catch (error) {
