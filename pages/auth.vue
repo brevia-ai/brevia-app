@@ -3,20 +3,25 @@
         <div class="mt-6 max-w-sm mx-auto space-y-8" v-if="!logged || !store.isLogged">
 
             <form class="flex flex-col space-y-6" @submit.stop.prevent>
-                <input type="text"
+                <UIXInput
                     autocomplete="username" autocorrect="off" autocapitalize="none"
                     :placeholder="$t('LOGIN_PLACEHOLDER')"
-                    v-model="username"
-                    @keydown.enter="login" required>
+                    v-model="username" @keydown.enter="login"
+                    required />
 
-                <input type="password"
-                    autocomplete="current-password" autocorrect="off" autocapitalize="none"
-                    :placeholder="$t('PASSWORD_PLACEHOLDER')"
-                    v-model="password"
-                    @keydown.enter="login" required>
-                <NuxtLink to="/forgot-password" class="text-xs text-end mt-0 pt-0 text-sky-600">{{ $t('FORGOT_PASS') }}</NuxtLink>
-                <button class="p-4 button text-lg" @click="login">{{ $t('SIGN_IN') }}</button>
+                <div class="flex flex-col space-y-3">
+                    <UIXInput password
+                        autocomplete="current-password" autocorrect="off" autocapitalize="none"
+                        :placeholder="$t('PASSWORD_PLACEHOLDER')"
+                        v-model="username" @keydown.enter="login"
+                        required />
 
+                    <NuxtLink to="/forgot-password" class="text-xs text-end mt-0 pt-0 text-sky-600">{{ $t('FORGOT_PASS') }}</NuxtLink>
+                </div>
+
+                <button class="p-4 button text-lg"
+                    :class="{ 'is-loading': isLoading }"
+                    @click="login">{{ $t('SIGN_IN') }}</button>
 
                 <div class="text-sm text-center">
                     {{ $t('NOT_A_MEMBER') }}
@@ -47,6 +52,7 @@ export default {
             password: '',
             logged: false,
             store: null,
+            isLoading: false,
         }
     },
 
@@ -67,8 +73,9 @@ export default {
             if (!this.username || !this.password) {
                 return;
             }
-            this.error = false;
 
+            this.error = false;
+            this.isLoading = true;
             try {
                 const data = await $fetch('/api/login', {
                     method: 'POST',
@@ -84,8 +91,11 @@ export default {
                     surname: data?.data?.attributes?.surname || '',
                     email: data?.data?.attributes?.email || '',
                 };
+
+                this.isLoading = true;
             } catch (error) {
                 this.error = true;
+                this.isLoading = false;
             }
         },
 
