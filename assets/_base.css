@@ -14,4 +14,8 @@
     label[for] {
         @apply cursor-pointer leading-tight;
     }
+
+    textarea {
+        @apply text-lg px-4 py-3.5 border border-sky-800 w-full rounded;
+    }
 }

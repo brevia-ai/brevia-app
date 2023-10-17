@@ -17,8 +17,12 @@
                     <Icon class="opacity-70" name="carbon:idea" size="28" v-else />
                     <span class="text-xs uppercase tracking-wider">{{ item.type }}</span>
                 </div>
-
             </NuxtLink>
+
+            <button class="big-button py-6 bg-slate-50 text-slate-700 hover:bg-white hover:text-pink-600"
+                @click="add">
+                <Icon name="carbon:add-large" size="64" />
+            </button>
         </div>
     </main>
 </template>
@@ -43,6 +47,9 @@ export default {
     },
 
     methods: {
+        add() {
+            this.$openModal('create-chatbot');
+        },
         capitalLetters(title, type) {
             return (title?.charAt(0)?.toUpperCase() || '') +
                 (type?.charAt(0)?.toUpperCase() || '');

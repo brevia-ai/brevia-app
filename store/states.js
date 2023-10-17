@@ -4,6 +4,7 @@ export const useStatesStore = defineStore('states', {
     state: () => ({
         isLogged: false,
         options: {},
+        activeModal: null,
     }),
 
     actions: {
@@ -82,5 +83,13 @@ export const useStatesStore = defineStore('states', {
             this.options = options;
             localStorage.setItem('chatlas-options', JSON.stringify(options));
         },
+
+        openModal(modal) {
+            this.activeModal = modal;
+        },
+
+        closeModal() {
+            this.activeModal = null;
+        }
     },
 });
