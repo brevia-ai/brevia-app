@@ -1,8 +1,7 @@
 <template>
     <main>
         <div class="mt-6 max-w-sm mx-auto space-y-8" v-if="!logged || !store.isLogged">
-
-            <form class="flex flex-col space-y-6" @submit.stop.prevent>
+            <form class="flex flex-col space-y-8" @submit.stop.prevent>
                 <UIXInput
                     autocomplete="username" autocorrect="off" autocapitalize="none"
                     :placeholder="$t('LOGIN_PLACEHOLDER')"
@@ -13,7 +12,7 @@
                     <UIXInput password
                         autocomplete="current-password" autocorrect="off" autocapitalize="none"
                         :placeholder="$t('PASSWORD_PLACEHOLDER')"
-                        v-model="username" @keydown.enter="login"
+                        v-model="password" @keydown.enter="login"
                         required />
 
                     <NuxtLink to="/forgot-password" class="text-xs text-end mt-0 pt-0 text-sky-600">{{ $t('FORGOT_PASS') }}</NuxtLink>
@@ -32,8 +31,8 @@
             <div class="w-full bg-red-100 border border-red-400 rounded text-center" v-if="error">
                 {{ $t('WRONG_CREDENTIALS') }}
             </div>
-
         </div>
+
         <div v-else>
             Welcome {{ logged.name }} {{ logged.surname }} ({{ logged.email }})
         </div>
@@ -77,6 +76,7 @@ export default {
             this.error = false;
             this.isLoading = true;
             try {
+                console.log('flex flex-col')
                 const data = await $fetch('/api/login', {
                     method: 'POST',
                     body: {
