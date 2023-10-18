@@ -1,12 +1,12 @@
 import { useStatesStore } from '~~/store/states';
 import { useSession } from 'h3';
+import { getSessionConfig } from '~~/server/utils/session';
 
 export default defineNuxtRouteMiddleware(async (to) => {
     const statesStore = useStatesStore();
     if (process.server) {
-        const config = useRuntimeConfig();
         const event = useRequestEvent();
-        const session = await useSession(event, config.session );
+        const session = await useSession(event, getSessionConfig());
         const userData = session.data?.['bedita.user'];
         if (userData) {
             statesStore.userLogin(userData);

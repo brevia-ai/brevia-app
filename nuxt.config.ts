@@ -6,7 +6,7 @@ export default defineNuxtConfig({
         beditaApiBaseUrl: process.env.BEDITA_API_BASE_URL || '',
         beditaApiKey: process.env.BEDITA_API_KEY || '',
         session: {
-            password: process.env.SESSION_SECRET,
+            secret: process.env.SESSION_SECRET,
             name: process.env.SESSION_NAME || 'Brevia',
         },
         public: {
