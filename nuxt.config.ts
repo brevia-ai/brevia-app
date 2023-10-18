@@ -7,7 +7,7 @@ export default defineNuxtConfig({
         beditaApiKey: process.env.BEDITA_API_KEY || '',
         session: {
             password: process.env.SESSION_SECRET,
-            name: process.env.SESSION_NAME || 'h3',
+            name: process.env.SESSION_NAME || 'Brevia',
         },
         public: {},
     },
