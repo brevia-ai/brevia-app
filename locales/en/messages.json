@@ -64,13 +64,14 @@
     "TEXT_SUMMARY": "Text summary",
     "TITLE": "Titolo",
     "TITLE_PLACEHOLDER": "Inserisci qui il titolo",
-    "TRANSCRIPTION_OF_FILE": "Transcription of file",
-    "UPLOAD_AND_ANALYZE_FILE": "Upload and analyze file",
-    "UPLOAD_AND_TRANSCRIBE_FILE": "Upload and transcribe file",
-    "WRONG_CREDENTIALS": "Wrong username or password",
     "TITLES": {
         "ATLAS_AI_POWERED_TOOLS": "Atlas AI-powered tools",
         "REGISTER_ACCOUNT": "Create account",
         "REGISTER_CONFIRM_EMAIL": "Confirm your email"
-    }
+    },
+    "TRANSCRIPTION_OF_FILE": "Transcription of file",
+    "UPLOAD_AND_ANALYZE_FILE": "Upload and analyze file",
+    "UPLOAD_AND_TRANSCRIBE_FILE": "Upload and transcribe file",
+    "WELCOME": "Welcome",
+    "WRONG_CREDENTIALS": "Wrong username or password"
 }

@@ -1,6 +1,6 @@
 <template>
     <main>
-        <div class="mt-6 max-w-sm mx-auto space-y-8" v-if="!logged || !store.isLogged">
+        <div class="mt-6 max-w-sm mx-auto space-y-8" v-if="!statesStore.isLogged">
             <form class="flex flex-col space-y-8" @submit.stop.prevent>
                 <UIXInput
                     autocomplete="username" autocorrect="off" autocapitalize="none"
@@ -31,16 +31,14 @@
             <div class="w-full bg-red-100 border border-red-400 rounded text-center" v-if="error">
                 {{ $t('WRONG_CREDENTIALS') }}
             </div>
-        </div>
 
-        <div v-else>
-            Welcome {{ logged.name }} {{ logged.surname }} ({{ logged.email }})
         </div>
     </main>
 </template>
 
 <script>
 import { useStatesStore } from '~~/store/states';
+import { mapStores } from 'pinia';
 
 export default {
     data() {
@@ -49,22 +47,20 @@ export default {
             menu: [],
             username: '',
             password: '',
-            logged: false,
-            store: null,
             isLoading: false,
         }
     },
 
-    mounted() {
-        this.store = useStatesStore();
+    computed: {
+        ...mapStores(useStatesStore),
     },
 
     created() {
-        const store = useStatesStore();
-        const menu = store.getMenu();
-        store.readOptions();
-        if(menu?.length)
+        const menu = this.statesStore.getMenu();
+        this.statesStore.readOptions();
+        if (menu?.length) {
             navigateTo('/');
+        }
     },
 
     methods: {
@@ -85,14 +81,11 @@ export default {
                     },
                 });
 
+                this.statesStore.userLogin(filterUserDataToStore(data))
                 this.setUserMenu(data);
-                this.logged = {
-                    name: data?.data?.attributes?.name || '',
-                    surname: data?.data?.attributes?.surname || '',
-                    email: data?.data?.attributes?.email || '',
-                };
+                navigateTo('/');
 
-                this.isLoading = true;
+                this.isLoading = false;
             } catch (error) {
                 this.error = true;
                 this.isLoading = false;
@@ -100,15 +93,14 @@ export default {
         },
 
         setUserMenu(data) {
-            const store = useStatesStore();
-            const included = data?.included || [];
-            if (included?.length === 0) {
-                store.userLogin([]);
+            const hasAccess = data?.data?.relationships?.has_access?.data || [];
+            if (hasAccess?.length === 0) {
+                this.statesStore.setMenu([]);
 
                 return;
             }
             let items = [];
-            const collections = included.filter(item => item?.type === 'collections');
+            const collections = hasAccess.filter(item => item?.type === 'collections');
             for (const item of collections) {
                 items.push({
                     link: `/chatbot/${item?.attributes?.uname}`,
@@ -118,7 +110,7 @@ export default {
                     params: null
                 });
             }
-            const features = included.filter(item => item?.type === 'features');
+            const features = hasAccess.filter(item => item?.type === 'features');
             for (const item of features) {
                 const params = item?.attributes?.feature_params || {};
                 if (!('payload' in params)) {
@@ -133,7 +125,7 @@ export default {
                     params
                 });
             }
-            store.userLogin(items);
+            this.statesStore.setMenu(items);
         },
 
         field(obj, field) {
