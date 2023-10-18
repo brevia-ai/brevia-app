@@ -21,7 +21,7 @@
             </NuxtLink>
 
             <button class="big-button place-self-stretch py-6 bg-slate-50 text-slate-700 hover:bg-white hover:text-pink-600"
-                @click="add">
+                @click="add" v-if="addAvailable">
                 <Icon name="carbon:add-large" size="64" />
             </button>
         </div>
@@ -43,15 +43,27 @@ export default {
     data() {
         return {
             menu: [],
+            maxUserChatbots: null,
         }
     },
 
     computed: {
         ...mapStores(useStatesStore),
+
+        addAvailable() {
+            if (!this.maxUserChatbots) {
+                return true;
+            }
+            const collections = this.menu.filter((x) => x.type === 'chatbot');
+
+            return collections?.length < this.maxUserChatbots;
+        }
     },
 
     created() {
         this.menu = this.statesStore.getMenu();
+        const config = useRuntimeConfig();
+        this.maxUserChatbots = config.public?.maxUserChatbots || null;
     },
 
     methods: {
