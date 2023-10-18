@@ -4,7 +4,7 @@
         <MainHeader class="w-full fixed z-10 bg-neutral-50 shadow" ></MainHeader>
 
         <div class="grow mt-28 p-6 w-full mx-auto"
-            :class="($route.path !== '/')? 'max-w-3xl' : 'max-w-[90rem]'">
+            :class="{ 'max-w-3xl': $route.path !== '/' }">
             <NuxtPage />
         </div>
 

@@ -1,10 +1,10 @@
 <template>
     <main>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-6 lg:gap-8 xl:gap-10 2xl:gap-12">
+        <div class="grid" :class="menu.length > 6? 'grid-dashboard-autofill' : 'grid-dashboard w-full mx-auto max-w-[90rem]'">
             <NuxtLink class="big-button flex-row justify-between sm:flex-col sm:justify-center gap-6 lg:gap-10"
                 v-for="(item, i) in menu" :key="i"
                 :to="item.link">
-                <div class="grow sm:pt-16 flex flex-col justify-center sm:items-center sm:text-center">
+                <div class="grow sm:pt-16 md:pt-16 flex flex-col justify-center sm:items-center sm:text-center">
                     <div class="text-5xl leading-tight font-semibold">{{ capitalLetters(item.title, item.type) }}</div>
                     <div class="text-lg lg:text-xl leading-tight">{{ itemTitle(item.title, item.type) }}</div>
                 </div>
@@ -17,7 +17,6 @@
                     <Icon class="opacity-70" name="carbon:idea" size="28" v-else />
                     <span class="text-xs uppercase tracking-wider">{{ item.type }}</span>
                 </div>
-
             </NuxtLink>
         </div>
     </main>
