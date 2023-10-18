@@ -19,6 +19,15 @@
         }
     }
 
+    .grid-dashboard {
+        @apply sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-6 lg:gap-8 xl:gap-10 2xl:gap-12;
+    }
+
+    .grid-dashboard-autofill {
+        @apply gap-6 lg:gap-8 2xl:gap-12;
+        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));;
+    }
+
     .bubble {
         @apply relative bg-neutral-800 text-white rounded-md p-3;
         min-width: 30%;
