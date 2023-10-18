@@ -21,7 +21,7 @@
             </NuxtLink>
         </div>
         <div v-else>
-            Welcome {{ statesStore.user?.name }} {{ statesStore.user?.surname }}
+            {{ $t('WELCOME') }} {{ statesStore.user?.name }} {{ statesStore.user?.surname }}
         </div>
     </main>
 </template>
