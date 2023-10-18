@@ -20,7 +20,7 @@
                 </div>
             </NuxtLink>
 
-            <button class="big-button py-6 bg-slate-50 text-slate-700 hover:bg-white hover:text-pink-600"
+            <button class="big-button place-self-stretch py-6 bg-slate-50 text-slate-700 hover:bg-white hover:text-pink-600"
                 @click="add">
                 <Icon name="carbon:add-large" size="64" />
             </button>

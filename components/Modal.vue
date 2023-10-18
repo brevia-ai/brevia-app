@@ -14,7 +14,7 @@
             <!-- header -->
             <header class="space-y-2">
                 <div class="flex items-start justify-between space-x-4">
-                    <h1 class="text-3xl leading-none">Crea un nuovo bot</h1>
+                    <h1 class="text-3xl leading-none">Crea un nuovo chatbot</h1>
                     <button type="button"
                         class="close-button"
                         @click.stop="$closeModal">
@@ -23,11 +23,11 @@
                     </button>
                 </div>
 
-                <p>Dai un titolo al tuo nuovo chatbot e inserisci una descrizione.</p>
+                <p>Dai un titolo al nuovo chatbot e inserisci una breve descrizione.</p>
             </header>
 
             <div class="space-y-5">
-                <form class="flex flex-col space-y-6">
+                <form class="flex flex-col space-y-6" @submit="create">
                     <UIXInput :label="$t('TITLE')"
                         :placeholder="$t('TITLE_PLACEHOLDER')"
                         v-model="title" @keydown.enter="create"
@@ -59,13 +59,38 @@ const isLoading = ref(false);
 const title = ref('');
 const description = ref('');
 
-const create = () => {
+const store = useStatesStore();
+const { $closeModal } = useNuxtApp();
+
+const create = async () => {
     if (isLoading.value)
         return;
 
     isLoading.value = true;
-    setTimeout(() => {
+    try {
+        isLoading.value = true;
+        const data = await $fetch('/api/collection', {
+            method: 'POST',
+            body: {
+                title: title.value,
+                description: description.value,
+            },
+        });
+
+        const menu = store.getMenu();
+        menu.push({
+            link: `/chatbot/${data.data?.attributes?.uname}`,
+            type: 'chatbot',
+            title: data.data?.attributes?.title,
+            description: data.data?.attributes?.description,
+            params: null
+        });
+        store.setMenu(menu);
+
+        $closeModal();
+    } catch (err) {
+        error.value = true;
         isLoading.value = false;
-    }, 2000);
+    }
 }
 </script>

@@ -45,7 +45,7 @@ const props = defineProps({
     },
     autocomplete: {
         type: String,
-        default: false,
+        default: null,
     },
     password: {
         type: Boolean,
