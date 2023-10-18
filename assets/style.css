@@ -5,4 +5,5 @@
 @import "tailwindcss/components";
 @import "_components.css";
 @import "_buttons.css";
+@import "_chat.css";
 @import "tailwindcss/utilities";

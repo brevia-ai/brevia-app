@@ -1,56 +1,64 @@
 <template>
-    <main class="space-y-8">
-        <div class="p-4 bg-white shadow-md rounded space-y-3">
-            <div class="text-sm text-neutral-600" v-if="hasCollection" v-html="collectionDescription">
-            </div>
-            <div class="text-sm text-red-600" v-else-if="!isBusy && !hasCollection">
-                <p>{{ $t('COLLECTION_NOT_FOUND') }}</p>
+    <main>
+        <div class="text-red-600" v-if="!collectionId">
+            <p>{{ $t('COLLECTION_NOT_FOUND') }}</p>
+        </div>
+
+        <div class="space-y-8" v-else>
+            <div class="space-y-6">
+                <h2 class="text-2xl md:text-3xl lg:text-4xl leading-tight font-bold">{{ collection.title }}</h2>
+                <div class="text-neutral-600"
+                    v-html="collection.description" v-if="collection.description"></div>
             </div>
 
             <div v-if="dialog.length">
-                <hr class="my-6 border-neutral-300">
+                <!-- <hr class="my-6 border-neutral-300"> -->
+                <div class="px-4 pt-6 pb-4 bg-white shadow-md rounded space-y-3">
+                    <div class="flex flex-col space-y-6 pb-4">
 
-                <div class="flex flex-col space-y-6 pb-4">
-                    <div class="bubble space-y-2" v-for="(item, i) in dialog" :key="i" :class="{ 'bg-pink-800': item.error}">
-                        <p class="text-xs">{{ item.who }}</p>
-                        <p>{{ item.message }}</p>
+                        <div class="chat-balloon space-y-2" v-for="(item, i) in dialog" :key="i" :class="{ 'bg-pink-800': item.error}">
+                            <div class="flex space-x-3 justify-between">
+                                <p class="text-xs">{{ item.who }}</p>
+                                <div class="chat-balloon-status" :class="{'busy': isBusy && i === dialog.length - 1}"></div>
+                            </div>
+                            <p>{{ item.message }} &nbsp;</p>
+                        </div>
+
                     </div>
-
-                    <div class="ellipsis-loading" v-if="isBusy"></div>
                 </div>
             </div>
-        </div>
 
-        <div class="flex space-x-4">
-            <input class="grow text-lg p-2 rounded border border-sky-500 disabled:bg-neutral-100 disabled:border-neutral-300 shadow-md" type="text"
-                ref="prompt"
-                :disabled="!isReady"
-                @keydown.enter="submit">
+            <div class="flex space-x-4">
+                <input class="grow text-lg p-2 rounded border border-sky-500 disabled:bg-neutral-100 disabled:border-neutral-300 shadow-md" type="text"
+                    ref="prompt"
+                    :disabled="!isReady"
+                    @keydown.enter="submit">
 
-            <button class="px-4 button shadow-md disabled:shadow-none"
-                :disabled="!isReady"
-                @click="submit">
-                <span class="md:hidden">›</span>
-                <span class="hidden md:inline">{{ $t('SEND') }}</span>
-            </button>
-        </div>
-
-        <div class="flex space-x-4">
-            <label class="grow text-lg space-x-2 cursor-pointer">
-                <input type="checkbox" v-model="sourceDocs" :disabled="isBusy">
-                <span>{{ $t('SHOW_DOCUMENTS_FOUND') }}</span>
-            </label>
-        </div>
-
-
-        <div class="flex flex-col space-y-3" v-if="!isBusy && docs.length > 0">
-            <div class="text-xl">
-                <p>{{ $t('DOCUMENTS') }}</p>
+                <button class="px-4 button shadow-md disabled:shadow-none"
+                    :disabled="!isReady"
+                    @click="submit">
+                    <span class="md:hidden">›</span>
+                    <span class="hidden md:inline">{{ $t('SEND') }}</span>
+                </button>
             </div>
-            <div v-for="(doc, n) in docs" :key="n">
-                <p class="text-xs">{{ (n + 1) }}.</p>
-                <p>{{ doc.page_content }}</p>
-                <p class="text-xs italic">{{ doc.metadata }}</p>
+
+            <div class="flex space-x-4">
+                <label class="grow text-lg space-x-2 cursor-pointer">
+                    <input type="checkbox" v-model="sourceDocs" :disabled="isBusy">
+                    <span>{{ $t('SHOW_DOCUMENTS_FOUND') }}</span>
+                </label>
+            </div>
+
+
+            <div class="flex flex-col space-y-3" v-if="!isBusy && docs.length > 0">
+                <div class="text-xl">
+                    <p>{{ $t('DOCUMENTS') }}</p>
+                </div>
+                <div v-for="(doc, n) in docs" :key="n">
+                    <p class="text-xs">{{ (n + 1) }}.</p>
+                    <p>{{ doc.page_content }}</p>
+                    <p class="text-xs italic">{{ doc.metadata }}</p>
+                </div>
             </div>
         </div>
     </main>
@@ -68,10 +76,10 @@ export default {
     data() {
         return {
             sessionId: '',
-            collection: '',
-
+            collectionId: '',
             hasCollection: false,
-            collectionDescription: '', // collection
+
+            collection: {},
             isBusy: false,
             hasAnswer: false,
             lastPrompt: '',
@@ -83,7 +91,7 @@ export default {
     },
 
     watch: {
-        collection() {
+        collectionId() {
             this.readCollections();
         }
     },
@@ -93,8 +101,8 @@ export default {
         if (process.client) {
             this.sessionId = self.crypto.randomUUID();
             const route = useRoute();
-            this.collection = route.params.id;
-            store.userAccess(`/chatbot/${this.collection}`);
+            this.collectionId = route.params.id;
+            store.userAccess(`/chatbot/${this.collectionId}`);
         }
         store.readOptions();
     },
@@ -146,7 +154,7 @@ export default {
                     },
                     body: JSON.stringify({
                         question: this.lastPrompt,
-                        collection: this.collection,
+                        collection: this.collectionId,
                         source_docs: this.sourceDocs,
                         streaming: true,
                     }),
@@ -187,7 +195,7 @@ export default {
             if (!this.sourceDocs) {
                 return;
             }
-            console.log('DOCUMENTI TROVATI per "' + this.lastPrompt + '"')
+
             this.docs.forEach((doc, i) => {
                 console.log('\n\n' + (i + 1) + ').');
                 console.log(doc.page_content);
@@ -210,11 +218,13 @@ export default {
         async readCollections() {
             this.isBusy = true;
             try {
-                const data = await $fetch(`/api/collections?name=${this.collection}`);
+                const data = await $fetch(`/api/collections?name=${this.collectionId}`);
                 this.collections = data;
-                const coll = this.collections.find((x) => x.name === this.collection);
+                const coll = this.collections.find(x => x.name === this.collectionId);
                 this.hasCollection = !!coll;
-                this.collectionDescription = coll?.cmetadata?.description || '';
+                console.log(coll);
+                this.collection.title = coll?.cmetadata?.title || '';
+                this.collection.description = coll?.cmetadata?.description || '';
 
                 this.isBusy = false;
             } catch (error) {
