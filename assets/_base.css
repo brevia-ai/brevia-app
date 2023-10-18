@@ -8,7 +8,7 @@
     }
 
     input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
-        @apply text-lg px-4 py-3.5 border border-sky-800 rounded;
+        @apply text-lg px-4 py-3.5 border-2 border-neutral-300 rounded outline-sky-600;
     }
 
     label[for] {
@@ -16,6 +16,6 @@
     }
 
     textarea {
-        @apply text-lg px-4 py-3.5 border border-sky-800 w-full rounded;
+        @apply text-lg px-4 py-3.5 border-2 border-neutral-300 w-full rounded outline-sky-600 leading-snug;
     }
 }

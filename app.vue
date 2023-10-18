@@ -11,7 +11,7 @@
         <MainFooter />
     </div>
 
-    <Modal v-if="$isOpenModal('create-chatbot')"/>
+    <Modal v-if="$isActiveModal()"/>
 </ClientOnly>
 </template>
 

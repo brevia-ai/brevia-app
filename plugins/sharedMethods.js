@@ -14,6 +14,10 @@ export default defineNuxtPlugin(async nuxtApp => {
                 store.closeModal();
             },
 
+            isActiveModal() {
+                return !!store.activeModal;
+            },
+
             isOpenModal(modal) {
                 return store.activeModal === modal;
             },
