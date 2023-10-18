@@ -5,7 +5,7 @@ import SessionStorageAdapter from '~~/lib/services/adapters/session-storage-adap
 
 export const beditaApiClient = async (event: H3Event): Promise<BEditaApiClient> => {
     const config = useRuntimeConfig();
-    const session = await useSession(event, config.session);
+    const session = await useSession(event, getSessionConfig());
     const client = new BEditaApiClient({
         baseUrl: config.beditaApiBaseUrl,
         apiKey: config.beditaApiKey,

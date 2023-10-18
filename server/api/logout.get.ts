@@ -1,6 +1,5 @@
 export default defineEventHandler(async (event) => {
-    const config = useRuntimeConfig();
-    const session = await useSession(event, config.session);
+    const session = await useSession(event, getSessionConfig());
     await session.clear();
 
     setResponseStatus(event, 204);
