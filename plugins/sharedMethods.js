@@ -1,9 +1,26 @@
+import { useStatesStore } from '~~/store/states';
 import { jsPDF } from 'jspdf';
 
 export default defineNuxtPlugin(async nuxtApp => {
+    const store = useStatesStore();
 
     return {
         provide: {
+            openModal(modal) {
+                store.openModal(modal);
+            },
+
+            closeModal() {
+                store.closeModal();
+            },
+
+            isActiveModal() {
+                return !!store.activeModal;
+            },
+
+            isOpenModal(modal) {
+                return store.activeModal === modal;
+            },
 
             createPdf(text) {
                 const doc = new jsPDF();

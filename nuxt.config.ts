@@ -9,7 +9,12 @@ export default defineNuxtConfig({
             password: process.env.SESSION_SECRET,
             name: process.env.SESSION_NAME || 'Brevia',
         },
-        public: {},
+        public: {
+            maxUserChatbots: process.env.MAX_USER_CHATBOTS || '',
+        },
+    },
+    imports: {
+        dirs: ['store'],
     },
     modules: [
         '@nuxtjs/tailwindcss',

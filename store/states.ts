@@ -1,14 +1,25 @@
+import { UserDataStore } from './../utils/user-data-store';
 import { defineStore } from 'pinia';
+
+export interface menuItem {
+    link: string;
+    type: string;
+    title: string;
+    description: string;
+    params: any;
+}
 
 export const useStatesStore = defineStore('states', {
     state: () => ({
         isLogged: false,
         options: {},
-        user: null,
+        user: null as UserDataStore | null,
+        menu: [] as menuItem[],
+        activeModal: null as string | null,
     }),
 
     actions: {
-        userLogin(user) {
+        userLogin(user: UserDataStore) {
             this.isLogged = true;
             this.user = user;
         },
@@ -20,10 +31,8 @@ export const useStatesStore = defineStore('states', {
 
         /**
          * Verify if user has access to internal link, redirect to `/` if not
-         * @param {string} link
-         * @returns {void}
          */
-        userAccess(link) {
+        userAccess(link: string) {
             const menu = this.getMenu();
             const found = menu.find(m => m.link === link);
             if (found) {
@@ -33,28 +42,48 @@ export const useStatesStore = defineStore('states', {
             navigateTo('/');
         },
 
-        getMenuItem(link) {
+        getMenuItem(link: string) {
             const menu = this.getMenu();
             return menu.find(m => m.link === link);
+        },
+
+        getMenu(): menuItem[] {
+            if (!this.menu.length) {
+                this.menu = JSON.parse(localStorage.getItem('chatlas-menu') || '[]');
+            }
+
+            return this.menu;
+        },
+
+        setMenu(menu: menuItem[]) {
+            if (!menu) {
+                this.menu = [];
+                localStorage.removeItem('chatlas-menu');
+                return;
+            }
+
+            this.menu = menu;
+            localStorage.setItem('chatlas-menu', JSON.stringify(menu));
         },
 
         setIsLogged(value = true) {
             this.isLogged = value;
         },
 
-        getMenu() {
-            return JSON.parse(localStorage.getItem('chatlas-menu') || '[]');
+        getJobInfo(name: string) {
+            const item = localStorage.getItem(name);
+            if (item === null)
+                return null;
+
+            return JSON.parse(item);
         },
 
-        getJobInfo(name) {
-            return JSON.parse(localStorage.getItem(name)) || null;
-        },
-
-        setJobInfo(name, value) {
+        setJobInfo(name: string, value: any) {
             if (!value) {
                 localStorage.removeItem(name);
                 return;
             }
+
             localStorage.setItem(name, JSON.stringify(value));
         },
 
@@ -62,16 +91,7 @@ export const useStatesStore = defineStore('states', {
             this.options = JSON.parse(localStorage.getItem('chatlas-options') || '{}');
         },
 
-        setMenu(menu) {
-            if (!menu) {
-                localStorage.removeItem('chatlas-menu');
-                return;
-            }
-
-            localStorage.setItem('chatlas-menu', JSON.stringify(menu));
-        },
-
-        setOptions(options) {
+        setOptions(options: any) {
             if (!options) {
                 this.options = {};
                 localStorage.removeItem('chatlas-options');
@@ -81,5 +101,13 @@ export const useStatesStore = defineStore('states', {
             this.options = options;
             localStorage.setItem('chatlas-options', JSON.stringify(options));
         },
+
+        openModal(modal: string) {
+            this.activeModal = modal;
+        },
+
+        closeModal() {
+            this.activeModal = null;
+        }
     },
 });

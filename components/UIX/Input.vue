@@ -2,7 +2,7 @@
 <div class="flex flex-col space-y-2">
     <label class="flex align-top leading-none space-x-1" :for="uniqueId" v-if="label">
         <span>{{ label }}</span>
-        <Icon name="carbon:star-filled" size="12" class="text-red-600" v-if="required" />
+        <Icon name="carbon:star-filled" size="12" class="text-pink-600" v-if="required" />
     </label>
 
     <input :type="type" class="w-full"
@@ -45,7 +45,7 @@ const props = defineProps({
     },
     autocomplete: {
         type: String,
-        default: false,
+        default: null,
     },
     password: {
         type: Boolean,

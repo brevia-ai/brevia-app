@@ -19,6 +19,11 @@
                     <span class="text-xs uppercase tracking-wider">{{ item.type }}</span>
                 </div>
             </NuxtLink>
+
+            <button class="big-button place-self-stretch py-6 bg-slate-50 text-slate-700 hover:bg-white hover:text-sky-700"
+                @click="add" v-if="addAvailable">
+                <Icon name="carbon:add-large" size="64" />
+            </button>
         </div>
         <div v-else>
             {{ $t('WELCOME') }} {{ statesStore.user?.name }} {{ statesStore.user?.surname }}
@@ -38,18 +43,33 @@ export default {
     data() {
         return {
             menu: [],
+            maxUserChatbots: null,
         }
     },
 
     computed: {
         ...mapStores(useStatesStore),
+
+        addAvailable() {
+            if (!this.maxUserChatbots) {
+                return true;
+            }
+            const collections = this.menu.filter((x) => x.type === 'chatbot');
+
+            return collections?.length < this.maxUserChatbots;
+        }
     },
 
     created() {
         this.menu = this.statesStore.getMenu();
+        const config = useRuntimeConfig();
+        this.maxUserChatbots = config.public?.maxUserChatbots || null;
     },
 
     methods: {
+        add() {
+            this.$openModal('create-chatbot');
+        },
         capitalLetters(title, type) {
             return (title?.charAt(0)?.toUpperCase() || '') +
                 (type?.charAt(0)?.toUpperCase() || '');
