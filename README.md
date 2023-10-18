@@ -21,6 +21,7 @@ Copy `.env.sample` in `.env` and set
 * `BEDITA_API_KEY` BEdita API KEY
 * `SESSION_NAME` The name used for session cookie (Brevia is used by default)
 * `SESSION_SECRET` The secret used to crypt/decrypt the session stored in cookie. It must be at least 32 chars.
+* (optional) `MAX_USER_CHATBOTS` The max number allowed per user (the max number a user can create)
 
 ## Session
 
