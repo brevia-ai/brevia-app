@@ -15,7 +15,7 @@
         @apply cursor-pointer leading-tight;
     }
 
-    textarea {
+    textarea, .textarea {
         @apply text-lg px-4 py-3.5 border-2 border-neutral-300 w-full rounded outline-sky-600 leading-snug;
     }
 }

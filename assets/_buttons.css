@@ -5,6 +5,10 @@
             disabled:bg-neutral-500 disabled:cursor-not-allowed;
     }
 
+    .button-secondary {
+        @apply border border-sky-700 bg-white hover:bg-sky-100 text-sky-700 uppercase;
+    }
+
     /* TODO: ELIMINARE */
     .button.loading {
         @apply relative text-transparent;
@@ -23,6 +27,12 @@
             @apply absolute left-1/2 top-1/2 -ml-2 -mt-2 w-4 h-4 border-2 rounded-full;
             animation: buttonSpinAround .5s linear infinite;
             border-color: transparent transparent #fff #fff;
+        }
+
+        &.button-secondary {
+            &:after {
+                border-color: transparent transparent #0369a1 #0369a1;
+            }
         }
     }
 
