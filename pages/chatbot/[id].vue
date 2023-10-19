@@ -28,29 +28,30 @@
                 </div>
             </div>
 
-            <div class="flex space-x-4">
-                <input type="text"
-                    class="grow text-lg p-2 rounded border border-sky-500 disabled:bg-neutral-100 disabled:border-neutral-300 shadow-md"
-                    ref="input"
-                    v-model.trim="prompt"
-                    :disabled="isBusy"
-                    @keydown.enter="submit">
+            <div class="space-y-4">
+                <div class="flex space-x-4">
+                    <input type="text"
+                        class="grow text-lg p-2 rounded border border-sky-500 disabled:bg-neutral-100 disabled:border-neutral-300 shadow-md"
+                        ref="input"
+                        v-model.trim="prompt"
+                        :disabled="isBusy"
+                        @keydown.enter="submit">
 
-                <button class="px-4 button shadow-md disabled:shadow-none"
-                    :disabled="isBusy"
-                    @click="submit">
-                    <span class="md:hidden">›</span>
-                    <span class="hidden md:inline">{{ $t('SEND') }}</span>
-                </button>
+                    <button class="px-6 button shadow-md disabled:shadow-none"
+                        :disabled="isBusy"
+                        @click="submit">
+                        <span class="sm:hidden">›</span>
+                        <span class="hidden sm:inline">{{ $t('SEND') }}</span>
+                    </button>
+                </div>
+
+                <div class="flex space-x-4">
+                    <label class="grow text-lg space-x-2 cursor-pointer">
+                        <input type="checkbox" v-model="showDocs" :disabled="isBusy">
+                        <span>{{ $t('SHOW_DOCUMENTS_FOUND') }}</span>
+                    </label>
+                </div>
             </div>
-
-            <div class="flex space-x-4">
-                <label class="grow text-lg space-x-2 cursor-pointer">
-                    <input type="checkbox" v-model="showDocs" :disabled="isBusy">
-                    <span>{{ $t('SHOW_DOCUMENTS_FOUND') }}</span>
-                </label>
-            </div>
-
 
             <div class="flex flex-col space-y-3" v-if="!isBusy && docs.length > 0">
                 <div class="text-xl">
@@ -67,7 +68,7 @@
 </template>
 
 <script lang="ts" setup>
-useHead({ title: 'Chatbot | Chatlas', });
+useHead({ title: 'Chatbot | Brevia', });
 
 interface DialogItem {
     who: string;
