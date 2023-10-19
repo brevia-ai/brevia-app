@@ -19,7 +19,7 @@
             <UIXInput :label="$t('TITLE')"
                 :placeholder="$t('TITLE_PLACEHOLDER')"
                 autocapitalize="on"
-                v-model="title" @keydown.enter="create"
+                v-model.trim="title" @keydown.enter="create"
                 required />
 
             <textarea :placeholder="$t('DESCRIPTION_PLACEHOLDER')"
@@ -76,4 +76,5 @@ const create = async () => {
         error.value = true;
         isLoading.value = false;
     }
-}</script>
+}
+</script>

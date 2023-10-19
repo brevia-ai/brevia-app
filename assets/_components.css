@@ -3,7 +3,7 @@
         @apply leading-normal;
 
         a[href] {
-            @apply underline underline-offset-2 hover:underline-offset-4 tracking-wide;
+            @apply text-sky-700 hover:text-sky-600 underline underline-offset-2 hover:underline-offset-4 tracking-wide;
         }
 
         ul {

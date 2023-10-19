@@ -7,12 +7,12 @@
                     <span v-else>{{ $t('TITLES.REGISTER_ACCOUNT') }}</span>
                 </h2>
 
-                <div class="rich-text text-lg" v-if="done">
+                <div class="text-lg" v-if="done">
                     <p>{{ $t('CONFIRMATION_MAIL_TO', { email: userMail }) }}.</p>
                     <p>{{ $t('CHECK_YOUR_INBOX') }}.</p>
                 </div>
 
-                <div class="rich-text" v-else>{{ $t('COMPILE_SUBSCRIPTION_FORM') }}.</div>
+                <div v-else>{{ $t('COMPILE_SUBSCRIPTION_FORM') }}.</div>
             </header>
 
             <form class="space-y-4" ref="signupForm" @submit.prevent v-if="!done">

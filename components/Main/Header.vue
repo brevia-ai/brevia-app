@@ -2,7 +2,7 @@
 <header class="py-4 px-6 flex space-x-4 justify-between items-center">
     <div class="flex space-x-2">
         <img class="mt-2 h-[26px] w-auto" src="/logo.png" alt="Atlas logo">
-        <div>
+        <div class="text-sky-950">
             <h1 class="text-4xl font-bold hover:text-sky-800">
                 <NuxtLink to="/">
                     <span class="leading-none">BREVIA</span>
@@ -41,8 +41,7 @@ const availableLocales = computed(() => {
 async function logout() {
     await $fetch('/api/logout');
     stateStore.userLogout();
-    stateStore.setMenu(null);
+    stateStore.setMenu([]);
     navigateTo('/auth');
 }
-
 </script>
