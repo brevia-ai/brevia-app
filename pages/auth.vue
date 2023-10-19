@@ -72,7 +72,6 @@ export default {
             this.error = false;
             this.isLoading = true;
             try {
-                console.log('flex flex-col')
                 const data = await $fetch('/api/login', {
                     method: 'POST',
                     body: {
@@ -81,7 +80,7 @@ export default {
                     },
                 });
 
-                this.statesStore.userLogin(filterUserDataToStore(data))
+                this.statesStore.userLogin(filterUserDataToStore(data));
                 this.setUserMenu(data);
                 navigateTo('/');
 
@@ -94,37 +93,34 @@ export default {
 
         setUserMenu(data) {
             const hasAccess = data?.data?.relationships?.has_access?.data || [];
-            if (hasAccess?.length === 0) {
+            if (!hasAccess?.length) {
                 this.statesStore.setMenu([]);
 
                 return;
             }
-            let items = [];
-            const collections = hasAccess.filter(item => item?.type === 'collections');
-            for (const item of collections) {
-                items.push({
-                    link: `/chatbot/${item?.attributes?.uname}`,
-                    type: 'chatbot',
-                    title: this.field(item, 'title'),
-                    description: this.field(item, 'description'),
-                    params: null
-                });
-            }
-            const features = hasAccess.filter(item => item?.type === 'features');
-            for (const item of features) {
-                const params = item?.attributes?.feature_params || {};
-                if (!('payload' in params)) {
-                    params['payload'] = {};
+
+            const items = [];
+            for (const item of hasAccess) {
+                const type = item?.type === 'collections'? 'chatbot' : item?.attributes?.feature_type || '';
+                const link = item?.type === 'collections'? `/chatbot/${item?.attributes?.uname}` : `/${item?.attributes?.feature_type}`;
+                let params = null;
+                if (item?.type === 'features') {
+                    params = item?.attributes?.feature_params || {};
+                    if (!('payload' in params)) {
+                        params['payload'] = {};
+                    }
+                    params['payload']['prompts'] = item?.attributes?.prompts || null;
                 }
-                params['payload']['prompts'] = item?.attributes?.prompts || null;
+
                 items.push({
-                    link: `/${item?.attributes?.feature_type}`,
-                    type: item?.attributes?.feature_type || '',
+                    link,
+                    type,
                     title: this.field(item, 'title'),
                     description: this.field(item, 'description'),
-                    params
+                    params,
                 });
             }
+
             this.statesStore.setMenu(items);
         },
 
