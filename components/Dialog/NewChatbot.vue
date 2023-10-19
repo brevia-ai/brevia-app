@@ -52,7 +52,6 @@ const create = async () => {
 
     isLoading.value = true;
     try {
-        isLoading.value = true;
         const data = await $fetch('/api/collection', {
             method: 'POST',
             body: {
@@ -71,6 +70,7 @@ const create = async () => {
         });
         store.setMenu(menu);
 
+        isLoading.value = false;
         $closeModal();
     } catch (err) {
         error.value = true;
