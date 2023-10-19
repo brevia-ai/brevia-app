@@ -3,7 +3,7 @@ const config = useRuntimeConfig()
 export default defineEventHandler(async (event) => {
     const reqUrl = new URL(event.node.req.url || '', 'http://example.com');
     const query = reqUrl.search || '';
-    const url = config.apiBaseUrl + `/collections?${query}`
+    const url = config.apiBaseUrl + `/collections${query}`
 
     try {
         const response = await fetch(url, {
