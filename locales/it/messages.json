@@ -45,6 +45,7 @@
     "LOGOUT": "Esci",
     "MAIL_TO": "Una email è stata inviata all'indirizzo ",
     "NEW_PASSWORD": "Nuova password",
+    "NO_AI_TOOL_HAS_BEEN_SET_UP_JUST_FOR_YOU": "Al momento nessuno strumento AI è stato ancora configurato per te",
     "NOT_A_MEMBER": "Non sei ancora registrato?",
     "NOT_VALID_EMAIL": "L'indirizzo di e-mail inserito non è valido.",
     "PASSWORD": "Password",
@@ -77,6 +78,6 @@
     "TRANSCRIPTION_OF_FILE": "Trascrizione del file",
     "UPLOAD_AND_ANALYZE_FILE": "Carica e analizza un file",
     "UPLOAD_AND_TRANSCRIBE_FILE": "Carica e trascrivi un file",
-    "WELCOME": "Benvenuto",
+    "WELCOME_ON_BREVIA": "benvenuto su Brevia",
     "WRONG_CREDENTIALS": "Credenziali errate"
 }
