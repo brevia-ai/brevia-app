@@ -53,9 +53,9 @@ if (!collection.value?.uuid) {
     });
 }
 
+const { $text2html } = useNuxtApp();
 title.value = collection.value.cmetadata?.title || '';
-// converts HTML to text, TODO: implement rich text editor or for more advanced convertion https://www.npmjs.com/package/html-to-text
-description.value = new DOMParser().parseFromString(collection.value.cmetadata?.description, "text/html").documentElement.textContent || '';
+description.value = $text2html(collection.value.cmetadata?.description);
 
 
 const save = async () => {
