@@ -3,7 +3,7 @@
 @import "tailwindcss/base";
 @import "_base.css";
 @import "tailwindcss/components";
-@import "_components.css";
-@import "_buttons.css";
-@import "_chat.css";
+@import "components/_components.css";
+@import "components/buttons.css";
+@import "components/chat.css";
 @import "tailwindcss/utilities";

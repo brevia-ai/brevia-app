@@ -1,14 +1,16 @@
 <template>
     <main>
-        <div class="text-red-600" v-if="!collectionName">
-            <p>{{ $t('COLLECTION_NOT_FOUND') }}</p>
-        </div>
+        <div class="space-y-12" v-if="collection.uuid">
+            <div class="flex justify-between space-x-4">
+                <div class="space-y-4">
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl leading-tight font-bold">{{ collection.cmetadata?.title }}</h2>
+                    <div class="text-neutral-600"
+                        v-html="collection.cmetadata?.description" v-if="collection.cmetadata?.description"></div>
+                </div>
 
-        <div class="space-y-8" v-else>
-            <div class="space-y-6">
-                <h2 class="text-2xl md:text-3xl lg:text-4xl leading-tight font-bold">{{ collection.cmetadata?.title }}</h2>
-                <div class="text-neutral-600"
-                    v-html="collection.cmetadata?.description" v-if="collection.cmetadata?.description"></div>
+                <NuxtLink class="text-sky-800 hover:text-sky-600" :to="`edit-${collectionName}`">
+                    <Icon name="carbon:settings" class="text-4xl" />
+                </NuxtLink>
             </div>
 
             <div v-if="dialog.length">

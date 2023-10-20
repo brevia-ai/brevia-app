@@ -12,6 +12,7 @@
         :autocomplete="autocomplete"
         :placeholder="placeholder"
         :required="required"
+        :value="modelValue"
         @input="handleInput"
         @change="handleChange">
 </div>
