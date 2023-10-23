@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-useHead({ title: 'Chatlas', });
+useHead({ title: 'Brevia', });
 
 const store = useStatesStore();
 const config = useRuntimeConfig();

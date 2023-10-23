@@ -14,5 +14,5 @@
     </div>
 </template>
 <script setup>
-    useHead({ title: 'About chatlas', });
+    useHead({ title: 'About Brevia', });
 </script>

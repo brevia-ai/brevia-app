@@ -83,7 +83,7 @@ export default {
         const link = '/summary';
         store.userAccess(link);
         this.menuItem = store.getMenuItem(link);
-        useHead({ title: `${this.menuItem?.title} | Chatlas`});
+        useHead({ title: `${this.menuItem?.title} | Brevia`});
         const info = store.getJobInfo('summary');
         this.jobId = info?.id || null;
         this.file = info?.file || null;

@@ -37,7 +37,7 @@ store.$onAction(({
 });
 
 useHead({
-    title: 'CHATLAS',
+    title: 'BREVIA',
     meta: [{
         name: 'description',
         content: t('TITLES.ATLAS_AI_POWERED_TOOLS'),
