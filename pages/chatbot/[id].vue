@@ -142,7 +142,7 @@ const submit = async () => {
     isBusy.value = true;
 
     dialog.value.push(formatDialogItem('YOU', prompt.value));
-    dialog.value.push(formatDialogItem('CHATLAS', ''));
+    dialog.value.push(formatDialogItem('BREVIA', ''));
 
     const currIdx = dialog.value.length - 1;
 
@@ -226,7 +226,7 @@ const handleStreamText = (text: string, currIdx: number) => {
 };
 
 const showErrorInDialog = (index: number) => {
-    const dialogItem = formatDialogItem('CHATLAS', t('SOMETHING_WENT_WRONG'), true);
+    const dialogItem = formatDialogItem('BREVIA', t('SOMETHING_WENT_WRONG'), true);
 
     if (index) {
         dialog.value[index] = dialogItem;

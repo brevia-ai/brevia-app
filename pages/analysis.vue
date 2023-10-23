@@ -68,7 +68,7 @@ export default {
         const link = this.$route.path;
         store.userAccess(link);
         this.menuItem = store.getMenuItem(link);
-        useHead({ title: `${this.menuItem?.title} | Chatlas`});
+        useHead({ title: `${this.menuItem?.title} | Brevia`});
         this.jobName = this.menuItem?.title?.toLowerCase()?.replace(' ', '-') || 'analysis';
         const info = store.getJobInfo(this.jobName);
         this.jobId = info?.id || null;

@@ -66,7 +66,7 @@ export default {
         const link = '/transcription';
         store.userAccess(link);
         this.menuItem = store.getMenuItem(link);
-        useHead({ title: `${this.menuItem?.title} | Chatlas`});
+        useHead({ title: `${this.menuItem?.title} | Brevia`});
     },
 
     methods: {
