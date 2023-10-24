@@ -48,18 +48,4 @@
         0%, 100% { transform: scale(0.0); }
         50% { transform: scale(1.0); }
     }
-
-    /* UNUSED */
-    .ellipsis-loading:after {
-        @apply inline-block text-2xl font-bold leading-none;
-        content: '\00a0 ';
-        animation: ellipsis steps(1, end) 1s infinite;
-    }
-    @keyframes ellipsis {
-        0%   { content: '\00a0 '; }
-        25%  { content: '.'; }
-        50%  { content: '..'; }
-        75%  { content: '...'; }
-        100% { content: '\00a0 '; }
-    }
 }

@@ -1,12 +1,19 @@
 import { UserDataStore } from './../utils/user-data-store';
 import { defineStore } from 'pinia';
 
+export enum ItemEditLevel {
+    ReadWrite = 'READ_WRITE',
+    ReadOnly = 'READ_ONLY',
+    None = 'NONE',
+}
+
 export interface menuItem {
     link: string;
     type: string;
     title: string;
     description: string;
     params: any;
+    edit: ItemEditLevel;
 }
 
 export const useStatesStore = defineStore('states', {

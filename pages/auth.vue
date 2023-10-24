@@ -118,6 +118,7 @@ export default {
                     title: this.field(item, 'title'),
                     description: this.field(item, 'description'),
                     params,
+                    edit: userEditLevel(item),
                 });
             }
 

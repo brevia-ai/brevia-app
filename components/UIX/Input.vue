@@ -14,7 +14,8 @@
         :required="required"
         :value="modelValue"
         @input="handleInput"
-        @change="handleChange">
+        @change="handleChange"
+        ref="input">
 </div>
 </template>
 
@@ -56,11 +57,24 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    autofocus: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const emit = defineEmits<{
     (e: 'update:modelValue', value: string): void
 }>();
+
+const input = ref<HTMLInputElement>();
+onMounted(() => {
+    if (props.autofocus) {
+        setTimeout(() => {
+            input.value?.focus();
+        }, 100);
+    }
+});
 
 const handleInput = (event: Event) => {
     const target = event.target as HTMLInputElement;

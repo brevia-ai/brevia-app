@@ -1,0 +1,20 @@
+@layer components {
+    .tabs {
+        @apply flex justify-start space-x-8 lg:space-x-10;
+
+        button {
+            @apply relative font-semibold text-sm uppercase tracking-wider;
+            &:after {
+                content: '';
+                @apply absolute h-1 w-0 -left-1 -bottom-1 bg-sky-700 transition-all;
+            }
+
+            &.active {
+                @apply text-sky-800;
+                &:after {
+                    @apply w-[calc(100%+.5rem)];
+                }
+            }
+        }
+    }
+}

@@ -11,7 +11,7 @@
         <MainFooter />
     </div>
 
-    <Modal v-if="$isActiveModal()"/>
+    <Modal v-if="$isActiveModal()" />
 </ClientOnly>
 </template>
 
