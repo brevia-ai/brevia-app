@@ -5,15 +5,15 @@
             border border-sky-700 hover:border-sky-600
             text-white rounded
             cursor-pointer select-none
-            disabled:bg-slate-400 disabled:text-opacity-80 disabled:cursor-not-allowed;
+            disabled:bg-slate-400 disabled:border-slate-400 disabled:text-opacity-80 disabled:cursor-not-allowed;
 
         &.disabled {
-            @apply bg-slate-400 text-opacity-80 cursor-not-allowed;
+            @apply bg-slate-400 border-slate-400 text-opacity-80 cursor-not-allowed;
         }
     }
 
     .button-secondary {
-        @apply border border-sky-700 bg-white hover:bg-sky-100 text-sky-700
+        @apply border-sky-700 bg-white hover:bg-sky-100 text-sky-700
             disabled:text-slate-400 disabled:text-opacity-70 disabled:bg-slate-200 disabled:border-slate-300;
         &.disabled {
             @apply text-slate-400 text-opacity-70 bg-slate-200 border-slate-300;
@@ -21,12 +21,13 @@
     }
 
     .button-danger {
-        @apply px-4 py-3.5 inline-flex items-center justify-center
+        @apply px-4 py-3 inline-flex items-center justify-center space-x-2
+            border-pink-700 hover:border-pink-600
             bg-pink-700 hover:bg-pink-600 text-white rounded
             disabled:bg-slate-400 disabled:text-opacity-80 disabled:cursor-not-allowed;
 
         &.disabled {
-            @apply bg-pink-400 text-opacity-80 cursor-not-allowed;
+            @apply bg-pink-400 border-pink-400 text-opacity-80 cursor-not-allowed;
         }
     }
 
