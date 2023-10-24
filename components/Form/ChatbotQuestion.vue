@@ -8,13 +8,13 @@
         required />
 
     <textarea :placeholder="$t('ANSWER_PLACEHOLDER')"
-        v-model="answer" rows="4"></textarea>
+        v-model="answer" rows="6"></textarea>
 
     <div class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary" v-if="error">
         {{ $t('AN_ERROR_OCCURRED_PLEASE_RETRY') }}
     </div>
 
-    <div class="flex justify-between space-x-4">
+    <div class="flex justify-start gap-4">
         <button type="submit" class="px-8 button button-primary uppercase"
             :class="{ 'is-loading': isLoading }"
             :disabled="!question"
@@ -23,7 +23,9 @@
                 <template v-else>{{ $t('ADD') }}</template>
             </button>
 
-        <button class="button button-secondary uppercase" @click.prevent="cancel">{{ $t('CANCEL') }}</button>
+        <button class="button button-secondary uppercase" :class="{'ml-auto': !item.id}" @click.prevent="cancel">{{ $t('CANCEL') }}</button>
+
+        <button class="ml-auto button button-danger uppercase" @click.prevent="cancel" v-if="item.id">{{ $t('DELETE') }}</button>
     </div>
 </form>
 </template>

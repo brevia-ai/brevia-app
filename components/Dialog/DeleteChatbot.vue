@@ -28,7 +28,7 @@
         </div>
 
         <div class="flex justify-between space-x-4">
-            <button type="submit" class="button button-danger uppercase">
+            <button type="submit" class="button button-danger uppercase" @click="deleteChatbot">
                 {{ $t('DELETE') }} chatbot
             </button>
 
@@ -47,4 +47,8 @@ onMounted(() => {
         }
     });
 });
+
+const deleteChatbot = () => {
+    $closeModal();
+}
 </script>
