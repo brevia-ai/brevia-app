@@ -1,6 +1,6 @@
 <template>
-<div class="bg-white shadow-md rounded overflow-hidden">
-    <div class="p-4 sm:p-6" v-if="editMode">
+<div>
+    <div class="p-4 sm:p-6 bg-slate-900 text-white shadow-md rounded" v-if="editMode">
         <FormChatbotQuestion :item="item" @close="editMode = false" />
     </div>
 

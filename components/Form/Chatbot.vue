@@ -15,6 +15,10 @@
     </div>
 
     <div :class="{'flex justify-between space-x-4': collection?.name}">
+        <NuxtLink class="button button-secondary uppercase"
+            :disabled="!title"
+            :to="collection.name" v-if="collection?.name">{{ $t('EXIT') }}</NuxtLink>
+
         <button type="submit" class="button button-primary uppercase"
             :class="{
                 'w-full max-w-lg mx-auto': !collection?.name,
@@ -25,11 +29,7 @@
                 <template v-if="collection?.name">{{ $t('SAVE') }}</template>
                 <template v-else>{{ $t('CREATE') }}</template>
                 chatbot
-            </button>
-
-        <NuxtLink class="button button-secondary uppercase"
-            :disabled="!title"
-            :to="collection.name" v-if="collection?.name">{{ $t('EXIT') }}</NuxtLink>
+        </button>
     </div>
 </form>
 </template>

@@ -11,10 +11,12 @@
     <div class="-my-6 ellipsis-loading text-sky-700"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
 
-    <div class="space-y-6" v-else-if="questions.formattedData.data.length">
-        <ElementChatbotQuestionItem
-            v-for="item in questions.formattedData.data" :key="item.id"
-            :item="item" />
+    <div class="questions space-y-6" v-else-if="questions.formattedData.data.length">
+        <div v-for="item in questions.formattedData.data" :key="item.id">
+            <div class="question">
+                <ElementChatbotQuestionItem :item="item" />
+            </div>
+        </div>
     </div>
 </div>
 </template>
@@ -33,3 +35,17 @@ const isLoading = ref(true);
 const { data: questions } = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions`);
 isLoading.value = false;
 </script>
+
+<style scoped>
+    .questions {
+        counter-reset: section;
+    }
+    .question {
+        @apply relative;
+        &:before {
+            counter-increment: section;
+            content: counter(section);
+            @apply hidden lg:flex absolute -left-8 top-6 w-8 h-8 items-center justify-center font-mono font-bold leading-none;
+        }
+    }
+</style>
