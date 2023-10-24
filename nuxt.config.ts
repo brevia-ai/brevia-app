@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     runtimeConfig: {
+        allowedBeditaEndpoints: [],
         apiSecret: process.env.API_SECRET || '',
         apiBaseUrl: process.env.API_BASE_URL || '',
         beditaApiBaseUrl: process.env.BEDITA_API_BASE_URL || '',
@@ -13,6 +14,7 @@ export default defineNuxtConfig({
             maxUserChatbots: process.env.MAX_USER_CHATBOTS || '',
         },
     },
+
     imports: {
         dirs: ['store'],
     },

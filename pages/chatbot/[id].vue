@@ -8,7 +8,8 @@
                         v-html="collection.cmetadata?.description" v-if="collection.cmetadata?.description"></div>
                 </div>
 
-                <NuxtLink class="text-sky-800 hover:text-sky-600" :to="`edit-${collectionName}`">
+                <NuxtLink class="text-sky-800 hover:text-sky-600" :to="`edit-${collectionName}`"
+                    v-if="editLevel != ItemEditLevel.None">
                     <Icon name="carbon:settings" class="text-4xl" />
                 </NuxtLink>
             </div>
@@ -90,6 +91,7 @@ const docs = ref<any>([]);
 
 let sessionId = '';
 let collectionName = '';
+let editLevel = ItemEditLevel.None;
 
 onBeforeMount(async () => {
     const route = useRoute();
@@ -97,14 +99,17 @@ onBeforeMount(async () => {
 
     // check if user has access to this page (TODO: refactor to use middleware)
     const store = useStatesStore();
-    store.userAccess(`/chatbot/${collectionName}`);
+    const link = `/chatbot/${collectionName}`;
+    store.userAccess(link);
+    const item = store.getMenuItem(link);
+    editLevel = item?.edit || ItemEditLevel.None;
 
     // TODO: refactor in store
     store.readOptions();
 
     isBusy.value = true;
     const data = await $fetch(`/api/collections?name=${collectionName}`);
-    collection.value = data.find((x: any) => x.name === collectionName);
+    collection.value = data;
 
     if (!collection.value?.uuid) {
         throw createError({

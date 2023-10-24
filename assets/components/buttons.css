@@ -1,12 +1,33 @@
 @layer components {
     .button {
-        @apply px-4 py-3.5 inline-flex items-center justify-center
-            bg-sky-700 hover:bg-sky-600 text-white rounded
-            disabled:bg-neutral-500 disabled:cursor-not-allowed;
+        @apply px-4 py-3 inline-flex items-center justify-center space-x-2
+            bg-sky-700 hover:bg-sky-600
+            border border-sky-700 hover:border-sky-600
+            text-white rounded
+            cursor-pointer select-none
+            disabled:bg-slate-400 disabled:text-opacity-80 disabled:cursor-not-allowed;
+
+        &.disabled {
+            @apply bg-slate-400 text-opacity-80 cursor-not-allowed;
+        }
     }
 
     .button-secondary {
-        @apply border border-sky-700 bg-white hover:bg-sky-100 text-sky-700 uppercase;
+        @apply border border-sky-700 bg-white hover:bg-sky-100 text-sky-700
+            disabled:text-slate-400 disabled:text-opacity-70 disabled:bg-slate-200 disabled:border-slate-300;
+        &.disabled {
+            @apply text-slate-400 text-opacity-70 bg-slate-200 border-slate-300;
+        }
+    }
+
+    .button-danger {
+        @apply px-4 py-3.5 inline-flex items-center justify-center
+            bg-pink-700 hover:bg-pink-600 text-white rounded
+            disabled:bg-slate-400 disabled:text-opacity-80 disabled:cursor-not-allowed;
+
+        &.disabled {
+            @apply bg-pink-400 text-opacity-80 cursor-not-allowed;
+        }
     }
 
     /* TODO: ELIMINARE */
@@ -21,7 +42,7 @@
     }
 
     .button.is-loading:not(.disabled) {
-        @apply relative !text-transparent;
+        @apply relative !text-transparent pointer-events-none;
         &:after {
             content: "";
             @apply absolute left-1/2 top-1/2 -ml-2 -mt-2 w-4 h-4 border-2 rounded-full;
@@ -31,7 +52,7 @@
 
         &.button-secondary {
             &:after {
-                border-color: transparent transparent #0369a1 #0369a1;
+                border-color: transparent transparent #0284c7 #0284c7;
             }
         }
     }

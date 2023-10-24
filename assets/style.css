@@ -6,4 +6,5 @@
 @import "components/_components.css";
 @import "components/buttons.css";
 @import "components/chat.css";
+@import "components/tabs.css";
 @import "tailwindcss/utilities";

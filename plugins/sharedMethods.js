@@ -44,11 +44,12 @@ export default defineNuxtPlugin(async nuxtApp => {
                 return doc;
             },
 
-            text2html(html) {
+            // converts HTML to text
+            // TODO: implement rich text editor or for more advanced convertion https://www.npmjs.com/package/html-to-text
+            html2text(html) {
                 if (!html)
                     return '';
 
-                // converts HTML to text, TODO: implement rich text editor or for more advanced convertion https://www.npmjs.com/package/html-to-text
                 return new DOMParser().parseFromString(html, "text/html").documentElement.textContent || '';
             }
         }
