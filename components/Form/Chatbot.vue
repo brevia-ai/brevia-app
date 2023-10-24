@@ -119,8 +119,6 @@ const update = async () => {
             },
         });
 
-        isLoading.value = false;
-
         // update menu
         const menu = store.getMenu();
         const newMenu = menu.map((item: any) => {
