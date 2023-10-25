@@ -33,7 +33,7 @@
 const props = defineProps({
     collection: {
         type: Object,
-        required: true,
+        default: {},
     },
 });
 
@@ -43,15 +43,10 @@ const { $closeModal } = useNuxtApp();
 const error = ref<string|null>(null);
 const isDeleting = ref(false);
 
-onMounted(() => {
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            $closeModal();
-        }
-    });
-});
-
 const deleteChatbot = async () => {
+    if (!props.collection.cmetadata?.id)
+        return;
+
     isDeleting.value = true;
     try {
         await $fetch(`/api/bedita/collection/${props.collection.cmetadata.id}`, { method: 'DELETE' });

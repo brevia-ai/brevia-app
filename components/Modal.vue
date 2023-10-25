@@ -19,4 +19,13 @@
 <script setup lang="ts">
 import { useModalStore } from '~~/store/modal';
 const modalStore = useModalStore();
+const { $closeModal } = useNuxtApp();
+
+onMounted(() => {
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            $closeModal();
+        }
+    });
+});
 </script>
