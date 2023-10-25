@@ -3,7 +3,7 @@
     <UIXInput :label="$t('TITLE')"
         :placeholder="$t('TITLE_PLACEHOLDER')"
         autocapitalize="on"
-        v-model.trim="title" @keydown.enter="save"
+        v-model.trim="title" @keydown.enter.stop.prevent="save"
         autofocus
         required />
 
@@ -24,8 +24,7 @@
                 'w-full max-w-lg mx-auto': !collection?.name,
                 'is-loading': isLoading
             }"
-            :disabled="!title"
-            @click.stop.prevent="save">
+            :disabled="!title">
                 <template v-if="collection?.name">{{ $t('SAVE') }}</template>
                 <template v-else>{{ $t('CREATE') }}</template>
                 chatbot
@@ -46,13 +45,14 @@ const props = defineProps({
     },
 });
 
+const { $closeModal, $html2text } = useNuxtApp();
+const store = useStatesStore();
+const modalstore = useModalStore();
+
 const error = ref(false);
 const isLoading = ref(false);
 const title = ref('');
 const description = ref('');
-
-const { $closeModal, $html2text } = useNuxtApp();
-const store = useStatesStore();
 
 if (props.collection) {
     title.value = props.collection.cmetadata?.title || '';

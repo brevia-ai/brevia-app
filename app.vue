@@ -16,11 +16,11 @@
 </template>
 
 <script setup lang="ts">
-import { useStatesStore } from '~~/store/states';
+import { useModalStore } from '~~/store/modal';
 const { locale, t } = useI18n();
 
-const store = useStatesStore();
-store.$onAction(({
+const modalStore = useModalStore();
+modalStore.$onAction(({
     name, // name of the action
     store, // store instance, same as `someStore`
     args, // array of parameters passed to the action

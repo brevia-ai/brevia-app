@@ -22,7 +22,6 @@ export const useStatesStore = defineStore('states', {
         options: {},
         user: null as UserDataStore | null,
         menu: [] as menuItem[],
-        activeModal: null as string | null,
     }),
 
     actions: {
@@ -108,13 +107,5 @@ export const useStatesStore = defineStore('states', {
             this.options = options;
             localStorage.setItem('chatlas-options', JSON.stringify(options));
         },
-
-        openModal(modal: string) {
-            this.activeModal = modal;
-        },
-
-        closeModal() {
-            this.activeModal = null;
-        }
     },
 });
