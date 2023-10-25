@@ -47,7 +47,6 @@ const props = defineProps({
 
 const { $closeModal, $html2text } = useNuxtApp();
 const store = useStatesStore();
-const modalstore = useModalStore();
 
 const error = ref(false);
 const isLoading = ref(false);

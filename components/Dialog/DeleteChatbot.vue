@@ -33,10 +33,11 @@
 const props = defineProps({
     collection: {
         type: Object,
-        default: null,
+        required: true,
     },
 });
 
+const store = useStatesStore();
 const { $closeModal } = useNuxtApp();
 
 const error = ref<string|null>(null);
@@ -53,11 +54,18 @@ onMounted(() => {
 const deleteChatbot = async () => {
     isDeleting.value = true;
     try {
-        // await $fetch(`/api/bedita/collection/${id}`, { method: 'DELETE' });
+        await $fetch(`/api/bedita/collection/${props.collection.cmetadata.id}`, { method: 'DELETE' });
     } catch (err) {
         error.value = 'Error delating';
     }
     isDeleting.value = false;
+
+    // update menu
+    const menu = store.getMenu();
+    const newMenu = menu.filter(item => item.link !== `/chatbot/${props.collection.name}`);
+    store.setMenu(newMenu);
+
     $closeModal();
+    navigateTo('/');
 }
 </script>
