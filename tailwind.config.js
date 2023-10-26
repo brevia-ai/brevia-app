@@ -1,6 +1,12 @@
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   theme: {
     extend: {
+      colors: {
+        primary: colors.sky[700],
+        danger: colors.pink[700],
+      },
       screens: {
         '3xl': '1728px',
         '4xl': '1920px',

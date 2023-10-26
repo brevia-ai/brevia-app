@@ -1,7 +1,8 @@
 <template>
-<div class="bg-white shadow-md rounded overflow-hidden">
-    <div class="p-4 sm:p-6" v-if="editMode">
-        <FormChatbotQuestion :item="item" @close="editMode = false" />
+<div>
+    <div class="p-4 sm:p-6 bg-slate-900 text-white shadow-md rounded" v-if="editMode">
+        <FormChatbotQuestion :item="item" :collection-id="collectionId"
+            @close="editMode = false; $emit('close', true)" />
     </div>
 
     <div v-else>
@@ -15,12 +16,12 @@
             </button>
         </div>
 
-        <div class="pl-3.5 pr-2 flex gap-4 cursor-pointer bg-white hover:bg-sky-50 text-sky-800"
+        <div class="pl-3.5 pr-2 flex justify-between gap-4 cursor-pointer bg-white hover:bg-sky-50 text-sky-800"
             @click="expanded = !expanded">
             <div class="my-3" :class="{'text-sm line-clamp-1': !expanded}"
-                v-html="item.attributes.body"></div>
+                v-html="item.attributes.body || '&nbsp;'"></div>
 
-            <button class="text-sky-600 leading-none">
+            <button class="text-sky-600 leading-none" v-if="item.attributes.body">
                 <Icon name="carbon:caret-down" class="text-4xl" v-if="!expanded" />
                 <Icon name="carbon:caret-up" class="text-4xl" v-else />
                 <span class="sr-only">{{ $t('EDIT') }}</span>
@@ -32,6 +33,10 @@
 
 <script lang="ts" setup>
 defineProps({
+    collectionId: {
+        type: [ String, Number ],
+        required: true,
+    },
     item: {
         type: Object,
         required: true,

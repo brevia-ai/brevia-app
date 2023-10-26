@@ -1,19 +1,19 @@
 @layer components {
     .button {
-        @apply px-4 py-3 inline-flex items-center justify-center space-x-2
-            bg-sky-700 hover:bg-sky-600
-            border border-sky-700 hover:border-sky-600
+        @apply px-4 py-3 inline-flex items-center justify-center gap-x-2
+            bg-primary hover:bg-sky-600
+            border border-primary hover:border-sky-600
             text-white rounded
             cursor-pointer select-none
-            disabled:bg-slate-400 disabled:text-opacity-80 disabled:cursor-not-allowed;
+            disabled:bg-slate-400 disabled:border-slate-400 disabled:text-opacity-80 disabled:cursor-not-allowed;
 
         &.disabled {
-            @apply bg-slate-400 text-opacity-80 cursor-not-allowed;
+            @apply bg-slate-400 border-slate-400 text-opacity-80 cursor-not-allowed;
         }
     }
 
     .button-secondary {
-        @apply border border-sky-700 bg-white hover:bg-sky-100 text-sky-700
+        @apply border-primary bg-white hover:bg-sky-100 text-primary
             disabled:text-slate-400 disabled:text-opacity-70 disabled:bg-slate-200 disabled:border-slate-300;
         &.disabled {
             @apply text-slate-400 text-opacity-70 bg-slate-200 border-slate-300;
@@ -21,13 +21,22 @@
     }
 
     .button-danger {
-        @apply px-4 py-3.5 inline-flex items-center justify-center
-            bg-pink-700 hover:bg-pink-600 text-white rounded
+        @apply px-4 py-3 inline-flex items-center justify-center gap-x-2
+            border-danger hover:border-pink-600
+            bg-danger hover:bg-pink-600 text-white rounded
             disabled:bg-slate-400 disabled:text-opacity-80 disabled:cursor-not-allowed;
 
         &.disabled {
-            @apply bg-pink-400 text-opacity-80 cursor-not-allowed;
+            @apply bg-pink-400 border-pink-400 text-opacity-80 cursor-not-allowed;
         }
+    }
+
+    .button-mock {
+        @apply px-4 py-3 inline-flex items-center justify-center gap-x-2 border select-none;
+    }
+
+    .button-transparent {
+        @apply bg-transparent border-transparent;
     }
 
     /* TODO: ELIMINARE */
@@ -68,8 +77,8 @@
 
     .big-button {
         @apply pt-4 pb-6 px-6 flex items-center justify-center flex-col space-y-2 sm:aspect-square
-            bg-slate-800 hover:bg-sky-700 text-white
-            focus:outline outline-offset-4 outline-4 outline-sky-700
+            bg-slate-800 hover:bg-primary text-white
+            focus:outline outline-offset-4 outline-4 outline-primary
             shadow-xl hover:shadow-2xl hover:shadow-sky-800
             rounded-lg;
     }

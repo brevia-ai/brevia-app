@@ -1,7 +1,7 @@
 <template>
 <div class="grow flex flex-col space-y-1">
     <div class="flex items-center space-x-2">
-        <UIXInputFile accept-types="application/pdf"
+        <UIXInputFile accept-types="application/pdf" ref="inputFile"
             label-classes="button-secondary w-full justify-between italic"
             @file-change="upload($event)"
             :is-loading="isLoading" />
@@ -14,21 +14,41 @@
 </template>
 
 <script lang="ts" setup>
-const file = ref(false);
+const props = defineProps({
+    collection: {
+        type: Object,
+        required: true,
+    },
+});
+
+const emit = defineEmits(['file-uploaded']);
+const { $fileName2title } = useNuxtApp();
+
+const inputFile = ref();
 const isLoading = ref(false);
 
 const upload = async (newFile: File) => {
     isLoading.value = true;
-    console.log('upload', newFile);
-    // const formData = new FormData();
-    // formData.append('file', newFile);
-    // const { data } = await useFetch('', {
-    //     method: 'POST',
-    //     body: formData,
-    // });
 
-    setTimeout(() => {
-        isLoading.value = false;
-    }, 5000);
+    const formData = new FormData();
+    formData.append('title', $fileName2title(newFile?.name));
+    formData.append('file', newFile);
+    formData.append('relatedId', props.collection.cmetadata.id);
+    formData.append('relatedType', 'collections');
+    formData.append('relationName', 'has_documents');
+
+    try {
+        await $fetch('/api/bedita/upload/files', {
+            method: 'POST',
+            body: formData,
+        });
+
+        inputFile.value?.reset();
+        emit('file-uploaded', true);
+    } catch (error) {
+        console.log(error);
+    }
+
+    isLoading.value = false;
 }
 </script>

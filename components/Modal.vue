@@ -9,11 +9,23 @@
 
         <!-- modal content -->
         <div class="pt-5 px-6 pb-6 space-y-6 relative w-full sm:max-w-lg bg-white rounded-lg shadow">
-
-            <DialogNewChatbot    v-if="$isOpenModal('create-chatbot')" />
-            <DialogDeleteChatbot v-if="$isOpenModal('delete-chatbot')" />
-
+            <LazyDialogNewChatbot    v-if="$isOpenModal('DialogNewChatbot')" />
+            <LazyDialogDeleteChatbot v-if="$isOpenModal('DialogDeleteChatbot')" v-bind="modalStore.actveModalProps" />
         </div>
     </div>
 </div>
 </template>
+
+<script setup lang="ts">
+import { useModalStore } from '~~/store/modal';
+const modalStore = useModalStore();
+const { $closeModal } = useNuxtApp();
+
+onMounted(() => {
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            $closeModal();
+        }
+    });
+});
+</script>

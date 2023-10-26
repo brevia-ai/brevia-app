@@ -5,16 +5,18 @@
         <span class="normal-case italic">{{  $t('CLIC_TO_ADD_QUESTION') }}</span>
         <Icon name="carbon:add-filled" class="text-2xl shrink-0" />
     </button>
-    <FormChatbotQuestion @close="addMode = false" v-else />
+    <FormChatbotQuestion :collection-id="collection.cmetadata.id" @close="closeForm" v-else />
 
     <!-- existing -->
     <div class="-my-6 ellipsis-loading text-sky-700"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
 
-    <div class="space-y-6" v-else-if="questions.formattedData.data.length">
-        <ElementChatbotQuestionItem
-            v-for="item in questions.formattedData.data" :key="item.id"
-            :item="item" />
+    <div class="questions space-y-6" v-else-if="questions.formattedData.data.length">
+        <div v-for="item in questions.formattedData.data" :key="item.id">
+            <div class="question">
+                <ElementChatbotQuestionItem :item="item" :collection-id="collection.cmetadata.id" @close="closeForm" />
+            </div>
+        </div>
     </div>
 </div>
 </template>
@@ -30,6 +32,30 @@ const props = defineProps({
 const addMode = ref(false);
 const isLoading = ref(true);
 
-const { data: questions } = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions`);
+const { data: questions, refresh } = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created`);
 isLoading.value = false;
+
+const closeForm = async (e) => {
+    if (e) {
+        isLoading.value = true;
+        await refresh();
+        isLoading.value = false;
+    }
+
+    addMode.value = false;
+}
 </script>
+
+<style scoped>
+    .questions {
+        counter-reset: question;
+    }
+    .question {
+        @apply relative;
+        &:before {
+            content: counter(question);
+            counter-increment: question;
+            @apply hidden lg:flex absolute -left-8 top-3 w-8 h-8 items-center justify-center text-lg font-mono font-bold leading-none;
+        }
+    }
+</style>

@@ -1,25 +1,25 @@
-import { useStatesStore } from '~~/store/states';
+import { useModalStore } from '~~/store/modal';
 import { jsPDF } from 'jspdf';
 
 export default defineNuxtPlugin(async nuxtApp => {
-    const store = useStatesStore();
+    const modalStore = useModalStore();
 
     return {
         provide: {
-            openModal(modal) {
-                store.openModal(modal);
+            openModal(modal, props = {}) {
+                modalStore.openModal(modal, props);
             },
 
             closeModal() {
-                store.closeModal();
+                modalStore.closeModal();
             },
 
             isActiveModal() {
-                return !!store.activeModal;
+                return !!modalStore.activeModal;
             },
 
             isOpenModal(modal) {
-                return store.activeModal === modal;
+                return modalStore.activeModal === modal;
             },
 
             createPdf(text) {
@@ -51,6 +51,16 @@ export default defineNuxtPlugin(async nuxtApp => {
                     return '';
 
                 return new DOMParser().parseFromString(html, "text/html").documentElement.textContent || '';
+            },
+
+            fileName2title(fileName) {
+                if (!fileName)
+                    return '';
+
+                fileName = fileName.replace(/[_-]/g, ' ');
+                fileName = fileName.replace(/\.[^/.]+$/, '');
+
+                return fileName.charAt(0).toUpperCase() + fileName.slice(1);
             }
         }
     }
