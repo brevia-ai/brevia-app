@@ -81,19 +81,30 @@ onUnmounted(() => {
 
 // methods
 function onDragEnter(e: Event) {
+    if (props.isLoading || props.disabled)
+        return;
+
     lastTarget.value = e.target as any;
     isDragging.value = true;
 }
 function onDragLeave(e: Event) {
+    if (props.isLoading || props.disabled)
+        return;
+
     if (e.target === lastTarget.value) {
         isDragging.value = false;
     }
 }
 function onDragOver(e: Event) {
     e.preventDefault();
+    if (props.isLoading || props.disabled)
+        return;
 }
 function onDrop(e: DragEvent) {
     e.preventDefault();
+    if (props.isLoading || props.disabled)
+        return;
+
     isDragging.value = false;
     if(e.dataTransfer != undefined) {
         const files: File[] = Array.from(e.dataTransfer.files);
