@@ -1,22 +1,30 @@
 <template>
-<div class="px-4 py-4 bg-gradient-to-br from-slate-700 to-slate-950 text-white text-sm rounded">
-    <div class="flex justify-between items-center space-x-4">
-        <div class="flex space-x-4 items-center">
-            <div>
-                <Icon name="carbon:document-pdf" class="text-3xl" />
-            </div>
+<div class="pl-4 pr-3 py-4 flex justify-between items-center space-x-4
+    bg-gradient-to-br from-slate-700 to-slate-950 text-white hover:text-sky-400 rounded cursor-pointer"
+    @click.stop="download">
 
-            <div>
-                <p>{{ item.attributes.title }}</p>
-                <p class="text-xs">{{ item.attributes.description }}</p>
-            </div>
+    <div class="flex space-x-4 items-center">
+        <div>
+            <Icon name="carbon:document-pdf" class="text-3xl" />
         </div>
 
-        <a href="#" target="_blank" class="button disabled py-2.5">
+        <div>
+            <p>{{ item.attributes.title }}</p>
+            <p class="text-xs text-slate-300" v-html="item.attributes.description" v-if="item.attributes.description"></p>
+        </div>
+    </div>
+
+    <div class="space-x-1">
+        <a href="#" class="button-mock border-transparent py-2.5 px-3" @click.prevent="download">
             <Icon name="carbon:download" class="text-lg" />
             <span class="sr-only">{{ $t('DOWNLOAD') }}</span>
         </a>
+        <button class="mr-auto button button-secondary button-transparent text-pink-500 hover:bg-danger hover:border-danger hover:text-white py-2.5 px-3" :class="{ 'is-loading': isDeleting }"
+            @click.stop.prevent="deleteFile" v-if="item.id">
+            <Icon name="carbon:trash-can" class="text-lg" />
+        </button>
     </div>
+
 </div>
 </template>
 
@@ -27,4 +35,7 @@ defineProps({
         required: true,
     },
 });
+
+const deleteFile = () => false;
+const download = () => false;
 </script>
