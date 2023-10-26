@@ -13,17 +13,21 @@
     </div>
 
     <div class="flex space-x-3 md:space-x-5">
-        <button class="w-10 h-10 button border-none text-xs uppercase"
+        <button class="w-12 h-10 button border-none text-xs uppercase"
             v-for="(lang, i) in availableLocales" :key="i"
             @click="setLocale(lang as string)">{{ lang }}</button>
 
-        <button class="h-10 px-5 sm:px-8 button text-sm leading-none bg-slate-950 hover:bg-red-800" @click="logout" v-if="stateStore.isLogged">
-            <span class="sm:hidden">⍈</span>
-            <span class="hidden sm:inline">{{ $t('LOGOUT') }}</span>
+        <button class="h-10 px-4 sm:px-8 button text-sm leading-none bg-slate-950 hover:bg-danger hover:border-pink-800" @click="logout" v-if="stateStore.isLogged">
+            <div class="sm:hidden">
+                <Icon name="carbon:logout" class="text-lg" />
+            </div>
+            <span class="hidden sr-only sm:not-sr-only sm:inline">{{ $t('LOGOUT') }}</span>
         </button>
 
-        <NuxtLink class="w-10 h-10 button border-none" to="/" v-if="$route.name === 'about'">⌂</NuxtLink>
-        <NuxtLink class="w-10 h-10 button" to="/about" v-else-if="!stateStore.isLogged">?</NuxtLink>
+        <NuxtLink class="w-12 h-10 button border-none" to="/" v-if="$route.name === 'about'">
+            <Icon name="carbon:home" class="text-lg" />
+        </NuxtLink>
+        <NuxtLink class="w-12 h-10 button" to="/about" v-else-if="!stateStore.isLogged">?</NuxtLink>
     </div>
 </header>
 </template>

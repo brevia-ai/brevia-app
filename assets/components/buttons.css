@@ -1,6 +1,6 @@
 @layer components {
     .button {
-        @apply px-4 py-3 inline-flex items-center justify-center space-x-2
+        @apply px-4 py-3 inline-flex items-center justify-center gap-x-2
             bg-primary hover:bg-sky-600
             border border-primary hover:border-sky-600
             text-white rounded
@@ -21,7 +21,7 @@
     }
 
     .button-danger {
-        @apply px-4 py-3 inline-flex items-center justify-center space-x-2
+        @apply px-4 py-3 inline-flex items-center justify-center gap-x-2
             border-danger hover:border-pink-600
             bg-danger hover:bg-pink-600 text-white rounded
             disabled:bg-slate-400 disabled:text-opacity-80 disabled:cursor-not-allowed;
@@ -32,7 +32,7 @@
     }
 
     .button-mock {
-        @apply px-4 py-3 inline-flex items-center justify-center space-x-2 border select-none;
+        @apply px-4 py-3 inline-flex items-center justify-center gap-x-2 border select-none;
     }
 
     .button-transparent {
