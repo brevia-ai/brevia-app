@@ -18,7 +18,7 @@
     <div class="flex justify-end gap-4">
         <button class="mr-auto button button-danger uppercase" :class="{ 'is-loading': isDeleting }"
             @click.prevent="deleteQuestion" v-if="item.id">
-            <Icon name="carbon:trash-can" class="text-2xl" />
+            <Icon name="ph:trash-simple-bold" class="text-2xl" />
         </button>
 
         <button class="button button-secondary uppercase" @click.prevent="cancel">{{ $t('CANCEL') }}</button>
@@ -28,7 +28,7 @@
             :disabled="!title">
                 <template v-if="item.id">{{ $t('SAVE') }}</template>
                 <template v-else>{{ $t('ADD') }}</template>
-            </button>
+        </button>
     </div>
 </form>
 </template>

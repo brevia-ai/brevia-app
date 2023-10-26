@@ -1,16 +1,16 @@
 <template>
     <main>
         <div class="space-y-12" v-if="collection.uuid">
-            <div class="flex justify-between space-x-4">
+            <div class="flex justify-between items-start space-x-4">
                 <div class="space-y-4">
-                    <h2 class="text-2xl md:text-3xl lg:text-4xl leading-tight font-bold">{{ collection.cmetadata?.title }}</h2>
+                    <h2 class="text-2xl md:text-3xl leading-tight font-bold">{{ collection.cmetadata?.title }}</h2>
                     <div class="text-neutral-600"
                         v-html="collection.cmetadata?.description" v-if="collection.cmetadata?.description"></div>
                 </div>
 
-                <NuxtLink class="text-sky-800 hover:text-sky-600" :to="`edit-${collectionName}`"
+                <NuxtLink class="mt-0.5 text-sky-700 hover:text-sky-500" :to="`edit-${collectionName}`"
                     v-if="editLevel != ItemEditLevel.None">
-                    <Icon name="carbon:settings" class="text-4xl" />
+                    <Icon name="ph:gear-fine-bold" class="text-4xl" />
                 </NuxtLink>
             </div>
 
@@ -34,7 +34,7 @@
             <div class="space-y-4">
                 <div class="flex space-x-4">
                     <input type="text"
-                        class="grow text-lg p-2 rounded border border-sky-500 disabled:bg-neutral-100 disabled:border-neutral-300 shadow-md"
+                        class="grow text-lg p-2 rounded border border-sky-500 disabled:bg-neutral-100 disabled:border-neutral-300 shadow-md disabled:shadow-none"
                         ref="input"
                         v-model.trim="prompt"
                         :disabled="isBusy"

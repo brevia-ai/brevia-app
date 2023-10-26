@@ -1,13 +1,13 @@
 <template>
-<NuxtLink class="big-button flex-row justify-between sm:flex-col sm:justify-center gap-6 lg:gap-10"
+<NuxtLink class="big-button relative flex-row justify-between sm:flex-col sm:justify-center"
     :to="link">
 
-    <div class="grow sm:pt-16 md:pt-16 flex flex-col justify-center sm:items-center sm:text-center">
-        <div class="text-5xl leading-tight font-semibold">{{ capitalLetters(item.title, item.type) }}</div>
-        <div class="text-lg lg:text-xl leading-tight">{{ itemTitle(item.title, item.type) }}</div>
+    <div class="grow pb-2 flex flex-col justify-center sm:items-center sm:text-center space-y-0.5">
+        <h2 class="text-4xl font-black leading-tight tracking-wider">{{ capitalLetters(item.title, item.type) }}</h2>
+        <h1 class="text-lg leading-tight">{{ itemTitle(item.title, item.type) }}</h1>
     </div>
 
-    <div class="flex items-center space-x-2 text-sky-300 opacity-90">
+    <div class="static md:absolute bottom-7 flex items-center space-x-2 text-sky-300 opacity-90">
         <Icon class="opacity-70" name="carbon:chat-bot" size="28" v-if="item.type === 'chatbot'" />
         <Icon class="opacity-70" name="carbon:search-locate" size="28" v-else-if="item.type === 'analysis'" />
         <Icon class="opacity-70" name="carbon:license-maintenance" size="28" v-else-if="item.type === 'summary'" />

@@ -14,7 +14,7 @@
         <span v-else>{{ $t('PLEASE_DROP_A_FILE') }}</span>
     </div>
     <div v-if="icon && !isLoading">
-        <Icon :name="icon" class="text-sky-600 text-xl" />
+        <Icon :name="icon" class="text-sky-600 text-2xl" />
     </div>
 
     <input type="file" name="file" ref="inputFile"
@@ -25,9 +25,9 @@
 </label>
 
 <Teleport to="body">
-    <div class="fixed inset-0 z-50 bg-sky-700 bg-opacity-80 flex flex-col items-center justify-center" v-if="isDragging">
-        <span class="text-white text-5xl font-bold">DROP FILE</span>
-        <Icon name="carbon:arrow-shift-down" class="text-white text-8xl" />
+    <div class="fixed inset-0 z-50 bg-sky-700 bg-opacity-80 flex flex-col items-center justify-center space-y-1" v-if="isDragging">
+        <span class="text-white text-5xl font-bold">{{ $t('DROP FILE') }}</span>
+        <Icon name="ph:arrow-circle-down" class="text-white text-8xl" />
     </div>
 </Teleport>
 </template>
@@ -53,7 +53,7 @@ const props = defineProps({
     },
     icon: {
         type: String,
-        default: 'carbon:upload',
+        default: 'ph:upload-simple-bold',
     },
 });
 

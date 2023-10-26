@@ -3,7 +3,7 @@
     <!-- new -->
     <button class="button button-secondary uppercase justify-between items-start px-3.5 text-left" @click="addMode = true" v-if="!addMode">
         <span class="normal-case italic">{{  $t('CLIC_TO_ADD_QUESTION') }}</span>
-        <Icon name="carbon:add-filled" class="text-2xl shrink-0" />
+        <Icon name="ph:plus-bold" class="text-2xl shrink-0" />
     </button>
     <FormChatbotQuestion :collection-id="collection.cmetadata.id" @close="closeForm" v-else />
 
@@ -35,7 +35,7 @@ const isLoading = ref(true);
 const { data: questions, refresh } = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created`);
 isLoading.value = false;
 
-const closeForm = async (e) => {
+const closeForm = async (e: boolean) => {
     if (e) {
         isLoading.value = true;
         await refresh();
@@ -55,7 +55,7 @@ const closeForm = async (e) => {
         &:before {
             content: counter(question);
             counter-increment: question;
-            @apply hidden lg:flex absolute -left-8 top-3 w-8 h-8 items-center justify-center text-lg font-mono font-bold leading-none;
+            @apply hidden lg:flex absolute -left-9 top-3 w-8 h-8 items-center justify-center text-slate-700 text-lg font-mono font-bold leading-none;
         }
     }
 </style>

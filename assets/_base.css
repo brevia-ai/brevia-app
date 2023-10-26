@@ -1,5 +1,6 @@
 @layer base {
     body {
+        font-family: 'Lato', sans-serif;
         @apply text-neutral-900 bg-slate-100 scroll-smooth;
     }
 

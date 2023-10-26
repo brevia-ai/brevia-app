@@ -24,7 +24,7 @@
     }
 
     .grid-dashboard-autofill {
-        @apply gap-6 lg:gap-8 2xl:gap-12;
+        @apply gap-6;
         grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));;
     }
 

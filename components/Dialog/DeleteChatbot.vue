@@ -1,7 +1,7 @@
 <template>
     <div class="space-y-8 leading-tight">
         <div class="text-center space-y-4">
-            <Icon name="carbon:warning" class="text-6xl text-pink-700" />
+            <Icon name="ph:warning-circle-bold" class="text-6xl text-pink-700" />
             <p class="text-lg">{{ $t('ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS') }} chatbot?</p>
             <p class="font-bold">{{ collection.cmetadata?.title }}</p>
         </div>
