@@ -1,5 +1,5 @@
 <template>
-<div class="pl-4 pr-3 py-4 flex justify-between items-center space-x-4
+<div class="pl-4 pr-2.5 py-3 flex justify-between items-center space-x-4
     bg-gradient-to-br from-slate-700 to-slate-950 text-white hover:text-sky-400 rounded cursor-pointer"
     @click.stop="download">
 
@@ -8,17 +8,18 @@
             <Icon name="carbon:document-pdf" class="text-3xl" />
         </div>
 
-        <div>
-            <p>{{ item.attributes.title }}</p>
-            <p class="text-xs text-slate-300" v-html="item.attributes.description" v-if="item.attributes.description"></p>
+        <div class="leading-tight space-y-1">
+            <p class="font-semibold">{{ item.attributes.title }}</p>
+            <p class="text-xs text-slate-400" v-if="item.attributes.description">{{ $html2text(item.attributes.description) }}</p>
         </div>
     </div>
 
-    <div class="space-x-1">
+    <div class="space-x-1 whitespace-nowrap">
         <a href="#" class="button-mock border-transparent py-2.5 px-3" @click.prevent="download">
             <Icon name="carbon:download" class="text-lg" />
             <span class="sr-only">{{ $t('DOWNLOAD') }}</span>
         </a>
+
         <button class="mr-auto button button-secondary button-transparent text-pink-500 hover:bg-danger hover:border-danger hover:text-white py-2.5 px-3" :class="{ 'is-loading': isDeleting }"
             @click.stop.prevent="deleteFile" v-if="item.id">
             <Icon name="carbon:trash-can" class="text-lg" />
