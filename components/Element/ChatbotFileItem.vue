@@ -29,13 +29,37 @@
 </template>
 
 <script lang="ts" setup>
-defineProps({
+const props = defineProps({
     item: {
         type: Object,
         required: true,
     },
 });
 
-const deleteFile = () => false;
-const download = () => false;
+const emit = defineEmits(['file-deleted']);
+
+const isDeleting = ref(false);
+
+const deleteFile = async () => {
+    isDeleting.value = true;
+    try {
+        await $fetch(`/api/bedita/file/${props.item.id}`, { method: 'DELETE' });
+        emit('file-deleted', true);
+    } catch (err) {
+        console.error(err);
+    }
+    isDeleting.value = false;
+};
+
+const download = async () => {
+    try {
+        const data = await $fetch(`/api/bedita/files/${props.item.id}`, { method: 'GET' });
+        console.log(data);
+        const url = data.formattedData?.data?.meta?.media_url;
+        if (url)
+            window.open(url, '_blank');
+    } catch (err) {
+        console.error(err);
+    }
+};
 </script>

@@ -14,10 +14,10 @@
         <span v-else>{{ $t('PLEASE_DROP_A_FILE') }}</span>
     </div>
     <div v-if="icon && !isLoading">
-        <Icon :name="icon" class="text-xl" />
+        <Icon :name="icon" class="text-sky-600 text-xl" />
     </div>
 
-    <input type="file" name="file"
+    <input type="file" name="file" ref="inputFile"
         class="opacity-0 w-px h-px absolute overflow-hidden"
         :accept="acceptTypes"
         :disabled="disabled"
@@ -59,6 +59,7 @@ const props = defineProps({
 
 const emit = defineEmits(['fileChange']);
 
+const inputFile = ref();
 const lastTarget = ref(null);
 const isDragging = ref(false);
 const fileTypeError = ref(false);
@@ -103,7 +104,7 @@ function onDrop(e: DragEvent) {
         }
 
         file.value = files[0];
-        emit('fileChange', file);
+        emit('fileChange', file.value);
     }
 }
 
@@ -111,13 +112,15 @@ const onChangeFile = (e: Event) => {
     const target = e.target as HTMLInputElement;
     const files = target.files as FileList;
     file.value = files[0];
-    emit('fileChange', file);
+    emit('fileChange', file.value);
 };
 
 const reset = () => {
-    // isDragging.value = false;
-    // file.value = null;
+    console.log('reset');
+    inputFile.value.value = null;
+    file.value = null;
 };
+defineExpose({ reset });
 
 const isAccepted = (file: File) => {
     if (!file)
