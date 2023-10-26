@@ -116,7 +116,6 @@ const onChangeFile = (e: Event) => {
 };
 
 const reset = () => {
-    console.log('reset');
     inputFile.value.value = null;
     file.value = null;
 };
