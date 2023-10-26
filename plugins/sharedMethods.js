@@ -51,6 +51,16 @@ export default defineNuxtPlugin(async nuxtApp => {
                     return '';
 
                 return new DOMParser().parseFromString(html, "text/html").documentElement.textContent || '';
+            },
+
+            fileName2title(fileName) {
+                if (!fileName)
+                    return '';
+
+                fileName = fileName.replace(/[_-]/g, ' ');
+                fileName = fileName.replace(/\.[^/.]+$/, '');
+
+                return fileName.charAt(0).toUpperCase() + fileName.slice(1);
             }
         }
     }

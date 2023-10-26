@@ -16,18 +16,30 @@ export default defineEventHandler(async (event) => {
         const body = await readMultipartFormData(event) as MultiPartData[];
 
         const fileData = getFormData('file', body);
-        const title = fileData.filename || '';
-        const file = new File([fileData.data as BlobPart], title, {
+        const file = new File([fileData.data as BlobPart], fileData.filename || '', {
             type: fileData.type,
         });
 
         const type: UploadResourceType = getRouterParam(event, 'type') as UploadResourceType;
         const response = await client.upload(file, type);
 
+        // humanzie title
+        const id = response.data?.data?.id;
+        const title = getFormData('title', body).data.toString();
+        await client.patch(`/${type}/${id}`, {
+            data: {
+                id,
+                type,
+                attributes: {
+                    title,
+                },
+            },
+        });
+
+        // create relation
         const relatedId = getFormData('relatedId', body).data.toString();
         const relatedType = getFormData('relatedType', body).data.toString();
         const relationName = getFormData('relationName', body).data.toString();
-        const id = response.data?.data?.id;
 
         await client.post(`/${relatedType}/${relatedId}/relationships/${relationName}`, {
             data: [
