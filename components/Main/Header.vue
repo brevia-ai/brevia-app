@@ -1,7 +1,7 @@
 <template>
 <header class="py-4 px-4 sm:px-6 flex space-x-4 justify-between items-center">
     <div class="flex flex-col space-y-1 sm:space-y-0">
-        <h1 class="flex space-x-1.5 text-4xl font-black text-slate-950 hover:text-sky-700">
+        <h1 class="flex space-x-1.5 text-4xl font-black text-slate-900 hover:text-sky-600 cursor-pointer">
             <ElementLogo class="mt-0.5 h-[36px] w-auto" />
             <NuxtLink to="/">
                 <span class="leading-none">BREVIA</span>

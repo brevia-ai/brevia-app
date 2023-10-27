@@ -77,7 +77,7 @@
 
     .big-button {
         @apply pt-4 pb-6 px-6 sm:px-4 flex items-center justify-center flex-col space-y-2 sm:aspect-square
-            bg-gradient-to-br from-slate-700 to-slate-900 hover:from-sky-700 hover:to-sky-900
+            bg-gradient-to-br from-slate-700 to-slate-900 hover:from-sky-600 hover:to-sky-700
             text-white
             focus:outline outline-offset-4 outline-4 outline-primary
             shadow-xl hover:shadow-2xl hover:shadow-sky-800
