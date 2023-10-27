@@ -6,6 +6,7 @@ module.exports = {
       colors: {
         primary: colors.sky[700],
         danger: colors.pink[700],
+        lobster: '#F04E53',
       },
       screens: {
         '3xl': '1728px',
