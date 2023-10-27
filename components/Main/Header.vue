@@ -1,7 +1,7 @@
 <template>
 <header class="py-4 px-4 sm:px-6 flex space-x-4 justify-between items-center">
     <div class="flex space-x-2">
-        <img class="mt-1 h-[32px] w-auto" src="/brevia-logo.svg" alt="Atlas logo">
+        <img class="mt-0.5 h-[36px] w-auto" src="/brevia-logo.svg" alt="Atlas logo">
         <div class="text-sky-950">
             <h1 class="text-4xl font-black text-slate-950 hover:text-sky-700">
                 <NuxtLink to="/">

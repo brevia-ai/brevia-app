@@ -6,7 +6,7 @@
 
             <UIXBigButton v-for="(item, i) in menu" :key="i" :item="item" :link="item.link" />
 
-            <button class="big-button place-self-stretch py-6 from-slate-50 text-slate-700 hover:from-white hover:text-sky-600"
+            <button class="big-button place-self-stretch py-6 from-slate-50 to-slate-50 text-slate-700 hover:from-white hover:to-white hover:text-sky-500"
                 @click="$openModal('DialogNewChatbot')"
                 v-if="isAddEnabled">
                 <Icon name="ph:plus-bold" size="64" />
