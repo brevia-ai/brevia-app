@@ -1,15 +1,13 @@
 <template>
 <header class="py-4 px-4 sm:px-6 flex space-x-4 justify-between items-center">
-    <div class="flex space-x-2">
-        <img class="mt-0.5 h-[36px] w-auto" src="/brevia-logo.svg" alt="Atlas logo">
-        <div class="text-sky-950">
-            <h1 class="text-4xl font-black text-slate-950 hover:text-sky-700">
-                <NuxtLink to="/">
-                    <span class="leading-none">BREVIA</span>
-                </NuxtLink>
-            </h1>
-            <h2 class="pl-1 text-sm sm:text-base leading-none">{{ $t('TITLES.ATLAS_AI_POWERED_TOOLS') }}</h2>
-        </div>
+    <div class="flex flex-col space-y-1 sm:space-y-0">
+        <h1 class="flex space-x-1.5 text-4xl font-black text-slate-950 hover:text-sky-700">
+            <ElementLogo class="mt-0.5 h-[36px] w-auto" />
+            <NuxtLink to="/">
+                <span class="leading-none">BREVIA</span>
+            </NuxtLink>
+        </h1>
+        <h2 class="ml-0.5 pl-3 sm:pl-10 text-sky-950 text-sm sm:text-base leading-none">{{ $t('TITLES.ATLAS_AI_POWERED_TOOLS') }}</h2>
     </div>
 
     <div class="flex space-x-2 sm:space-x-4 md:space-x-5">

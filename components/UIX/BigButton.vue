@@ -1,10 +1,10 @@
 <template>
-<NuxtLink class="big-button relative flex-row justify-between sm:flex-col sm:justify-center"
+<NuxtLink class="big-button relative flex-row justify-between sm:flex-col sm:justify-center gap-1 md:gap-0"
     :to="link">
 
-    <div class="grow pb-4 flex flex-col justify-center sm:items-center sm:text-center space-y-0.5">
-        <h2 class="text-4xl font-black leading-tight tracking-wider">{{ capitalLetters(item.title, item.type) }}</h2>
-        <h1 class="text-lg leading-tight">{{ itemTitle(item.title, item.type) }}</h1>
+    <div class="grow md:pb-3 flex flex-col justify-center sm:items-center sm:text-center space-y-0.5">
+        <h2 class="text-3xl md:text-4xl font-black leading-tight tracking-wider">{{ capitalLetters(item.title, item.type) }}</h2>
+        <h1 class="md:text-lg leading-tight">{{ itemTitle(item.title, item.type) }}</h1>
     </div>
 
     <div class="static md:absolute bottom-7 flex items-center space-x-2 text-sky-300 opacity-90">
