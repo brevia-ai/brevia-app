@@ -40,7 +40,7 @@
     "EXIT": "Esci",
     "ELAPSED_TIME": "Tempo trascorso",
     "EMAIL": "Email",
-    "EMAIL_PLACEHOLDER": "La tua email, ad esempio: {email}",
+    "EMAIL_PLACEHOLDER": "es. {email}",
     "ENGLISH": "Inglese",
     "FILE_TYPE_MUST_BE": "Il file deve essere in formato",
     "FILE_TYPE_NOT_ACCEPTED": "Tipo di file non accettato",

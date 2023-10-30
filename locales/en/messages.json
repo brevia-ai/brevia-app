@@ -41,7 +41,7 @@
     "ELAPSED_TIME": "Elapsed time",
     "ENGLISH": "English",
     "EMAIL": "Email",
-    "EMAIL_PLACEHOLDER": "Your email eg: {email}",
+    "EMAIL_PLACEHOLDER": "e.g. {email}",
     "FILE_TYPE_MUST_BE": "Accepted file type:",
     "FILE_TYPE_NOT_ACCEPTED": "File type not accepted",
     "FILES": "Files",

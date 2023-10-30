@@ -6,10 +6,12 @@
             <p>{{ $t('MAIL_TO') }} <span class="font-semibold">{{ resetMail }}</span></p>
             <p>{{ $t('CHECK_YOUR_INBOX_RESET') }}</p>
         </div>
+
         <div class="flex flex-col space-y-4" v-else-if="!mailSent && error">
             <p class="text-lg text-center font-bold text-red-600">{{ $t('AN_ERROR_OCCURRED') }} </p>
             <button class="p-4  py-2.5 button text-sm font-semibold" @click="retry">Riprova</button>
         </div>
+
         <div class="flex flex-col space-y-4" v-else >
             <p>{{ $t('RESET_INSTRUCTIONS') }}</p>
             <input
@@ -18,7 +20,7 @@
                 type="email"
                 class="block w-full rounded-md border border-sky-800 px-3.5 py-2 shadow-sm sm:text-sm sm:leading-6"
                 required
-                :placeholder="$t('EMAIL_PLACEHOLDER', { email: 'name.surname@email.com' })"
+                :placeholder="$t('EMAIL_PLACEHOLDER', { email: 'mario@example.com' })"
             >
             <p class="text-sm font-bold text-red-600" v-if="resetMail && !isValidEmail()" >{{ $t('NOT_VALID_EMAIL') }}</p>
             <button
