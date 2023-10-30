@@ -12,7 +12,7 @@ export default defineNuxtConfig({
         },
         public: {
             maxUserChatbots: process.env.MAX_USER_CHATBOTS || '',
-            signupAvailable: process.env.SIGNUP_AVAILABLE === 'true',
+            signupAvailable: process.env.FEATURE_SIGNUP_AVAILABLE === 'true',
         },
     },
 
