@@ -22,7 +22,7 @@
                     :class="{ 'is-loading': isLoading }"
                     @click="login">{{ $t('SIGN_IN') }}</button>
 
-                <div class="text-sm text-center">
+                <div class="text-sm text-center" v-if="enableSignup">
                     {{ $t('NOT_A_MEMBER') }}
                     <NuxtLink class="text-sky-800" to="/signup">{{ $t('SIGN_UP_HERE') }}</NuxtLink>
                 </div>
@@ -48,11 +48,13 @@ export default {
             username: '',
             password: '',
             isLoading: false,
+            enableSignup: this.$config.public.signupAvailable,
         }
     },
 
     computed: {
         ...mapStores(useStatesStore),
+
     },
 
     created() {
