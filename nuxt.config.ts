@@ -11,7 +11,7 @@ export default defineNuxtConfig({
             name: process.env.SESSION_NAME || 'Brevia',
         },
         public: {
-            maxUserChatbots: process.env.MAX_USER_CHATBOTS || '',
+            maxUserChatbots: '',
             signupAvailable: process.env.FEATURE_SIGNUP_AVAILABLE === 'true',
         },
     },
