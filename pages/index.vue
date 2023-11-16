@@ -31,9 +31,10 @@ const config = useRuntimeConfig();
 const menu = ref([]);
 
 const isAddEnabled = computed(() => {
-    const max = Number(config.public?.maxUserChatbots) || null;
-    if (max === null)
+    if (config.public.maxUserChatbots === '') {
         return true;
+    }
+    const max = Number(config.public.maxUserChatbots)
 
     return menu.value.filter((x) => x.type === 'chatbot').length < max;
 });
