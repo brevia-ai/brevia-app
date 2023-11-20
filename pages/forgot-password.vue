@@ -33,15 +33,28 @@
             </button>
         </div>
         <NuxtLink class="p-4  py-2.5 button text-sm font-semibold" to="/auth">{{ $t('GO_TO_LOGIN_PAGE') }}</NuxtLink>
+        <div class="text-xs text-center text-neutral-400" >
+            <i18n-t keypath="RECAPTCHA" tag="p">
+                <template v-slot:privacyPolicy>
+                    <a class="font-semibold" href="https://policies.google.com/privacy">{{ $t('PRIVACY_POLICY') }}</a>
+                </template>
+                <template v-slot:termsOfService>
+                    <a class="font-semibold" href="https://policies.google.com/terms">{{ $t('TERMS_OF_SERVICE') }}</a>
+                </template>
+            </i18n-t>
+        </div>
     </main>
 </template>
 
 <script setup lang="ts">
+import { useReCaptcha } from 'vue-recaptcha-v3';
+
 const loading = ref(false);
 const mailSent = ref(false);
 const error = ref(false);
 const resetMail = ref('');
 const mailInput = ref(null);
+const recaptchaInstance = useReCaptcha();
 
 const isValidEmail = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -52,10 +65,16 @@ async function sendResetMail() {
     loading.value = true;
     error.value = false;
     try {
+        // Waiting for recaptcha
+        await recaptchaInstance?.recaptchaLoaded();
+        const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
+        const recaptcha_token = await recaptcha();
+
         await $fetch('/api/auth/reset', {
             method: 'POST',
             body: {
                 contact: resetMail.value,
+                recaptcha_token,
             }
         });
         mailSent.value = true;

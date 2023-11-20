@@ -57,7 +57,6 @@
                 </div>
 
                 <div v-if="error">{{ $t('AN_ERROR_OCCURRED') }}</div>
-
                 <div class="pt-2">
                     <button type="submit" class="block w-full sm:max-w-xs mx-auto button text-lg"
                         @click.prevent.stop="signup"
@@ -70,6 +69,17 @@
                     {{ $t('ALREADY_REGISTERED') }}
                     <NuxtLink class="text-sky-800" to="/auth">{{ $t('SIGN_IN') }}</NuxtLink>
                 </div>
+
+                <div class="text-xs text-center text-neutral-400" >
+                    <i18n-t keypath="RECAPTCHA" tag="p">
+                        <template v-slot:privacyPolicy>
+                            <a class="font-semibold" href="https://policies.google.com/privacy">{{ $t('PRIVACY_POLICY') }}</a>
+                        </template>
+                        <template v-slot:termsOfService>
+                            <a class="font-semibold" href="https://policies.google.com/terms">{{ $t('TERMS_OF_SERVICE') }}</a>
+                        </template>
+                    </i18n-t>
+                </div>
             </form>
         </div>
     </main>
@@ -77,6 +87,7 @@
 
 <script>
     import { useStatesStore } from '~~/store/states';
+    import { useReCaptcha } from 'vue-recaptcha-v3';
 
     export default {
         data(){
@@ -91,6 +102,7 @@
                 showPassword: false,
                 loading: false,
                 error: false,
+                recaptchaInstance: useReCaptcha(),
             }
         },
         computed: {
@@ -116,9 +128,13 @@
             async signup() {
                 this.error = false;
                 this.loading = true;
-
                 // Register user
                 try {
+                    // Waiting for recaptcha
+                    await this.recaptchaInstance?.recaptchaLoaded();
+                    const recaptcha = async () => await this.recaptchaInstance?.executeRecaptcha('login');
+                    const recaptcha_token = await recaptcha();
+
                     await $fetch('/api/signup', {
                         method: 'POST',
                         body: {
@@ -127,6 +143,7 @@
                             username: this.userMail,
                             password: this.userPass,
                             email: this.userMail,
+                            recaptcha_token,
                         },
                     });
 

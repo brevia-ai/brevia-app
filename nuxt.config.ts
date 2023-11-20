@@ -6,6 +6,7 @@ export default defineNuxtConfig({
         apiBaseUrl: '',
         beditaApiBaseUrl: '',
         beditaApiKey: '',
+        recaptchaSecret: '',
         session: {
             secret: '',
             name: '' || 'Brevia',
@@ -15,6 +16,7 @@ export default defineNuxtConfig({
                 signupAvailable: '',
             },
             maxUserChatbots: '',
+            recaptchaKey: '',
         },
     },
 
