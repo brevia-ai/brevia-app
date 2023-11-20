@@ -55,10 +55,21 @@
             <p class="text-lg">{{ $t('PASSWORD_CHANGED') }} </p>
             <NuxtLink class="p-4 button w-full mt-6 rounded-md px-3.5 py-2.5 text-center text-sm font-semibold" to="/auth">{{ $t('GO_TO_LOGIN_PAGE') }}</NuxtLink>
         </div>
+        <div class="text-xs text-center text-neutral-400" >
+            <i18n-t keypath="RECAPTCHA" tag="p">
+                <template v-slot:privacyPolicy>
+                    <a class="font-semibold" href="https://policies.google.com/privacy">{{ $t('PRIVACY_POLICY') }}</a>
+                </template>
+                <template v-slot:termsOfService>
+                    <a class="font-semibold" href="https://policies.google.com/terms">{{ $t('TERMS_OF_SERVICE') }}</a>
+                </template>
+            </i18n-t>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { useReCaptcha } from 'vue-recaptcha-v3';
 
 definePageMeta({
     middleware: [
@@ -77,17 +88,24 @@ const error = ref(false);
 const passSet = ref(false);
 const showPassword = ref(false);
 const route = useRoute();
+const recaptchaInstance = useReCaptcha();
 
 async function resetPassword() {
     loading.value = true;
     error.value = false;
     try {
+        // Waiting for recaptcha
+        await recaptchaInstance?.recaptchaLoaded();
+        const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
+        const recaptcha_token = await recaptcha();
+
         await $fetch('api/auth/change', {
             method: 'PATCH',
             body: {
                 uuid: route.query?.uuid,
                 password: newPass.value,
                 login: false,
+                recaptcha_token,
             }
         });
         passSet.value = true;

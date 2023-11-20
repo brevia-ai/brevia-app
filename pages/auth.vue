@@ -27,10 +27,22 @@
                     <NuxtLink class="text-sky-800" to="/signup">{{ $t('SIGN_UP_HERE') }}</NuxtLink>
                 </div>
             </form>
-
             <div class="w-full bg-red-100 border border-red-400 rounded text-center" v-if="error">
                 {{ $t('WRONG_CREDENTIALS') }}
             </div>
+
+
+            <div class="text-xs text-center text-neutral-400" >
+                <i18n-t keypath="RECAPTCHA" tag="p">
+                    <template v-slot:privacyPolicy>
+                        <a class="font-semibold" href="https://policies.google.com/privacy">{{ $t('PRIVACY_POLICY') }}</a>
+                    </template>
+                    <template v-slot:termsOfService>
+                        <a class="font-semibold" href="https://policies.google.com/terms">{{ $t('TERMS_OF_SERVICE') }}</a>
+                    </template>
+                </i18n-t>
+            </div>
+
         </div>
     </main>
 </template>
@@ -38,6 +50,7 @@
 <script>
 import { useStatesStore } from '~~/store/states';
 import { mapStores } from 'pinia';
+import { useReCaptcha } from 'vue-recaptcha-v3';
 
 export default {
     data() {
@@ -48,6 +61,7 @@ export default {
             password: '',
             isLoading: false,
             enableSignup: this.$config.public.features.signupAvailable,
+            recaptchaInstance: useReCaptcha(),
         }
     },
 
@@ -70,11 +84,17 @@ export default {
             this.error = false;
             this.isLoading = true;
             try {
+                // Waiting for recaptcha
+                await this.recaptchaInstance?.recaptchaLoaded();
+                const recaptcha = async () => await this.recaptchaInstance?.executeRecaptcha('login');
+                const recaptcha_token = await recaptcha();
+
                 const data = await $fetch('/api/login', {
                     method: 'POST',
                     body: {
                         username: this.username,
                         password: this.password,
+                        recaptcha_token,
                     },
                 });
 
