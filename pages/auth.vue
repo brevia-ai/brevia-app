@@ -47,7 +47,7 @@ export default {
             username: '',
             password: '',
             isLoading: false,
-            enableSignup: this.$config.public.signupAvailable,
+            enableSignup: this.$config.public.features.signupAvailable,
         }
     },
 
