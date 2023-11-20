@@ -23,7 +23,7 @@ const isAddEnabled = computed(() => {
     }
     const max = Number(config.public.maxUserChatbots)
 
-    return statesStore.menu.value.filter((x) => x.type === 'chatbot').length < max;
+    return statesStore.menu.filter((x) => x.type === 'chatbot').length < max;
 });
 
 const { data: has_access, status, refresh } = await useFetch('/api/bedita/user_has_access');
