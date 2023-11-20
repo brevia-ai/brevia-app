@@ -37,7 +37,7 @@ const props = defineProps({
     },
 });
 
-const store = useStatesStore();
+const statesStore = useStatesStore();
 const { $closeModal } = useNuxtApp();
 
 const error = ref<string|null>(null);
@@ -56,9 +56,8 @@ const deleteChatbot = async () => {
     isDeleting.value = false;
 
     // update menu
-    const menu = store.getMenu();
-    const newMenu = menu.filter(item => item.link !== `/chatbot/${props.collection.name}`);
-    store.setMenu(newMenu);
+    const newMenu = statesStore.menu.filter(item => item.link !== `/chatbot/${props.collection.name}`);
+    statesStore.menu = newMenu;
 
     $closeModal();
     navigateTo('/');

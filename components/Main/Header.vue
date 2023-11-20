@@ -15,7 +15,8 @@
             v-for="(lang, i) in availableLocales" :key="i"
             @click="setLocale(lang as string)">{{ lang }}</button>
 
-        <button class="h-10 px-4 sm:px-8 button text-sm leading-none bg-slate-900 hover:bg-danger hover:border-pink-800" @click="logout" v-if="stateStore.isLogged">
+        <button class="h-10 px-4 sm:px-8 button text-sm leading-none bg-slate-900 hover:bg-danger hover:border-pink-800"
+            @click="logout" v-if="stateStore.isLogged">
             <div class="sm:hidden">
                 <Icon name="ph:sign-out-bold" class="text-lg" />
             </div>
@@ -43,7 +44,6 @@ const availableLocales = computed(() => {
 async function logout() {
     await $fetch('/api/logout');
     stateStore.userLogout();
-    stateStore.setMenu([]);
     navigateTo('/auth');
 }
 </script>

@@ -21,7 +21,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
 
     if (!statesStore.isLogged) {
-        statesStore.setMenu(null);
+        statesStore.menu = [];
         return navigateTo('/auth', { redirectCode: 301 });
     }
 });

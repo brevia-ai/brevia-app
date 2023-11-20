@@ -21,6 +21,19 @@ module.exports = {
       listStyleType: {
         square: 'square',
       },
+      animation: {
+        progress: 'progress .7s infinite linear',
+      },
+      keyframes: {
+        progress: {
+          '0%': { transform: ' translateX(0) scaleX(0)' },
+          '40%': { transform: 'translateX(0) scaleX(0.4)' },
+          '100%': { transform: 'translateX(100%) scaleX(0.5)' },
+        },
+      },
+      transformOrigin: {
+        'left-center': 'left center',
+      },
     }
   }
 }
