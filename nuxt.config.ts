@@ -2,17 +2,19 @@
 export default defineNuxtConfig({
     runtimeConfig: {
         allowedBeditaEndpoints: [],
-        apiSecret: process.env.API_SECRET || '',
-        apiBaseUrl: process.env.API_BASE_URL || '',
-        beditaApiBaseUrl: process.env.BEDITA_API_BASE_URL || '',
-        beditaApiKey: process.env.BEDITA_API_KEY || '',
+        apiSecret: '',
+        apiBaseUrl: '',
+        beditaApiBaseUrl: '',
+        beditaApiKey: '',
         session: {
-            secret: process.env.SESSION_SECRET,
-            name: process.env.SESSION_NAME || 'Brevia',
+            secret: '',
+            name: '' || 'Brevia',
         },
         public: {
+            features: {
+                signupAvailable: '',
+            },
             maxUserChatbots: '',
-            signupAvailable: process.env.FEATURE_SIGNUP_AVAILABLE === 'true',
         },
     },
 
