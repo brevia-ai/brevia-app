@@ -1,6 +1,6 @@
 <template>
-    <div class="mt-6 max-w-sm mx-auto flex flex-col space-y-4">
-        <h2 text-3xl class="font-bold tracking-tight text-gray-900 sm:text-4xl" >{{ $t('PASSWORD_RESET') }}</h2>
+    <main class="pt-3 sm:pt-8  max-w-sm mx-auto flex flex-col space-y-4">
+        <h2 text-3xl class="text-gray-900 text-2xl sm:text-3xl font-bold tracking-tight" >{{ $t('PASSWORD_RESET') }}</h2>
         <div class="flex flex-col space-y-4" v-if="mailSent && !error">
             <img class="mx-auto" width="40" height="40" src="/check.png">
             <p>{{ $t('MAIL_TO') }} <span class="font-semibold">{{ resetMail }}</span></p>
@@ -33,7 +33,7 @@
             </button>
         </div>
         <NuxtLink class="p-4  py-2.5 button text-sm font-semibold" to="/auth">{{ $t('GO_TO_LOGIN_PAGE') }}</NuxtLink>
-    </div>
+    </main>
 </template>
 
 <script setup lang="ts">
