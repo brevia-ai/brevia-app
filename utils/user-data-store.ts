@@ -24,3 +24,35 @@ export const userEditLevel = (item: any): ItemEditLevel => {
 
     return ItemEditLevel.None
 };
+
+// TODO: move somewhere?
+const extractBeditafield = (obj: any, field: string) => {
+    return obj?.attributes?.[field] || obj?.meta?.[field] || '';
+};
+
+export const buildUserMenu = (hasAccess: any) => {
+    const items = [];
+    for (const item of hasAccess) {
+        const type = item?.type === 'collections'? 'chatbot' : item?.attributes?.feature_type || '';
+        const link = item?.type === 'collections'? `/chatbot/${item?.attributes?.uname}` : `/${item?.attributes?.feature_type}`;
+        let params = null;
+        if (item?.type === 'features') {
+            params = item?.attributes?.feature_params || {};
+            if (!('payload' in params)) {
+                params['payload'] = {};
+            }
+            params['payload']['prompts'] = item?.attributes?.prompts || null;
+        }
+
+        items.push({
+            link,
+            type,
+            title: extractBeditafield(item, 'title'),
+            description: extractBeditafield(item, 'description'),
+            params,
+            edit: userEditLevel(item),
+        });
+    }
+
+    return items;
+};

@@ -14,7 +14,8 @@
                 {{ $t('ACCOUNT_ACTIVATED') }}!<br>
                 {{ $t('CAN_ACCESS_NOW') }}.<br>
                 <div class="text-center mt-10">
-                    <a class="p-4 button text-sm rounded-md" href="/auth" @click.prevent.stop="loginUser">{{ $t('GO_TO_LOGIN_PAGE') }}</a>
+                    <NuxtLink class="p-4 button text-sm rounded-md"
+                        to="/auth">{{ $t('GO_TO_LOGIN_PAGE') }}</NuxtLink>
                 </div>
             </p>
         </div>
@@ -22,8 +23,6 @@
 </template>
 
 <script setup>
-import { useStatesStore } from '~~/store/states';
-
 const route = useRoute();
 const { pending: loading, error } = await useFetch('api/signup/activation',{
     method:'POST',
@@ -31,10 +30,4 @@ const { pending: loading, error } = await useFetch('api/signup/activation',{
         uuid: route.query?.uuid,
     },
 });
-
-function loginUser() {
-    const store = useStatesStore();
-    store.userLogout();
-}
-
 </script>

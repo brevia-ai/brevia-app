@@ -46,7 +46,7 @@ const props = defineProps({
 });
 
 const { $closeModal, $html2text } = useNuxtApp();
-const store = useStatesStore();
+const statesStore = useStatesStore();
 
 const error = ref(false);
 const isLoading = ref(false);
@@ -89,8 +89,7 @@ const create = async () => {
             },
         });
 
-        const menu = store.getMenu();
-        menu.push({
+        statesStore.menu.push({
             link: `/chatbot/${data.data?.attributes?.uname}`,
             type: 'chatbot',
             title: data.data?.attributes?.title,
@@ -98,8 +97,6 @@ const create = async () => {
             params: null,
             edit: ItemEditLevel.ReadWrite,
         });
-        store.setMenu(menu);
-
     } catch (err) {
         error.value = true;
     }
@@ -119,8 +116,7 @@ const update = async () => {
         });
 
         // update menu
-        const menu = store.getMenu();
-        const newMenu = menu.map((item: any) => {
+        const newMenu = statesStore.menu.map((item: any) => {
             if (item.type === 'chatbot' && item.link === `/chatbot/${props.collection.name}`) {
                 item.title = title.value;
                 item.description = description.value;
@@ -129,7 +125,7 @@ const update = async () => {
             return item;
         });
 
-        store.setMenu(newMenu);
+        statesStore.menu = newMenu;
     } catch (err) {
         error.value = true;
     }

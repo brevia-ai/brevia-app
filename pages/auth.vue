@@ -1,5 +1,5 @@
 <template>
-    <main>
+    <main class="mt-16">
         <div class="mt-6 max-w-sm mx-auto space-y-8" v-if="!statesStore.isLogged">
             <form class="flex flex-col space-y-8" @submit.stop.prevent>
                 <UIXInput
@@ -31,7 +31,6 @@
             <div class="w-full bg-red-100 border border-red-400 rounded text-center" v-if="error">
                 {{ $t('WRONG_CREDENTIALS') }}
             </div>
-
         </div>
     </main>
 </template>
@@ -58,11 +57,8 @@ export default {
     },
 
     created() {
-        const menu = this.statesStore.getMenu();
-        this.statesStore.readOptions();
-        if (menu?.length) {
+        if (this.statesStore.isLogged)
             navigateTo('/');
-        }
     },
 
     methods: {
@@ -83,7 +79,6 @@ export default {
                 });
 
                 this.statesStore.userLogin(filterUserDataToStore(data));
-                this.setUserMenu(data);
                 navigateTo('/');
 
                 this.isLoading = false;
@@ -91,44 +86,6 @@ export default {
                 this.error = true;
                 this.isLoading = false;
             }
-        },
-
-        setUserMenu(data) {
-            const hasAccess = data?.data?.relationships?.has_access?.data || [];
-            if (!hasAccess?.length) {
-                this.statesStore.setMenu([]);
-
-                return;
-            }
-
-            const items = [];
-            for (const item of hasAccess) {
-                const type = item?.type === 'collections'? 'chatbot' : item?.attributes?.feature_type || '';
-                const link = item?.type === 'collections'? `/chatbot/${item?.attributes?.uname}` : `/${item?.attributes?.feature_type}`;
-                let params = null;
-                if (item?.type === 'features') {
-                    params = item?.attributes?.feature_params || {};
-                    if (!('payload' in params)) {
-                        params['payload'] = {};
-                    }
-                    params['payload']['prompts'] = item?.attributes?.prompts || null;
-                }
-
-                items.push({
-                    link,
-                    type,
-                    title: this.field(item, 'title'),
-                    description: this.field(item, 'description'),
-                    params,
-                    edit: userEditLevel(item),
-                });
-            }
-
-            this.statesStore.setMenu(items);
-        },
-
-        field(obj, field) {
-            return obj?.attributes?.[field] || obj?.meta?.[field] || '';
         },
     },
 }

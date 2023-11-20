@@ -107,10 +107,8 @@
         },
 
         created() {
-            const store = useStatesStore();
-            const menu = store.getMenu();
-            store.readOptions();
-            if(menu?.length)
+            const statesStore = useStatesStore();
+            if (statesStore.isLogged)
                 navigateTo('/');
         },
 

@@ -4,6 +4,7 @@ export const useModalStore = defineStore('modal', {
     state: () => ({
         activeModal: null as string | null,
         actveModalProps: {},
+        isLoadingPage: false,
     }),
 
     actions: {

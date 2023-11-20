@@ -19,7 +19,6 @@ export interface menuItem {
 export const useStatesStore = defineStore('states', {
     state: () => ({
         isLogged: false,
-        options: {},
         user: null as UserDataStore | null,
         menu: [] as menuItem[],
     }),
@@ -33,43 +32,24 @@ export const useStatesStore = defineStore('states', {
         userLogout() {
             this.isLogged = false;
             this.user = null;
+            this.menu = [];
         },
 
         /**
          * Verify if user has access to internal link, redirect to `/` if not
          */
         userAccess(link: string) {
-            const menu = this.getMenu();
-            const found = menu.find(m => m.link === link);
+            const found = this.menu.find(m => m.link === link);
             if (found) {
                 return;
             }
+
             console.warn(`Forbidden access to ${link}`);
             navigateTo('/');
         },
 
         getMenuItem(link: string) {
-            const menu = this.getMenu();
-            return menu.find(m => m.link === link);
-        },
-
-        getMenu(): menuItem[] {
-            if (!this.menu.length) {
-                this.menu = JSON.parse(localStorage.getItem('chatlas-menu') || '[]');
-            }
-
-            return this.menu;
-        },
-
-        setMenu(menu: menuItem[]) {
-            if (!menu) {
-                this.menu = [];
-                localStorage.removeItem('chatlas-menu');
-                return;
-            }
-
-            this.menu = menu;
-            localStorage.setItem('chatlas-menu', JSON.stringify(menu));
+            return this.menu.find(m => m.link === link);
         },
 
         setIsLogged(value = true) {
@@ -91,21 +71,6 @@ export const useStatesStore = defineStore('states', {
             }
 
             localStorage.setItem(name, JSON.stringify(value));
-        },
-
-        readOptions() {
-            this.options = JSON.parse(localStorage.getItem('chatlas-options') || '{}');
-        },
-
-        setOptions(options: any) {
-            if (!options) {
-                this.options = {};
-                localStorage.removeItem('chatlas-options');
-                return;
-            }
-
-            this.options = options;
-            localStorage.setItem('chatlas-options', JSON.stringify(options));
         },
     },
 });

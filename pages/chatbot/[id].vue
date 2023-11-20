@@ -104,9 +104,6 @@ onBeforeMount(async () => {
     const item = store.getMenuItem(link);
     editLevel = item?.edit || ItemEditLevel.None;
 
-    // TODO: refactor in store
-    store.readOptions();
-
     isBusy.value = true;
     const data = await $fetch(`/api/collections?name=${collectionName}`);
     collection.value = data;

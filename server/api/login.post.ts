@@ -7,9 +7,6 @@ export default defineEventHandler(async (event) => {
         const client = await beditaApiClient(event);
         await client.authenticate(body?.username, body?.password);
         const response = await client.get('/auth/user', {
-            params: {
-                include: 'has_access',
-            },
             responseInterceptors: [new FormatUserInterceptor(client)],
         });
 
