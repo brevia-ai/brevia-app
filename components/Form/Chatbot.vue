@@ -81,7 +81,7 @@ const save = async () => {
 
 const create = async () => {
     try {
-        const data = await $fetch('/api/collection', {
+        const data = await $fetch('/api/bedita/collection', {
             method: 'POST',
             body: {
                 title: title.value,
@@ -104,7 +104,7 @@ const create = async () => {
 
 const update = async () => {
     try {
-        await $fetch('/api/collection', {
+        await $fetch('/api/bedita/collection', {
             method: 'PATCH',
             body: {
                 id: String(props.collection.cmetadata?.id),

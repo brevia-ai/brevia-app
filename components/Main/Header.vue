@@ -42,7 +42,7 @@ const availableLocales = computed(() => {
 });
 
 async function logout() {
-    await $fetch('/api/logout');
+    await $fetch('/api/bedita/auth/logout');
     stateStore.userLogout();
     navigateTo('/auth');
 }
