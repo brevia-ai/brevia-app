@@ -70,7 +70,7 @@ async function sendResetMail() {
         const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
         const recaptcha_token = await recaptcha();
 
-        await $fetch('/api/auth/reset', {
+        await $fetch('/api/bedita/auth/reset', {
             method: 'POST',
             body: {
                 contact: resetMail.value,

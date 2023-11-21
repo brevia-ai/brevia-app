@@ -1,5 +1,3 @@
-import { handleBeditaApiError } from "../utils/bedita-api-client";
-
 export default defineEventHandler(async (event) => {
     try {
         const body = await readBody(event);

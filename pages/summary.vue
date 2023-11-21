@@ -154,7 +154,7 @@ export default {
                 // 'multipart/form-data' Content-type header
                 // intentionally not set to avoid boundary error
                 // https://stackoverflow.com/questions/39280438/fetch-missing-boundary-in-multipart-form-data-post/39281156#39281156
-                const data = await $fetch('/api/upload_summarize', {
+                const data = await $fetch('/api/brevia/upload_summarize', {
                     method: 'POST',
                     body: formData,
                 });
@@ -186,7 +186,7 @@ export default {
                 return;
             }
             try {
-                const data = await $fetch(`/api/jobs/${this.jobId}`);
+                const data = await $fetch(`/api/brevia/jobs/${this.jobId}`);
                 const err = data?.error || data.result?.error || null;
                 if (err) {
                     this.isBusy = false;

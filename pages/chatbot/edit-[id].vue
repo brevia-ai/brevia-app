@@ -34,7 +34,7 @@ const { t } = useI18n();
 const route = useRoute();
 const collectionName = route.params.id as string;
 
-const { data: collection } = await useFetch(`/api/collections?name=${collectionName}`);
+const { data: collection } = await useFetch(`/api/brevia/collections?name=${collectionName}`);
 if (!collection.value?.uuid) {
     throw createError({
         statusCode: 404,

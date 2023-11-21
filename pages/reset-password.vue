@@ -99,7 +99,7 @@ async function resetPassword() {
         const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
         const recaptcha_token = await recaptcha();
 
-        await $fetch('api/auth/change', {
+        await $fetch('/api/bedita/auth/change', {
             method: 'PATCH',
             body: {
                 uuid: route.query?.uuid,

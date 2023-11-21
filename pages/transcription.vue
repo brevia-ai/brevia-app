@@ -88,7 +88,7 @@ export default {
                 // 'multipart/form-data' Content-type header
                 // intentionally not set to avoid boundary error
                 // https://stackoverflow.com/questions/39280438/fetch-missing-boundary-in-multipart-form-data-post/39281156#39281156
-                const response = await fetch('/api/transcribe', {
+                const response = await fetch('/api/brevia/transcribe', {
                     method: 'POST',
                     body: formData,
                 });

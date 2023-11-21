@@ -105,7 +105,7 @@ onBeforeMount(async () => {
     editLevel = item?.edit || ItemEditLevel.None;
 
     isBusy.value = true;
-    const data = await $fetch(`/api/collections?name=${collectionName}`);
+    const data = await $fetch(`/api/brevia/collections?name=${collectionName}`);
     collection.value = data;
 
     if (!collection.value?.uuid) {
@@ -162,7 +162,7 @@ const streamingFetchRequest = async (currIdx: number) => {
     const question = prompt.value;
     prompt.value = '';
 
-    const response = await fetch('/api/prompt', {
+    const response = await fetch('/api/brevia/prompt', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',

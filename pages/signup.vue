@@ -135,7 +135,7 @@
                     const recaptcha = async () => await this.recaptchaInstance?.executeRecaptcha('login');
                     const recaptcha_token = await recaptcha();
 
-                    await $fetch('/api/signup', {
+                    await $fetch('/api/bedita/signup', {
                         method: 'POST',
                         body: {
                             name: this.firstName,

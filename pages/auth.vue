@@ -89,7 +89,7 @@ export default {
                 const recaptcha = async () => await this.recaptchaInstance?.executeRecaptcha('login');
                 const recaptcha_token = await recaptcha();
 
-                const data = await $fetch('/api/login', {
+                const data = await $fetch('/api/bedita/auth/login', {
                     method: 'POST',
                     body: {
                         username: this.username,

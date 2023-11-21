@@ -154,7 +154,7 @@ export default {
             formData.append('payload', JSON.stringify(this.menuItem?.params?.payload || ''));
             formData.append('file', this.file);
             try {
-                const data = await $fetch('/api/upload_analyze', {
+                const data = await $fetch('/api/brevia/upload_analyze', {
                     method: 'POST',
                     body: formData,
                 });
@@ -186,7 +186,7 @@ export default {
                 return;
             }
             try {
-                const data = await $fetch(`/api/jobs/${this.jobId}`);
+                const data = await $fetch(`/api/brevia/jobs/${this.jobId}`);
                 const err = data?.error || data.result?.error || null;
                 if (err) {
                     this.isBusy = false;
