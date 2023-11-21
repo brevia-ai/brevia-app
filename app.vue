@@ -1,22 +1,50 @@
 <template>
 <ClientOnly>
-    <div class="h-screen flex flex-col">
-        <MainHeader :route="$route" class="w-full fixed z-10 bg-neutral-50 shadow" ></MainHeader>
-        <div class="grow mt-28 p-4 sm:p-6 w-full max-w-3xl mx-auto">
-                <NuxtPage />
+    <div class="h-[100dvh] flex flex-col">
+        <MainHeader class="ml-0.5 w-full fixed z-10 bg-neutral-50 shadow" ></MainHeader>
+        <UIXProgressLinear class="z-10 absolute top-24 w-full" v-if="modalStore.isLoadingPage" />
+
+        <div class="grow mt-24 pt-3 sm:pt-8 pb-14 px-4 sm:px-6 w-full mx-auto"
+            :class="{ 'max-w-3xl': $route.path !== '/' }">
+            <NuxtPage />
         </div>
 
         <MainFooter />
     </div>
+
+    <Modal v-if="$isActiveModal()" />
 </ClientOnly>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { useModalStore } from '~~/store/modal';
+const { locale, t } = useI18n();
+
+const modalStore = useModalStore();
+modalStore.$onAction(({
+    name, // name of the action
+    store, // store instance, same as `someStore`
+    args, // array of parameters passed to the action
+    after, // hook after the action returns or resolves
+    onError, // hook if the action throws or rejects
+}) => {
+    after(() => {
+        useHead({
+            bodyAttrs: {
+                class: store.activeModal ? 'overflow-hidden' : '',
+            }
+        });
+    });
+});
+
 useHead({
-    title: 'CHATLAS',
+    title: 'BREVIA',
     meta: [{
         name: 'description',
-        content: 'Atlas AI-powered tools'
+        content: t('TITLES.ATLAS_AI_POWERED_TOOLS'),
     }],
+    htmlAttrs: {
+        lang: locale.value,
+    },
 });
 </script>

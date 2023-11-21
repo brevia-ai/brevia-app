@@ -1,77 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Hind:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@layer components {
-    .button {
-        @apply inline-flex items-center justify-center
-            bg-sky-700 hover:bg-sky-600 text-white rounded
-            disabled:bg-neutral-500 disabled:cursor-not-allowed;
-    }
-
-    .big-button {
-        @apply p-6 flex items-center justify-center flex-col space-y-2 sm:aspect-square bg-sky-800 hover:bg-sky-600 text-white rounded-lg;
-    }
-
-    .bubble {
-        @apply relative bg-neutral-800 text-white rounded-md p-3;
-        min-width: 30%;
-        max-width: 80%;
-    }
-
-    /* odd bubbles left */
-    .bubble:nth-child(2n) {
-        align-self: flex-start;
-    }
-    .bubble:nth-child(2n):after {
-        content: '';
-        @apply absolute left-2 bottom-0 translate-y-full border-solid;
-        border-width: .5rem .5rem 0 0;
-        border-color: rgb(38, 38, 38) transparent;
-    }
-
-    /* even bubbles right */
-    .bubble:nth-child(2n+1) {
-        @apply bg-sky-800;
-        align-self: flex-end;
-    }
-
-    .bubble:nth-child(2n+1):after {
-        content: ' ';
-        @apply absolute right-2 bottom-0 translate-y-full border-solid;
-        border-width: .5rem 0 0 .5rem;
-        border-color: rgb(7 89 133) transparent;
-    }
-
-    .loading:after {
-        @apply inline-block text-2xl font-bold leading-none;
-        content: '\00a0 ';
-        animation: ellipsis steps(1, end) 1s infinite;
-    }
-    button.loading {
-        @apply relative text-transparent;
-    }
-    button.loading:after {
-        position: absolute;
-    left: calc(50% - (1em * .5));
-    top: calc(50% - (1em * .5));
-        color: white;
-    }
-
-    @keyframes ellipsis {
-        0%   { content: '\00a0 '; }
-        25%  { content: '.'; }
-        50%  { content: '..'; }
-        75%  { content: '...'; }
-        100% { content: '\00a0 '; }
-    }
-}
-
-body {
-    @apply text-neutral-900 bg-slate-100 scroll-smooth;
-}
-
-html {
-    @apply scroll-smooth;
-}
+@import "tailwindcss/base";
+@import "_base.css";
+@import "tailwindcss/components";
+@import "components/_components.css";
+@import "components/buttons.css";
+@import "components/chat.css";
+@import "components/tabs.css";
+@import "tailwindcss/utilities";

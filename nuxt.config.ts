@@ -1,38 +1,45 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     runtimeConfig: {
-        apiSecret: '123', // unused
-        public: {
-            apiUrl: process.env.API_BASE_URL || '',
-            aclMenu: [
-                {
-                    code: 'doorway',
-                    menu: [
-                        {link : '/chatbot/doorway', title: "Doorway"},
-                        {link : '/chatbot/wiseair-doorway', title: "Wiseair deal"},
-                    ],
-                },
-                {
-                    code: 'chatlas',
-                    menu: [
-                        {link : '/summary', title: ""},
-                        {link : '/chatbot/storia-novecento', title: "Storia 900"},
-                        {link : '/chatbot/wiseair-doorway', title: "Wiseair deal"},
-                        {link : '/chatbot/biologia', title: "Biologia"},
-                    ],
-                },
-            ],
+        allowedBeditaEndpoints: [],
+        apiSecret: '',
+        apiBaseUrl: '',
+        beditaApiBaseUrl: '',
+        beditaApiKey: '',
+        recaptchaSecret: '',
+        session: {
+            secret: '',
+            name: '' || 'Brevia',
         },
+        public: {
+            features: {
+                signupAvailable: '',
+            },
+            maxUserChatbots: '',
+            recaptchaKey: '',
+        },
+    },
+
+    imports: {
+        dirs: ['store'],
     },
     modules: [
         '@nuxtjs/tailwindcss',
         '@pinia/nuxt',
-        // '@nuxtjs/axios',
+        '@nuxtjs/i18n',
+        'nuxt-icon',
     ],
+    build: {
+        transpile: ['tslib']
+    },
     app: {
         head: {
             link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }]
         }
     },
     css: ['@/assets/style.css'],
+    i18n: {
+        strategy: 'no_prefix',
+        locales: ['it', 'en'],
+    },
 })

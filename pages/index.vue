@@ -1,41 +1,35 @@
 <template>
-    <main>
-        <div class="grid sm:grid-cols-2 gap-8">
-            <NuxtLink class="big-button shadow-xl hover:shadow-2xl hover:shadow-sky-800"
-                v-for="(item, i) in menu" :key="i"
-                :to="item.link">
-                <div class="text-4xl font-bold" v-if="item.link != '/summary'">SC</div>
-                <div class="text-4xl font-bold" v-else>DS</div>
-                <div class="text-center leading-tight">
-                    <slot v-if="item.link != '/summary'">
-                        {{ item.title }} <span class="font-bold">chatbot</span>
-                    </slot>
-                    <slot v-else>
-                        Document <span class="font-bold">summary</span>
-                    </slot>
-                </div>
-            </NuxtLink>
-        </div>
+    <main class="flex flex-col justify-stretch">
+        <DashboardMenu :class="{ 'opacity-70 pointer-events-none select-none': modalStore.isLoadingPage }"
+            :menu="statesStore.menu" :add-enabled="isAddEnabled"
+            v-if="statesStore.menu.length" />
+
+        <DashboardWelcome :user="statesStore.user" :add-enabled="isAddEnabled"
+            v-else-if="statesStore.user" />
     </main>
 </template>
 
 <script setup>
-    useHead({ title: 'Chatlas', });
-</script>
+import { buildUserMenu } from '~~/utils/user-data-store';
+useHead({ title: 'Brevia', });
 
-<script>
-import { useStatesStore } from '~~/store/states';
+const modalStore = useModalStore();
+const statesStore = useStatesStore();
+const config = useRuntimeConfig();
 
-export default {
-    data() {
-        return {
-            menu: [],
-        }
-    },
+const isAddEnabled = computed(() => {
+    if (config.public.maxUserChatbots === '') {
+        return true;
+    }
+    const max = Number(config.public.maxUserChatbots)
 
-    created() {
-        const store = useStatesStore();
-        this.menu = store.getMenu();
-    },
-}
+    return statesStore.menu.filter((x) => x.type === 'chatbot').length < max;
+});
+
+const { data: has_access, status, refresh } = await useFetch('/api/bedita/user_has_access');
+statesStore.menu = buildUserMenu(has_access.value);
+
+watch(status, (value) => {
+    modalStore.isLoadingPage = value === 'pending';
+});
 </script>

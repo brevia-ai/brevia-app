@@ -1,0 +1,3 @@
+# redirect rules
+/       https://chatlas-demo.atlasconsulting.it
+/auth   https://chatlas-demo.atlasconsulting.it

@@ -1,19 +1,27 @@
 import { useStatesStore } from '~~/store/states';
+import { useSession } from 'h3';
+import { getSessionConfig } from '~~/server/utils/session';
 
 export default defineNuxtRouteMiddleware(async (to) => {
-    if (!process.client) return;
+    const statesStore = useStatesStore();
+    if (process.server) {
+        const event = useRequestEvent();
+        const session = await useSession(event, getSessionConfig());
+        const userData = session.data?.['bedita.user'];
+        if (userData) {
+            statesStore.userLogin(userData);
+        }
 
-    const publicPages = ['/auth', '/about'];
+        return;
+    }
+
+    const publicPages = ['/auth', '/about', '/signup', '/signup-activation', '/forgot-password', '/reset-password'];
     if (publicPages.includes(to.path)) {
         return;
     }
 
-    const nuxtApp = useNuxtApp();
-    const store = useStatesStore();
-    const menu = store.getMenu();
-    if (!menu.length) {
+    if (!statesStore.isLogged) {
+        statesStore.menu = [];
         return navigateTo('/auth', { redirectCode: 301 });
-    } else {
-        store.setIsLogged();
     }
 });
