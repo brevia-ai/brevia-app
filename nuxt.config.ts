@@ -12,6 +12,8 @@ export default defineNuxtConfig({
             name: '' || 'Brevia',
         },
         public: {
+            appName: '',
+            appDescription: '',
             features: {
                 signupAvailable: '',
             },

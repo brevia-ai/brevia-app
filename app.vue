@@ -37,11 +37,13 @@ modalStore.$onAction(({
     });
 });
 
+const config = useRuntimeConfig();
+
 useHead({
     title: 'BREVIA',
     meta: [{
         name: 'description',
-        content: t('TITLES.ATLAS_AI_POWERED_TOOLS'),
+        content: config.public.appDescription || t('TITLES.ATLAS_AI_POWERED_TOOLS'),
     }],
     htmlAttrs: {
         lang: locale.value,
