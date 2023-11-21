@@ -9,7 +9,7 @@
             <Icon name="ph:globe" />
             <span class="sr-only">Web site Atlas SRL</span>
         </a>
-        <a class="hover:text-sky-300" href="https://github.com/atlasconsulting" target="_blank" rel="noopener">
+        <a class="hover:text-sky-300" href="https://github.com/brevia-ai/brevia" target="_blank" rel="noopener">
             <Icon name="ph:github-logo" />
             <span class="sr-only">Github</span>
         </a>
