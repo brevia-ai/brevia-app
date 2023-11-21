@@ -4,7 +4,7 @@
         <h1 class="flex space-x-1.5 text-4xl font-black text-slate-900 hover:text-sky-600 cursor-pointer">
             <ElementLogo class="mt-0.5 h-[36px] w-auto" />
             <NuxtLink to="/">
-                <span class="leading-none">{{ config.public.appName || 'BREVIA' }}</span>
+                <span class="leading-none">{{ config.public.appName }}</span>
             </NuxtLink>
         </h1>
         <h2 class="ml-0.5 pl-3 sm:pl-10 text-sky-950 text-sm sm:text-base leading-none">{{ config.public.appDescription || $t('TITLES.ATLAS_AI_POWERED_TOOLS') }}</h2>

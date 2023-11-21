@@ -28,7 +28,8 @@
 </template>
 
 <script lang="ts" setup>
-useHead({ title: 'Edit Chatbot | Brevia', });
+const config = useRuntimeConfig();
+useHead({ title: `Edit Chatbot | ${config.public.appName}`});
 
 const { t } = useI18n();
 const route = useRoute();

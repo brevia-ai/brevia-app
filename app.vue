@@ -40,7 +40,7 @@ modalStore.$onAction(({
 const config = useRuntimeConfig();
 
 useHead({
-    title: 'BREVIA',
+    title: config.public.appName,
     meta: [{
         name: 'description',
         content: config.public.appDescription || t('TITLES.ATLAS_AI_POWERED_TOOLS'),
