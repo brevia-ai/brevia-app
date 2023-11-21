@@ -9,10 +9,10 @@ export default defineNuxtConfig({
         recaptchaSecret: '',
         session: {
             secret: '',
-            name: '' || 'Brevia',
+            name: 'Brevia',
         },
         public: {
-            appName: '',
+            appName: 'BREVIA',
             appDescription: '',
             features: {
                 signupAvailable: '',
