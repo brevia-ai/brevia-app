@@ -7,7 +7,7 @@
             <div class="col-span-full md:col-span-5">
                 <DropZone @file-change="file = $event" :disabled="isBusy" ref="fileDrop"/>
             </div>
-            <div class="flex justify-around">
+            <div class="flex justify-around" v-if="menuItem?.params?.payload?.prompts">
                 <div class="flex items- gap-4">
                     <div class="hidden sm:block">{{ $t('TYPE') }}</div>
                     <div class="flex flex-col space-y-1"
