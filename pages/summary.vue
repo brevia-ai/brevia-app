@@ -1,66 +1,47 @@
 <template>
     <div class="space-y-6">
         <h2 class="text-2xl md:text-3xl lg:text-4xl leading-tight font-bold">{{ menuItem?.title }}</h2>
-        <div class="space-y-6 sm:space-y-8">
+        <div class="space-y-6 md:space-y-8">
             <div v-html="menuItem?.description"></div>
 
-            <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
-                <div class="sm:col-span-2">
-                    <DropZone @file-change="file = $event"
-                        :disabled="isBusy" :accept-types="acceptTypes" ref="fileDrop"/>
-                </div>
-
-                <div class="sm:self-center justify-self-center sm:justify-self-start flex flex-col space-y-1 text-lg"
-                    :class="{'text-neutral-400' : isBusy}">
-                    <label class="space-x-2 cursor-pointer">
-                        <input type="radio" :value="'summarize'" v-model="summaryType" :disabled="isBusy">
-                        <span :class="{ 'font-bold': summaryType === 'summarize' }">{{ $t('TEXT_SUMMARY') }}</span>
-                    </label>
-                    <label class="space-x-2 cursor-pointer">
-                        <input type="radio" :value="'summarize_point'" v-model="summaryType" :disabled="isBusy">
-                        <span :class="{ 'font-bold': summaryType === 'summarize_point' }">{{ $t('BULLET_LIST_SUMMARY') }}</span>
-                    </label>
-                    <label class="space-x-2 cursor-pointer">
-                        <input type="radio" :value="'classificate'" v-model="summaryType" :disabled="isBusy">
-                        <span :class="{ 'font-bold': summaryType === 'classificate' }">{{ $t('CATEGORIZE_CONTENT') }}</span>
-                    </label>
-                </div>
+            <div class="col-span-full md:col-span-5">
+                <DropZone @file-change="file = $event" :disabled="isBusy" ref="fileDrop"/>
             </div>
             <div class="flex justify-around">
                 <div class="flex items- gap-4">
-                    <div class="hidden sm:block">TYPE</div>
+                    <div class="hidden sm:block">{{ $t('TYPE') }}</div>
                     <div class="flex flex-col space-y-1"
                         :class="{'text-neutral-400' : isBusy}">
                         <label class="space-x-2 cursor-pointer">
                             <input type="radio" name="type" :value="'summarize'" v-model="summaryType" :disabled="isBusy">
-                            <span :class="{ 'font-bold': summaryType === 'summarize' }">Text summary</span>
+                            <span :class="{ 'font-bold': summaryType === 'summarize' }">{{ $t('TEXT_SUMMARY') }}</span>
                         </label>
                         <label class="space-x-2 cursor-pointer">
                             <input type="radio" name="type" :value="'summarize_point'" v-model="summaryType" :disabled="isBusy">
-                            <span :class="{ 'font-bold': summaryType === 'summarize_point' }">Bullet list summary</span>
+                            <span :class="{ 'font-bold': summaryType === 'summarize_point' }">{{ $t('BULLET_LIST_SUMMARY') }}</span>
                         </label>
                         <label class="space-x-2 cursor-pointer">
                             <input type="radio" name="type" :value="'classificate'" v-model="summaryType" :disabled="isBusy">
-                            <span :class="{ 'font-bold': summaryType === 'classificate' }">Categorize content</span>
+                            <span :class="{ 'font-bold': summaryType === 'classificate' }">{{ $t('CATEGORIZE_CONTENT') }}</span>
                         </label>
                     </div>
                 </div>
 
                 <div class="flex items- gap-4">
-                    <div class="hidden sm:block">ANSWER IN</div>
+                    <div class="hidden sm:block">{{ $t('ANSWER_IN') }}</div>
                     <div class="flex flex-col space-y-1"
                         :class="{'text-neutral-400' : isBusy}">
                         <label class="space-x-2 cursor-pointer">
                             <input type="radio" name="language" :value="null" v-model="summaryLanguage" :disabled="isBusy">
-                            <span :class="{ 'font-bold': !summaryLanguage }">Same language</span>
+                            <span :class="{ 'font-bold': !summaryLanguage }">{{ $t('DOCUMENT_LANGUAGE') }}</span>
                         </label>
                         <label class="space-x-2 cursor-pointer">
-                            <input type="radio" name="language" :value="'ita'" v-model="summaryLanguage" :disabled="isBusy">
-                            <span :class="{ 'font-bold': summaryLanguage === 'ita' }">Italian</span>
+                            <input type="radio" name="language" :value="'Italian'" v-model="summaryLanguage" :disabled="isBusy">
+                            <span :class="{ 'font-bold': summaryLanguage === 'Italian' }">Italiano</span>
                         </label>
                         <label class="space-x-2 cursor-pointer">
-                            <input type="radio" name="language" :value="'eng'" v-model="summaryLanguage" :disabled="isBusy">
-                            <span :class="{ 'font-bold': summaryLanguage === 'eng' }">English</span>
+                            <input type="radio" name="language" :value="'English'" v-model="summaryLanguage" :disabled="isBusy">
+                            <span :class="{ 'font-bold': summaryLanguage === 'English' }">English</span>
                         </label>
                     </div>
                 </div>
@@ -188,8 +169,7 @@ export default {
             this.jobId = null;
             this.jobData = null;
             let formData = new FormData();
-            formData.append('num_items', 5);
-            formData.append('summ_prompt', this.summaryType);
+            formData.append('initial_prompt', this.summaryPrompt());
             formData.append('file', this.file);
             try {
                 // 'multipart/form-data' Content-type header
@@ -213,6 +193,17 @@ export default {
                 this.error = error;
                 console.log(error);
             }
+        },
+
+        summaryPrompt() {
+            const prompts = this.menuItem?.params?.payload?.prompts || {};
+            const summPrompt = prompts?.[this.summaryType] || null;
+            if (summPrompt.template) {
+                const lang = this.summaryLanguage || 'the same language of the text';
+                summPrompt.template = summPrompt.template.replace('%lang%', lang);
+            }
+
+            return summPrompt ? JSON.stringify(summPrompt) : null;
         },
 
         downloadPdf() {

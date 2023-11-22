@@ -10,6 +10,7 @@
     "AN_ERROR_OCCURRED": "An error occurred",
     "AN_ERROR_OCCURRED_PLEASE_RETRY": "An error occurred, please retry",
     "ANSWER_PLACEHOLDER": "Scrivi qui la risposta da suggerire al chatbot",
+    "ANSWER_IN": "Answer in",
     "ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS": "Are you sure you want to remove this",
     "BULLET_LIST_SUMMARY": "Bullet list summary",
     "CAN_ACCESS_NOW": "You can now log in with your new account",
@@ -32,6 +33,7 @@
     "DASHBOARD_EMPTY": "Your dashboard is empty. Click the button to create a new chatbot",
     "DESCRIPTION_PLACEHOLDER": "Insert a description here",
     "DELETE": "Delete",
+    "DOCUMENT_LANGUAGE": "Document language",
     "DOCUMENTS": "Documents",
     "DOWNLOAD": "Download",
     "DOWNLOAD_ANALYSIS": "Download analysis",
@@ -103,6 +105,7 @@
         "REGISTER_CONFIRM_EMAIL": "Confirm your email"
     },
     "TRANSCRIPTION_OF_FILE": "Transcription of file",
+    "TYPE": "Type",
     "UPLOAD_AND_ANALYZE_FILE": "Upload and analyze file",
     "UPLOAD_AND_TRANSCRIBE_FILE": "Upload and transcribe file",
     "WELCOME_ON_BREVIA": "welcome",
