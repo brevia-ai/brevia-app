@@ -71,7 +71,8 @@
 </template>
 
 <script lang="ts" setup>
-useHead({ title: 'Chatbot | Brevia', });
+const config = useRuntimeConfig();
+useHead({ title: `Chatbot | ${config.public.appName}`});
 
 interface DialogItem {
     who: string;
