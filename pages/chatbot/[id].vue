@@ -162,7 +162,7 @@ const streamingFetchRequest = async (currIdx: number) => {
     const question = prompt.value;
     prompt.value = '';
 
-    const response = await fetch('/api/brevia/prompt', {
+    const response = await fetch('/api/brevia/chat', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
