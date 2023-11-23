@@ -32,7 +32,7 @@ const props = defineProps({
 const addMode = ref(false);
 const isLoading = ref(true);
 
-const { data: questions, refresh } = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created`);
+const { data: questions, refresh } = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created&page_size=100`);
 isLoading.value = false;
 
 const closeForm = async (e: boolean) => {

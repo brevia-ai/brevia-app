@@ -26,6 +26,6 @@ const props = defineProps({
 
 const isLoading = ref(true);
 
-const { data: files, refresh } = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=files&sort=-created`);
+const { data: files, refresh } = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=files&sort=-created&page_size=100`);
 isLoading.value = false;
 </script>
