@@ -31,7 +31,12 @@
                 <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ result.output }}</p>
             </div>
             <div class="space-y-2 text-center sm:text-left" v-if="result">
-                <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
+                <a class="w-full sm:w-auto px-8 py-2 sm:py-4 button" v-if="result.document_url"
+                    :href="result.document_url" target="_blank">
+                        <Icon name="ph:download-bold" class="mr-3 -translate-y-px text-xl" />
+                        <span class="inline-block py-2">{{ $t('DOWNLOAD_ANALYSIS') }}</span>
+                </a>
+                <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button" v-else
                     @click="downloadPdf">{{ $t('DOWNLOAD_ANALYSIS') }}</button>
             </div>
 
@@ -151,8 +156,10 @@ export default {
             this.jobId = null;
             this.jobData = null;
             let formData = new FormData();
+            let payload = this.menuItem?.params?.payload || {}
+            payload['file_name'] = this.file.name;
             formData.append('service', this.menuItem?.params?.service || '');
-            formData.append('payload', JSON.stringify(this.menuItem?.params?.payload || ''));
+            formData.append('payload', JSON.stringify(payload));
             formData.append('file', this.file);
             try {
                 const data = await $fetch('/api/brevia/upload_analyze', {
