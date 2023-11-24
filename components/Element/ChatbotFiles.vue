@@ -23,9 +23,9 @@ const props = defineProps({
         required: true,
     },
 });
+const isLoading = ref(true);
 const endpoint = `/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=files&sort=-created`;
 const { data: files } = await useApiGetAll(endpoint);
-const isLoading = ref(true);
 isLoading.value = false;
 const reloadFiles = async () => {
     isLoading.value = true;
