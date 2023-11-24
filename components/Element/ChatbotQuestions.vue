@@ -32,31 +32,18 @@ const props = defineProps({
 const addMode = ref(false);
 const isLoading = ref(true);
 
-let { data: questions, r: refresh } = await loadQuestionData(1, 100);
+const endpoint = `/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created`;
+const { data: questions } = await useApiGetAll(endpoint);
 isLoading.value = false;
 
 const closeForm = async (e: boolean) => {
     if (e) {
         isLoading.value = true;
-        await refresh();
+        await useApiGetAll(endpoint);
         isLoading.value = false;
     }
 
     addMode.value = false;
-}
-
-async function loadQuestionData (pageToLoad: number, chunkSize:number) {
-    let pageQuestions = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created&page_size=${chunkSize}&page=${pageToLoad}`);
-    let pageData = pageQuestions.data;
-    let numPages = pageQuestions.data.value.meta.pagination.page_count;
-    if(pageToLoad < numPages){
-        let sub = await loadQuestionData(pageToLoad + 1, 100);
-        pageData.value.formattedData.data = pageData.value.formattedData.data.concat(sub.data.value.formattedData.data);
-    }
-    return {
-        data:pageData,
-        r:pageQuestions.refresh
-    };
 }
 
 </script>

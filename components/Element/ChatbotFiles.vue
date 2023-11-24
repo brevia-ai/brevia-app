@@ -1,7 +1,7 @@
 <template>
 <div class="flex flex-col space-y-8">
     <!-- new -->
-    <FormChatbotFile :collection="collection" @file-uploaded="refresh" />
+    <FormChatbotFile :collection="collection" @file-uploaded="reloadFiles" />
 
     <!-- existing -->
     <div class="-my-6 ellipsis-loading text-sky-800"
@@ -11,7 +11,7 @@
         <ElementChatbotFileItem
             v-for="item in files.formattedData.data" :key="item.id"
             :item="item"
-            @file-deleted="refresh" />
+            @file-deleted="reloadFiles" />
     </div>
 </div>
 </template>
@@ -23,24 +23,13 @@ const props = defineProps({
         required: true,
     },
 });
-
+const endpoint = `/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=files&sort=-created`;
+const { data: files } = await useApiGetAll(endpoint);
 const isLoading = ref(true);
-
-const { data: files, r: refresh } = await loadFilesData(1,100);
 isLoading.value = false;
-
-async function loadFilesData (pageToLoad: number, chunkSize:number) {
-    let pageQuestions = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=files&sort=-created&page_size=${chunkSize}&page=${pageToLoad}`);
-    let pageData = pageQuestions.data;
-    let numPages = pageQuestions.data.value.meta.pagination.page_count;
-    if(pageToLoad < numPages){
-        let sub = await loadFilesData(pageToLoad + 1, 100);
-        pageData.value.formattedData.data = pageData.value.formattedData.data.concat(sub.data.value.formattedData.data);
-    }
-    return {
-        data:pageData,
-        r:pageQuestions.refresh
-    };
+const reloadFiles = async () => {
+    isLoading.value = true;
+    await useApiGetAll(endpoint);
+    isLoading.value = false;
 }
-
 </script>
