@@ -72,5 +72,9 @@ export const useStatesStore = defineStore('states', {
 
             localStorage.setItem(name, JSON.stringify(value));
         },
+
+        userHasRole(name: string) {
+            return !!this.user?.roles?.find(r => r === name);
+        },
     },
 });

@@ -8,6 +8,15 @@
 
         <div class="text-xs text-slate-600" v-if="isLoading">uploading</div>
     </div>
+    <div class="space-y-4" v-if="isDemo">
+        <p class="block p-8 border text-white rounded-lg text-lg whitespace-pre-line">
+            {{ $t('MAX_NUMBER_FILES') }}: {{ $config.public.demo.maxChatFiles }}
+        </p>
+    </div>
+    <div class="space-y-4" v-if="error">
+        <p class="block p-8 bg-red-900 border border-red-900 text-white rounded-lg text-lg whitespace-pre-line">{{ error }}</p>
+    </div>
+
 
     <p class="text-xs text-center sm:text-left text-slate-600">{{ $t('FILE_TYPE_MUST_BE') }} <span class="font-bold">PDF</span></p>
 </div>
@@ -26,8 +35,24 @@ const { $fileName2title } = useNuxtApp();
 
 const inputFile = ref();
 const isLoading = ref(false);
+const isDemo = ref(useStatesStore().userHasRole('demo')); // flag to check for `demo` limits
+const error = ref('');
+
+const isFileSizeAccepted = (file: File) => {
+    if (!isDemo.value) {
+        return true;
+    }
+    const fileSizeMB = (file?.size || 0)  / (1024 ** 2);
+
+    return parseFloat(useRuntimeConfig().public.demo.maxFileSize) >= fileSizeMB;
+}
 
 const upload = async (newFile: File) => {
+    if (!isFileSizeAccepted(newFile)) {
+        error.value = 'File too big';
+        return;
+    }
+    error.value = '';
     isLoading.value = true;
 
     const formData = new FormData();

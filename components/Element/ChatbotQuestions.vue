@@ -1,7 +1,7 @@
 <template>
 <div class="flex flex-col space-y-10">
     <!-- new -->
-    <button class="button button-secondary uppercase justify-between items-start px-3.5 text-left" @click="addMode = true" v-if="!addMode">
+    <button class="button button-secondary uppercase justify-between items-start px-3.5 text-left" @click="addMode = true" v-if="!addMode && questionAddAllowed">
         <span class="normal-case italic">{{  $t('CLIC_TO_ADD_QUESTION') }}</span>
         <Icon name="ph:plus-bold" class="text-2xl shrink-0" />
     </button>
@@ -44,6 +44,15 @@ const closeForm = async (e: boolean) => {
 
     addMode.value = false;
 }
+
+const questionAddAllowed = computed(() => {
+    if (!useStatesStore().userHasRole('demo')) {
+        return true;
+    }
+
+    const num = questions?.formattedData?.data?.length || 0;
+    return parseInt(useRuntimeConfig().public.demo.maxChatQA) > num;
+});
 </script>
 
 <style scoped>

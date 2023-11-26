@@ -5,7 +5,7 @@
             <div v-html="menuItem?.description"></div>
 
             <div>
-                <DropZone @file-change="file = $event"
+                <DropZone @file-change="file = $event" :is-demo="isDemo"
                     :disabled="isBusy" :accept-types="acceptTypes" ref="fileDrop"/>
             </div>
 
@@ -64,6 +64,7 @@ export default {
             jobName: null,
             pollingId: null,
             error: null,
+            isDemo: false, // flag to check for `demo` limits
             menuItem: {},
         }
     },
@@ -81,6 +82,7 @@ export default {
         this.file = info?.file || null;
         this.startPolling();
         this.isBusy = !!this.jobId;
+        this.isDemo = store.userHasRole('demo');
     },
 
     computed: {
@@ -158,6 +160,10 @@ export default {
             let formData = new FormData();
             let payload = this.menuItem?.params?.payload || {}
             payload['file_name'] = this.file.name;
+            if (this.isDemo) {
+                payload['user_id'] = useStatesStore().user.id;
+                payload['max_analysis'] = useRuntimeConfig().public.demo.maxAnalysis;
+            }
             formData.append('service', this.menuItem?.params?.service || '');
             formData.append('payload', JSON.stringify(payload));
             formData.append('file', this.file);

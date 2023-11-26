@@ -1,7 +1,7 @@
 <template>
 <div class="flex flex-col space-y-8">
     <!-- new -->
-    <FormChatbotFile :collection="collection" @file-uploaded="refresh" />
+    <FormChatbotFile :collection="collection" @file-uploaded="refresh" v-if="fileUploadAllowed" />
 
     <!-- existing -->
     <div class="-my-6 ellipsis-loading text-sky-800"
@@ -28,4 +28,13 @@ const isLoading = ref(true);
 
 const { data: files, refresh } = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=files&sort=-created`);
 isLoading.value = false;
+
+const fileUploadAllowed = computed(() => {
+    if (!useStatesStore().userHasRole('demo')) {
+        return true;
+    }
+
+    const numUploaded = files?.formattedData?.data?.length || 0;
+    return parseInt(useRuntimeConfig().public.demo.maxChatFiles) > numUploaded;
+});
 </script>

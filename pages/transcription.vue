@@ -7,7 +7,7 @@
 
             <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
                 <div class="sm:col-span-2">
-                    <DropZone @file-change="file = $event"
+                    <DropZone @file-change="file = $event" :is-demo="isDemo"
                         :disabled="isBusy" accept-types="audio/*" ref="fileDrop"/>
                 </div>
 
@@ -57,6 +57,7 @@ export default {
             isBusy: false,
             transcription: null,
             error: null,
+            isDemo: false,
             menuItem: {},
         }
     },
@@ -68,6 +69,7 @@ export default {
         this.menuItem = store.getMenuItem(link);
         const config = useRuntimeConfig();
         useHead({ title: `${this.menuItem?.title} | ${config.public.appName}`});
+        this.isDemo = store.userHasRole('demo');
     },
 
     methods: {

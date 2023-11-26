@@ -11,6 +11,10 @@
     <textarea :placeholder="$t('ANSWER_PLACEHOLDER')"
         v-model="answer" rows="7"></textarea>
 
+    <div class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary" v-if="isDemo">
+        {{ $t('MAX_NUMBER_QUESTIONS') }}: {{ $config.public.demo.maxChatQA }}
+    </div>
+
     <div class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary" v-if="error">
         {{ $t('AN_ERROR_OCCURRED_PLEASE_RETRY') }}
     </div>
@@ -52,6 +56,7 @@ const isSaving = ref(false);
 const isDeleting = ref(false);
 const title = ref('');
 const answer = ref('');
+const isDemo = ref(useStatesStore().userHasRole('demo')); // flag to check for `demo` limits
 
 const { $html2text } = useNuxtApp();
 if (props.item.attributes) {

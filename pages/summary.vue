@@ -6,7 +6,7 @@
 
             <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
                 <div class="sm:col-span-2">
-                    <DropZone @file-change="file = $event"
+                    <DropZone @file-change="file = $event" :is-demo="isDemo"
                         :disabled="isBusy" :accept-types="acceptTypes" ref="fileDrop"/>
                 </div>
 
@@ -74,6 +74,7 @@ export default {
             jobData: null,
             pollingId: null,
             error: null,
+            isDemo: false,
             menuItem: {},
         }
     },
@@ -90,6 +91,7 @@ export default {
         this.file = info?.file || null;
         this.startPolling();
         this.isBusy = !!this.jobId;
+        this.isDemo = store.userHasRole('demo');
     },
 
     computed: {

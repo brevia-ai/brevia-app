@@ -30,6 +30,10 @@ export default {
             type: Boolean,
             default: false,
         },
+        isDemo: {
+            type: Boolean,
+            default: false,
+        },
         acceptTypes: {
             // comma separated lists of accepted mime types
             type: String,
@@ -64,7 +68,7 @@ export default {
         onDrop(e: DragEvent) {
             e.preventDefault();
             const file = [...(e.dataTransfer?.files as any)][0] || null;
-            if (!this.isFileAccepted(file)) {
+            if (!this.isFileTypeAccepted(file) || !!this.isFileSizeAccepted(file)) {
                 this.file = null;
                 this.isDragging = false;
                 this.isFileError = true;
@@ -76,7 +80,7 @@ export default {
             this.$emit('fileChange', [...(e.dataTransfer?.files as any)][0]);
             this.isDragging = false;
         },
-        isFileAccepted(file: File) {
+        isFileTypeAccepted(file: File) {
             if (!file || !file.type) {
                 return false;
             }
@@ -97,7 +101,16 @@ export default {
             });
 
             return found;
-        }
+        },
+        isFileSizeAccepted(file: File) {
+            if (!this.isDemo) {
+                return true;
+            }
+            const fileSizeMB = (file?.size || 0)  / (1024 ** 2);
+            const config = useRuntimeConfig();
+
+            return parseFloat(config.public.demo.maxFileSize) >= fileSizeMB;
+        },
     },
 };
 </script>
