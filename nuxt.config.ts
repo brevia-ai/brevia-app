@@ -25,7 +25,7 @@ export default defineNuxtConfig({
                 maxChatFiles: '3', // max number of files per Chatbot
                 maxChatQA: '20', // max number of Q&A per Chatbot
                 maxFileSize: '5', // max file size in MB
-                maxAnalysis: '5', // max num analysis per day
+                maxNumAnalysis: '5', // max num analysis per day
             },
         },
     },

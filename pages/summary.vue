@@ -75,6 +75,7 @@ export default {
             pollingId: null,
             error: null,
             isDemo: false,
+            jobsLeft: null,
             menuItem: {},
         }
     },
@@ -92,6 +93,7 @@ export default {
         this.startPolling();
         this.isBusy = !!this.jobId;
         this.isDemo = store.userHasRole('demo');
+        this.updateJobsLeft();
     },
 
     computed: {
@@ -141,6 +143,23 @@ export default {
                 clearInterval(this.pollingId);
             }
             this.pollingId = null;
+        },
+
+        async updateJobsLeft() {
+            if (!this.isDemo) {
+                return;
+            }
+            const userId = useStatesStore().user.id;
+            const query = `service=brevia.services.SummarizeFileService&user_id=${userId}`
+            try {
+                const response = await fetch(`/api/brevia/service_usage?${query}`);
+                const data = await response.json();
+                const usage = data?.usage || 0;
+                const left = Math.max(0, parseInt(config.public.demo.maxNumAnalysis) - parseInt(usage));
+                this.jobsLeft = String(left);
+            } catch (error) {
+                console.log(error);
+            }
         },
 
         async submit() {
@@ -204,6 +223,7 @@ export default {
                         useStatesStore().setJobInfo('summary', null);
                         this.jobId = null;
                         this.isBusy = false;
+                        this.updateJobsLeft();
                     }
                 }
             } catch (error) {
