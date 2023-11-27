@@ -94,8 +94,8 @@ const input = ref<HTMLElement|null>(null);
 const dialog = ref<DialogItem[]>([]);
 const showDocs = ref(false);
 const docs = ref<any>([]);
-const isDemo = ref(store.userHasRole('demo')); // flag to check for `demo` limits
-const messagesLeft = ref('100');
+const isDemo = ref(store.userHasRole('demo'));
+const messagesLeft = ref('');
 
 let sessionId = '';
 let collectionName = '';

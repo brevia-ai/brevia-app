@@ -34,7 +34,7 @@ const isDemo = ref(useStatesStore().userHasRole('demo'));
 const isUploadAllowed = ref(true);
 
 function checkUploadAllowed(newFiles: any) {
-    if (!useStatesStore().userHasRole('demo')) {
+    if (!isDemo) {
         return true;
     }
 

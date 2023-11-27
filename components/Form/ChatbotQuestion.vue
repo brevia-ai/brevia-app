@@ -52,7 +52,6 @@ const isSaving = ref(false);
 const isDeleting = ref(false);
 const title = ref('');
 const answer = ref('');
-const isDemo = ref(useStatesStore().userHasRole('demo')); // flag to check for `demo` limits
 
 const { $html2text } = useNuxtApp();
 if (props.item.attributes) {
