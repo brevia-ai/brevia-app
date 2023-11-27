@@ -7,7 +7,7 @@
     <div class="-my-6 ellipsis-loading text-sky-800"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
 
-    <div class="flex flex-col space-y-2.5" v-else-if="files.formattedData.data.length">
+    <div class="flex flex-col space-y-2.5" v-else-if="files?.formattedData.data.length">
         <ElementChatbotFileItem
             v-for="item in files.formattedData.data" :key="item.id"
             :item="item"

@@ -11,7 +11,7 @@
     <div class="-my-6 ellipsis-loading text-sky-700"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
 
-    <div class="questions space-y-6" v-else-if="questions.formattedData.data.length">
+    <div class="questions space-y-6" v-else-if="questions?.formattedData.data.length">
         <div v-for="item in questions.formattedData.data" :key="item.id">
             <div class="question">
                 <ElementChatbotQuestionItem :item="item" :collection-id="collection.cmetadata.id" @close="closeForm" />
