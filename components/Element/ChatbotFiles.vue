@@ -1,7 +1,13 @@
 <template>
 <div class="flex flex-col space-y-8">
     <!-- new -->
-    <FormChatbotFile :collection="collection" @file-uploaded="refresh" v-if="fileUploadAllowed" />
+    <div>
+        <FormChatbotFile :collection="collection" @file-uploaded="refresh" v-if="isUploadAllowed" />
+
+        <p class="mt-2 text-xs text-center sm:text-left text-slate-600" v-if="isDemo">
+            {{ $t('MAX_NUMBER_FILES') }}: <span class="font-bold">{{ $config.public.demo.maxChatFiles }}</span>
+        </p>
+    </div>
 
     <!-- existing -->
     <div class="-my-6 ellipsis-loading text-sky-800"
@@ -25,16 +31,23 @@ const props = defineProps({
 });
 
 const isLoading = ref(true);
+const isDemo = ref(useStatesStore().userHasRole('demo'));
+const isUploadAllowed = ref(true);
 
 const { data: files, refresh } = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=files&sort=-created`);
 isLoading.value = false;
 
-const fileUploadAllowed = computed(() => {
+watch(files, (newFiles) => {
+    isUploadAllowed.value = checkUploadAllowed(newFiles);
+});
+
+function checkUploadAllowed(newFiles: any) {
     if (!useStatesStore().userHasRole('demo')) {
         return true;
     }
 
-    const numUploaded = files?.formattedData?.data?.length || 0;
-    return parseInt(useRuntimeConfig().public.demo.maxChatFiles) > numUploaded;
-});
+    const num = newFiles?.formattedData?.data?.length || 0;
+    return parseInt(useRuntimeConfig().public.demo.maxChatFiles) > num;
+}
+
 </script>
