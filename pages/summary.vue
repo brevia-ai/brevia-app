@@ -30,10 +30,14 @@
             <div class="text-center sm:text-left">
                 <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
                     :class="{'loading' : isBusy}"
-                    :disabled="!file || isBusy" @click="submit">{{ $t('UPLOAD_AND_ANALYZE_FILE') }}</button>
+                    :disabled="!file || isBusy || jobsLeft == '0'"
+                    @click="submit">{{ $t('UPLOAD_AND_ANALYZE_FILE') }}</button>
                 <button class="mt-4 sm:ml-6 sm:mt-0 px-8 py-2 sm:py-4 bg-red-900 button"
                     :class="{'hover:bg-red-700' : !resetDisabled}"
                     :disabled="resetDisabled" @click="reset">{{ $t('RESET') }}</button>
+            </div>
+            <div class="space-y-4" v-if="isDemo">
+                <span class="grow text-lg">{{ $t('JOBS_LEFT') }}: {{ jobsLeft }}</span>
             </div>
 
             <hr class="border-neutral-300" v-if="jobData">
@@ -155,7 +159,7 @@ export default {
                 const response = await fetch(`/api/brevia/service_usage?${query}`);
                 const data = await response.json();
                 const usage = data?.usage || 0;
-                const left = Math.max(0, parseInt(config.public.demo.maxNumAnalysis) - parseInt(usage));
+                const left = Math.max(0, parseInt(useRuntimeConfig().public.demo.maxNumAnalysis) - parseInt(usage));
                 this.jobsLeft = String(left);
             } catch (error) {
                 console.log(error);
@@ -169,8 +173,9 @@ export default {
             this.jobId = null;
             this.jobData = null;
             let formData = new FormData();
-            formData.append('num_items', 5);
-            formData.append('summ_prompt', this.summaryType);
+            if (this.isDemo) {
+                formData.append('payload', `{"user_id": "${useStatesStore().user.id}"}`);
+            }
             formData.append('file', this.file);
             try {
                 // 'multipart/form-data' Content-type header

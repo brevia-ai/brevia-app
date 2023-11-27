@@ -41,7 +41,7 @@
                         @keydown.enter="submit">
 
                     <button class="px-6 button shadow-md disabled:shadow-none"
-                        :disabled="chatDisabled.value"
+                        :disabled="isBusy || messagesLeft == '0'"
                         @click="submit">
                         <span class="sm:hidden">›</span>
                         <span class="hidden sm:inline">{{ $t('SEND') }}</span>
@@ -95,7 +95,7 @@ const dialog = ref<DialogItem[]>([]);
 const showDocs = ref(false);
 const docs = ref<any>([]);
 const isDemo = ref(store.userHasRole('demo')); // flag to check for `demo` limits
-const messagesLeft = ref('');
+const messagesLeft = ref('100');
 
 let sessionId = '';
 let collectionName = '';
@@ -252,8 +252,7 @@ const updateLeftMessages = async () => {
         return;
     }
 
-    const d = new Date();
-    const today = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()}`
+    const today = new Date().toISOString().substring(0, 10);
     const query = `min_date=${today}&collection=${collection.value?.name}`
     try {
         const response = await fetch(`/api/brevia/chat_history?${query}`);
@@ -265,7 +264,4 @@ const updateLeftMessages = async () => {
         console.log(error);
     }
 };
-
-const chatDisabled = computed(() => isBusy || (isDemo && parseInt(messagesLeft.value) <= 0));
-
 </script>

@@ -68,7 +68,7 @@ export default {
         onDrop(e: DragEvent) {
             e.preventDefault();
             const file = [...(e.dataTransfer?.files as any)][0] || null;
-            if (!this.isFileTypeAccepted(file) || !!this.isFileSizeAccepted(file)) {
+            if (!this.isFileTypeAccepted(file) || !this.isFileSizeAccepted(file)) {
                 this.file = null;
                 this.isDragging = false;
                 this.isFileError = true;
