@@ -17,7 +17,7 @@
     <div class="-my-6 ellipsis-loading text-sky-700"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
 
-    <div class="questions space-y-6" v-else-if="questions.formattedData.data.length">
+    <div class="questions space-y-6" v-else-if="questions?.formattedData.data.length">
         <div v-for="item in questions.formattedData.data" :key="item.id">
             <div class="question">
                 <ElementChatbotQuestionItem :item="item" :collection-id="collection.cmetadata.id" @close="closeForm" />
@@ -40,13 +40,14 @@ const isLoading = ref(true);
 const isDemo = ref(useStatesStore().userHasRole('demo'));
 const isQuestionAddAllowed = ref(true);
 
-const { data: questions, refresh } = await useFetch(`/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created`);
+const endpoint = `/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created`;
+const { data: questions } = await useApiGetAll(endpoint);
 isLoading.value = false;
 
 const closeForm = async (e: boolean) => {
     if (e) {
         isLoading.value = true;
-        await refresh();
+        await useApiGetAll(endpoint);
         isLoading.value = false;
     }
 
