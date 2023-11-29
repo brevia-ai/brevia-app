@@ -30,7 +30,7 @@ const props = defineProps({
     },
 });
 const isLoading = ref(true);
-const isDemo = ref(useStatesStore().userHasRole('demo'));
+const isDemo = useStatesStore().userHasRole('demo');
 const isUploadAllowed = ref(true);
 
 function checkUploadAllowed(newFiles: any) {
