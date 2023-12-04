@@ -49,4 +49,16 @@ useHead({
         lang: locale.value,
     },
 });
+
+onMounted(() => {
+    if (!config.public.cookiesPrivacyTerms) {
+        return;
+    }
+    useHead({
+        script: [{
+            src: 'https://cdn.iubenda.com/iubenda.js',
+            defer: true,
+        }]
+    });
+});
 </script>

@@ -19,6 +19,7 @@ export default defineNuxtConfig({
             },
             maxUserChatbots: '',
             recaptchaKey: '',
+            cookiesPrivacyTerms: '',
         },
     },
 
@@ -30,6 +31,7 @@ export default defineNuxtConfig({
         '@pinia/nuxt',
         '@nuxtjs/i18n',
         'nuxt-icon',
+        'nuxt-gtag',
     ],
     build: {
         transpile: ['tslib']
@@ -43,5 +45,9 @@ export default defineNuxtConfig({
     i18n: {
         strategy: 'no_prefix',
         locales: ['it', 'en'],
+    },
+    gtag: {
+        id: 'G-XXXXXXXXXX',
+        initialConsent: false,
     },
 })
