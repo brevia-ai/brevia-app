@@ -31,20 +31,22 @@ const props = defineProps({
 });
 const isLoading = ref(true);
 const isDemo = useStatesStore().userHasRole('demo');
-const isUploadAllowed = ref(true);
+const isUploadAllowed = ref(false);
 
 function checkUploadAllowed(newFiles: any) {
     if (!isDemo) {
         return true;
     }
 
-    const num = newFiles?.formattedData?.data?.length || 0;
+    const num = newFiles?.value?.data?.length || newFiles?.data?.length || 0;
     return parseInt(useRuntimeConfig().public.demo.maxChatFiles) > num;
 }
 
 const endpoint = `/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=files&sort=-created`;
 const { data: files } = await useApiGetAll(endpoint);
 isLoading.value = false;
+isUploadAllowed.value = checkUploadAllowed(files);
+
 const reloadFiles = async () => {
     isLoading.value = true;
     await useApiGetAll(endpoint);

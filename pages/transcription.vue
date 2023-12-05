@@ -7,7 +7,7 @@
 
             <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
                 <div class="sm:col-span-2">
-                    <DropZone @file-change="file = $event" :is-demo="isDemo"
+                    <DropZone @file-change="file = $event"
                         :disabled="isBusy" accept-types="audio/*" ref="fileDrop"/>
                 </div>
 

@@ -5,8 +5,8 @@
             <div v-html="menuItem?.description"></div>
 
             <div>
-                <DropZone @file-change="file = $event" :is-demo="isDemo"
-                    :disabled="isBusy" :accept-types="acceptTypes" ref="fileDrop"/>
+                <DropZone @file-change="file = $event"
+                    :disabled="isBusy || jobsLeft == '0'" :accept-types="acceptTypes" ref="fileDrop"/>
             </div>
 
             <div class="flex flex-col sm:flex-row justify-between">
@@ -20,6 +20,12 @@
             </div>
             <div class="space-y-4" v-if="isDemo">
                 <span class="grow text-lg">{{ $t('JOBS_LEFT') }}: {{ jobsLeft }}</span>
+            </div>
+
+            <div class="space-x-4" v-if="isDemo && jobsLeft == '0'">
+                <p class="block p-8 bg-red-100 border border-red-400 rounded-lg text-lg whitespace-pre-line">
+                    {{ $t('NO_MORE_ANALYSIS_JOBS') }}
+                </p>
             </div>
 
             <hr class="border-neutral-300" v-if="jobData">

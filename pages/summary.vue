@@ -6,8 +6,8 @@
 
             <div class="grid sm:grid-cols-3 gap-4 sm:gap-8">
                 <div class="sm:col-span-2">
-                    <DropZone @file-change="file = $event" :is-demo="isDemo"
-                        :disabled="isBusy" :accept-types="acceptTypes" ref="fileDrop"/>
+                    <DropZone @file-change="file = $event"
+                        :disabled="isBusy || jobsLeft == '0'" :accept-types="acceptTypes" ref="fileDrop"/>
                 </div>
 
                 <div class="sm:self-center justify-self-center sm:justify-self-start flex flex-col space-y-1 text-lg"
@@ -38,6 +38,12 @@
             </div>
             <div class="space-y-4" v-if="isDemo">
                 <span class="grow text-lg">{{ $t('JOBS_LEFT') }}: {{ jobsLeft }}</span>
+            </div>
+
+            <div class="space-x-4" v-if="isDemo && jobsLeft == '0'">
+                <p class="block p-8 bg-red-100 border border-red-400 rounded-lg text-lg whitespace-pre-line">
+                    {{ $t('NO_MORE_ANALYSIS_JOBS') }}
+                </p>
             </div>
 
             <hr class="border-neutral-300" v-if="jobData">

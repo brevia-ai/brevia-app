@@ -37,7 +37,7 @@
                         class="grow text-lg p-2 rounded border border-sky-500 disabled:bg-neutral-100 disabled:border-neutral-300 shadow-md disabled:shadow-none"
                         ref="input"
                         v-model.trim="prompt"
-                        :disabled="isBusy"
+                        :disabled="isBusy || messagesLeft == '0'"
                         @keydown.enter="submit">
 
                     <button class="px-6 button shadow-md disabled:shadow-none"
@@ -57,6 +57,12 @@
 
                 <div class="flex space-x-4" v-if="isDemo">
                     <span class="grow text-lg">{{ $t('MESSAGES_LEFT') }}: {{ messagesLeft }}</span>
+                </div>
+
+                <div class="space-x-4" v-if="isDemo && messagesLeft == '0'">
+                    <div class="w-full bg-red-100 border border-red-400 rounded text-center">
+                        {{ $t('NO_MORE_CHAT_MESSAGES') }}
+                    </div>
                 </div>
             </div>
 

@@ -10,7 +10,7 @@
         @dragleave="onDragLeave"
         @drop="onDrop">
             <div class="max-w-full text-sm font-mono text-green-300 overflow-hidden text-ellipsis" v-if="file">{{ file.name }}</div>
-            <div v-else-if="isFileError">{{ $t('PLEASE_DROP_A_FILE') }}</div>
+            <div v-else-if="isFileError">{{ fileErrorMessage }}</div>
             <div v-else-if="isDragging">{{ $t('DROP_FILE') }}</div>
             <div v-else>{{ $t('PLEASE_DROP_A_FILE') }}</div>
 
@@ -30,10 +30,6 @@ export default {
             type: Boolean,
             default: false,
         },
-        isDemo: {
-            type: Boolean,
-            default: false,
-        },
         acceptTypes: {
             // comma separated lists of accepted mime types
             type: String,
@@ -45,6 +41,7 @@ export default {
             isDragging: false,
             isFileError: false,
             file: null,
+            fileErrorMessage: '',
         };
     },
 
@@ -55,7 +52,11 @@ export default {
             (this.$refs.fileInput as any).value = '';
         },
         onChangeFile() {
-            this.file = [...(this.$refs.fileInput as any).files][0];
+            const file = [...(this.$refs.fileInput as any).files][0] || null;
+            if (!this.checkFile(file)) {
+                return;
+            }
+            this.file = file;
             this.$emit('fileChange', this.file);
         },
         onDragOver(e: DragEvent) {
@@ -68,11 +69,7 @@ export default {
         onDrop(e: DragEvent) {
             e.preventDefault();
             const file = [...(e.dataTransfer?.files as any)][0] || null;
-            if (!this.isFileTypeAccepted(file) || !this.isFileSizeAccepted(file)) {
-                this.file = null;
-                this.isDragging = false;
-                this.isFileError = true;
-                setTimeout(() => { this.isFileError = false; }, 2000);
+            if (!this.checkFile(file)) {
                 return;
             }
 
@@ -80,36 +77,19 @@ export default {
             this.$emit('fileChange', [...(e.dataTransfer?.files as any)][0]);
             this.isDragging = false;
         },
-        isFileTypeAccepted(file: File) {
-            if (!file || !file.type) {
-                return false;
-            }
-            const acceptList = this.acceptTypes.split(',');
-
-            const itemParts = file.type.split('/');
-            const fileType = itemParts[0];
-            const fileSubtype = itemParts?.[1];
-            let found = false;
-            acceptList.forEach((item) => {
-                const parts = item.split('/');
-                if (
-                    parts[0] === fileType &&
-                    (parts?.[1] === '*' || parts?.[1] === fileSubtype)
-                ) {
-                    found = true;
-                }
-            });
-
-            return found;
-        },
-        isFileSizeAccepted(file: File) {
-            if (!this.isDemo) {
+        checkFile(file: File) {
+            const typeOk = this.$fileTypeAccepted(file, this.acceptTypes);
+            const sizeOk = this.$fileSizeAccepted(file);
+            if (typeOk && sizeOk) {
                 return true;
             }
-            const fileSizeMB = (file?.size || 0)  / (1024 ** 2);
-            const config = useRuntimeConfig();
+            this.file = null;
+            this.isDragging = false;
+            this.fileErrorMessage = !typeOk ? this.$t('FILE_TYPE_NOT_ACCEPTED') : this.$t('FILE_SIZE_ERROR');
+            this.isFileError = true;
+            setTimeout(() => { this.isFileError = false; }, 4000);
 
-            return parseFloat(config.public.demo.maxFileSize) >= fileSizeMB;
+            return false;
         },
     },
 };

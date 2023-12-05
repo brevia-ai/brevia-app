@@ -38,11 +38,12 @@ const props = defineProps({
 const addMode = ref(false);
 const isLoading = ref(true);
 const isDemo = ref(useStatesStore().userHasRole('demo'));
-const isQuestionAddAllowed = ref(true);
+const isQuestionAddAllowed = ref(false);
 
 const endpoint = `/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created`;
 const { data: questions } = await useApiGetAll(endpoint);
 isLoading.value = false;
+isQuestionAddAllowed.value = checkAddAllowed(questions);
 
 const closeForm = async (e: boolean) => {
     if (e) {
@@ -63,7 +64,7 @@ function checkAddAllowed(newQuestions: any) {
         return true;
     }
 
-    const num = newQuestions?.formattedData?.data?.length || 0;
+    const num = newQuestions?.value?.data?.length || newQuestions?.data?.length || 0;
     return parseInt(useRuntimeConfig().public.demo.maxChatQuestions) > num;
 }
 </script>

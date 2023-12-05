@@ -3,13 +3,13 @@
     :class="[{
         'disabled pointer-events-none': disabled,
         '!bg-slate-800': file && !disabled,
-        'button-danger': fileTypeError,
+        'button-danger': isFileError,
         'is-loading after:!left-auto after:right-3': isLoading,
     }, labelClasses]">
 
     <div class="text-sm font-mono text-green-300 overflow-hidden text-ellipsis" v-if="file">{{ file.name }}</div>
     <div v-else>
-        <span v-if="fileTypeError">{{ $t('FILE_TYPE_NOT_ACCEPTED') }}</span>
+        <span v-if="isFileError">{{ fileErrorMessage }}</span>
         <span v-else-if="isDragging">{{ $t('DROP_FILE') }}</span>
         <span v-else>{{ $t('PLEASE_DROP_A_FILE') }}</span>
     </div>
@@ -58,11 +58,14 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['fileChange']);
+const { $fileTypeAccepted, $fileSizeAccepted } = useNuxtApp();
+const { t } = useI18n();
 
 const inputFile = ref();
 const lastTarget = ref(null);
 const isDragging = ref(false);
-const fileTypeError = ref(false);
+const isFileError = ref(false);
+const fileErrorMessage = ref('');
 const file = ref<File | null>(null);
 
 onMounted(() => {
@@ -108,11 +111,9 @@ function onDrop(e: DragEvent) {
     isDragging.value = false;
     if(e.dataTransfer != undefined) {
         const files: File[] = Array.from(e.dataTransfer.files);
-        if (!isAccepted(files[0])) {
-            fileTypeError.value = true;
-            setTimeout(() => { fileTypeError.value = false; }, 5000);
-            return;
-        }
+        if (!checkFile(files[0])) {
+                return;
+            }
 
         file.value = files[0];
         emit('fileChange', file.value);
@@ -132,23 +133,17 @@ const reset = () => {
 };
 defineExpose({ reset });
 
-const isAccepted = (file: File) => {
-    if (!file)
-        return;
+const checkFile = (newfile: File) => {
+    const typeOk = $fileTypeAccepted(newfile, props.acceptTypes);
+    const sizeOk = $fileSizeAccepted(newfile);
+    if (typeOk && sizeOk) {
+        return true;
+    }
+    file.value = null;
+    fileErrorMessage.value = !typeOk ? t('FILE_TYPE_NOT_ACCEPTED') : t('FILE_SIZE_ERROR');
+    isFileError.value = true;
+    setTimeout(() => { isFileError.value = false; }, 4000);
 
-    const acceptTypesArray = props.acceptTypes.toLowerCase().split(',').map(item => item.trim());
-    const fileName = (file.name || '').toLowerCase();
-    const mimeType = (file.type || '').toLowerCase();
-    const baseMimeType = mimeType.replace(/\/.*$/, '');
-
-    return acceptTypesArray.some((type: string) => {
-        if (type.charAt(0) === '.') {
-            return fileName.endsWith(type);
-        } else if (type.endsWith('/*')) { // e.g. image/*
-            return baseMimeType === type.replace(/\/.*$/, '');
-        }
-
-        return mimeType === type;
-    });
-}
+    return false;
+};
 </script>
