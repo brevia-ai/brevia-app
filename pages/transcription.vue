@@ -57,6 +57,7 @@ export default {
             isBusy: false,
             transcription: null,
             error: null,
+            isDemo: false,
             menuItem: {},
         }
     },
@@ -68,6 +69,7 @@ export default {
         this.menuItem = store.getMenuItem(link);
         const config = useRuntimeConfig();
         useHead({ title: `${this.menuItem?.title} | ${config.public.appName}`});
+        this.isDemo = store.userHasRole('demo');
     },
 
     methods: {
