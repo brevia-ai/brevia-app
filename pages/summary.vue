@@ -4,72 +4,75 @@
         <div class="space-y-6 md:space-y-8">
             <div v-html="menuItem?.description"></div>
 
-            <div class="col-span-full md:col-span-5">
-                <DropZone @file-change="file = $event" :disabled="isBusy" ref="fileDrop"/>
-            </div>
-            <div class="flex justify-around" v-if="menuItem?.params?.payload?.prompts">
-                <div class="flex items- gap-4">
-                    <div class="hidden sm:block">{{ $t('TYPE') }}</div>
-                    <div class="flex flex-col space-y-1"
-                        :class="{'text-neutral-400' : isBusy}">
-                        <label class="space-x-2 cursor-pointer">
-                            <input type="radio" name="type" :value="'summarize'" v-model="summaryType" :disabled="isBusy">
-                            <span :class="{ 'font-bold': summaryType === 'summarize' }">{{ $t('TEXT_SUMMARY') }}</span>
-                        </label>
-                        <label class="space-x-2 cursor-pointer">
-                            <input type="radio" name="type" :value="'summarize_point'" v-model="summaryType" :disabled="isBusy">
-                            <span :class="{ 'font-bold': summaryType === 'summarize_point' }">{{ $t('BULLET_LIST_SUMMARY') }}</span>
-                        </label>
-                        <label class="space-x-2 cursor-pointer">
-                            <input type="radio" name="type" :value="'classificate'" v-model="summaryType" :disabled="isBusy">
-                            <span :class="{ 'font-bold': summaryType === 'classificate' }">{{ $t('CATEGORIZE_CONTENT') }}</span>
-                        </label>
-                    </div>
+            <div class="flex max-sm:flex-col gap-x-8 gap-y-6">
+                <div class="sm:w-2/3">
+                    <DropZone class="sm:h-72 sm:min-h-full" @file-change="file = $event" :disabled="isBusy" ref="fileDrop"/>
                 </div>
 
-                <div class="flex items- gap-4">
-                    <div class="hidden sm:block">{{ $t('ANSWER_IN') }}</div>
-                    <div class="flex flex-col space-y-1"
-                        :class="{'text-neutral-400' : isBusy}">
-                        <label class="space-x-2 cursor-pointer">
-                            <input type="radio" name="language" :value="null" v-model="summaryLanguage" :disabled="isBusy">
-                            <span :class="{ 'font-bold': !summaryLanguage }">{{ $t('DOCUMENT_LANGUAGE') }}</span>
-                        </label>
-                        <label class="space-x-2 cursor-pointer">
-                            <input type="radio" name="language" :value="'Italian'" v-model="summaryLanguage" :disabled="isBusy">
-                            <span :class="{ 'font-bold': summaryLanguage === 'Italian' }">Italiano</span>
-                        </label>
-                        <label class="space-x-2 cursor-pointer">
-                            <input type="radio" name="language" :value="'English'" v-model="summaryLanguage" :disabled="isBusy">
-                            <span :class="{ 'font-bold': summaryLanguage === 'English' }">English</span>
-                        </label>
+                <div class="flex flex-col justify-center gap-6" v-if="menuItem?.params?.payload?.prompts">
+                    <div class="flex flex-col gap-2 max-sm:max-w-sm max-sm:mx-auto max-sm:px-4">
+                        <div class="hidden sm:block">{{ $t('ANSWER_TYPE') }}</div>
+                        <div class="flex flex-col space-y-1"
+                            :class="{'text-neutral-400' : isBusy}">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="type" :value="'summarize'" v-model="summaryType" :disabled="isBusy">
+                                <span class="whitespace-nowrap" :class="{ 'font-bold': summaryType === 'summarize' }">{{ $t('TEXT_SUMMARY') }}</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="type" :value="'summarize_point'" v-model="summaryType" :disabled="isBusy">
+                                <span class="whitespace-nowrap" :class="{ 'font-bold': summaryType === 'summarize_point' }">{{ $t('BULLET_LIST_SUMMARY') }}</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="type" :value="'classificate'" v-model="summaryType" :disabled="isBusy">
+                                <span class="whitespace-nowrap" :class="{ 'font-bold': summaryType === 'classificate' }">{{ $t('CATEGORIZE_CONTENT') }}</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2 max-sm:max-w-sm max-sm:mx-auto max-sm:px-4">
+                        <div class="hidden sm:block">{{ $t('ANSWER_IN') }}</div>
+                        <div class="flex flex-col space-y-1"
+                            :class="{'text-neutral-400' : isBusy}">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="language" :value="null" v-model="summaryLanguage" :disabled="isBusy">
+                                <span class="whitespace-nowrap" :class="{ 'font-bold': !summaryLanguage }">{{ $t('DOCUMENT_LANGUAGE') }}</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="language" :value="'Italian'" v-model="summaryLanguage" :disabled="isBusy">
+                                <span class="whitespace-nowrap" :class="{ 'font-bold': summaryLanguage === 'Italian' }">Italiano</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="language" :value="'English'" v-model="summaryLanguage" :disabled="isBusy">
+                                <span class="whitespace-nowrap" :class="{ 'font-bold': summaryLanguage === 'English' }">English</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <div class="flex max-sm:flex-col gap-x-8 gap-y-4">
+                <button class="button sm:w-2/3"
+                    :class="{'is-loading' : isBusy}"
+                    :disabled="!file" @click="submit">{{ $t('UPLOAD_AND_ANALYZE_FILE') }}</button>
 
-            <div class="text-center">
-                <button class="w-full md:w-auto px-8 py-2 md:py-4 button"
-                    :class="{'loading' : isBusy}"
-                    :disabled="!file || isBusy" @click="submit">{{ $t('UPLOAD_AND_ANALYZE_FILE') }}</button>
-                <button class="mt-4 sm:ml-6 sm:mt-0 px-8 py-2 sm:py-4 bg-red-900 button"
+                <button class="bg-slate-500 button px-12"
                     :class="{'hover:bg-red-700' : !resetDisabled}"
                     :disabled="resetDisabled" @click="reset">{{ $t('RESET') }}</button>
             </div>
 
             <hr class="border-neutral-300" v-if="jobData">
+
             <div class="space-y-4" v-if="jobData">
-                <h2 class="text-xl leading-tight"><span class="block md:inline font-bold">{{ file.name }}</span> {{ $t('SUMMARIZATION') }} <span class="block md:inline font-bold">{{ jobStatus }}</span></h2>
+                <h2 class="text-xl leading-tight text-center"><span class="block md:inline font-bold break-all">{{ file.name }}</span> {{ $t('SUMMARIZATION') }} <span class="block md:inline font-bold">{{ jobStatus }}</span></h2>
             </div>
 
-            <hr class="border-neutral-300" v-if="summary">
             <div class="space-y-4" v-if="summary">
-                <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ summary }}</p>
+                <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line leading-relaxed">{{ summary }}</p>
             </div>
-            <div class="text-center sm:text-left" v-if="summary">
-                <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button"
+
+            <button class="block w-full sm:max-w-xs mx-auto button"
+                v-if="summary"
                 @click="downloadPdf">{{ $t('DOWNLOAD_SUMMARY') }}</button>
-            </div>
 
             <div class="space-y-4" v-if="error">
                 <p class="block p-8 bg-red-900 border border-red-900 text-white rounded-lg text-lg whitespace-pre-line">{{ error }}</p>
