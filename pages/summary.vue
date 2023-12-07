@@ -6,7 +6,8 @@
 
             <div class="flex max-sm:flex-col gap-x-8 gap-y-6">
                 <div class="sm:w-2/3">
-                    <DropZone class="sm:h-72 sm:min-h-full" @file-change="file = $event" :disabled="isBusy" ref="fileDrop"/>
+                    <DropZone class="sm:h-72 sm:min-h-full" @file-change="file = $event"
+                        :disabled="isBusy || jobsLeft == '0'" :accept-types="acceptTypes" ref="fileDrop"/>
                 </div>
 
                 <div class="flex flex-col justify-center gap-6" v-if="menuItem?.params?.payload?.prompts">
@@ -53,11 +54,21 @@
             <div class="flex max-sm:flex-col gap-x-8 gap-y-4">
                 <button class="button sm:w-2/3"
                     :class="{'is-loading' : isBusy}"
-                    :disabled="!file" @click="submit">{{ $t('UPLOAD_AND_ANALYZE_FILE') }}</button>
+                    :disabled="!file || isBusy || jobsLeft == '0'"
+                    @click="submit">{{ $t('UPLOAD_AND_ANALYZE_FILE') }}</button>
 
                 <button class="bg-slate-500 button px-12"
                     :class="{'hover:bg-red-700' : !resetDisabled}"
                     :disabled="resetDisabled" @click="reset">{{ $t('RESET') }}</button>
+            </div>
+            <div class="space-y-4" v-if="isDemo">
+                <span class="grow text-lg">{{ $t('JOBS_LEFT') }}: {{ jobsLeft }}</span>
+            </div>
+
+            <div class="space-x-4" v-if="isDemo && jobsLeft == '0'">
+                <p class="block p-8 bg-red-100 border border-red-400 rounded-lg text-lg whitespace-pre-line">
+                    {{ $t('NO_MORE_ANALYSIS_JOBS') }}
+                </p>
             </div>
 
             <hr class="border-neutral-300" v-if="jobData">
@@ -99,6 +110,8 @@ export default {
             jobData: null,
             pollingId: null,
             error: null,
+            isDemo: false,
+            jobsLeft: null,
             menuItem: {},
         }
     },
@@ -115,6 +128,8 @@ export default {
         this.file = info?.file || null;
         this.startPolling();
         this.isBusy = !!this.jobId;
+        this.isDemo = store.userHasRole('demo');
+        this.updateJobsLeft();
     },
 
     computed: {
@@ -166,6 +181,23 @@ export default {
             this.pollingId = null;
         },
 
+        async updateJobsLeft() {
+            if (!this.isDemo) {
+                return;
+            }
+            const userId = useStatesStore().user.id;
+            const query = `service=brevia.services.SummarizeFileService&user_id=${userId}`
+            try {
+                const response = await fetch(`/api/brevia/service_usage?${query}`);
+                const data = await response.json();
+                const usage = data?.usage || 0;
+                const left = Math.max(0, parseInt(useRuntimeConfig().public.demo.maxNumAnalysis) - parseInt(usage));
+                this.jobsLeft = String(left);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
         async submit() {
             this.isBusy = true;
             this.summary = null;
@@ -174,6 +206,9 @@ export default {
             this.jobData = null;
             let formData = new FormData();
             formData.append('initial_prompt', this.summaryPrompt());
+            if (this.isDemo) {
+                formData.append('payload', `{"user_id": "${useStatesStore().user.id}"}`);
+            }
             formData.append('file', this.file);
             try {
                 // 'multipart/form-data' Content-type header
@@ -237,6 +272,7 @@ export default {
                         useStatesStore().setJobInfo('summary', null);
                         this.jobId = null;
                         this.isBusy = false;
+                        this.updateJobsLeft();
                     }
                 }
             } catch (error) {

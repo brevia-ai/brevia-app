@@ -1,10 +1,16 @@
 <template>
 <div class="flex flex-col space-y-10">
     <!-- new -->
-    <button class="button button-secondary uppercase justify-between items-start px-3.5 text-left" @click="addMode = true" v-if="!addMode">
-        <span class="normal-case italic">{{  $t('CLIC_TO_ADD_QUESTION') }}</span>
-        <Icon name="ph:plus-bold" class="text-2xl shrink-0" />
-    </button>
+    <div v-if="!addMode">
+        <button class="button button-secondary uppercase justify-between items-start px-3.5 text-left" @click="addMode = true" v-if="isQuestionAddAllowed">
+            <span class="normal-case italic">{{  $t('CLIC_TO_ADD_QUESTION') }}</span>
+            <Icon name="ph:plus-bold" class="text-2xl shrink-0" />
+        </button>
+        <p class="mt-2 text-xs text-center sm:text-left text-slate-600" v-if="isDemo">
+            {{ $t('MAX_NUMBER_QUESTIONS') }}: <span class="font-bold">{{ $config.public.demo.maxChatQuestions }}</span>
+        </p>
+    </div>
+
     <FormChatbotQuestion :collection-id="collection.cmetadata.id" @close="closeForm" v-else />
 
     <!-- existing -->
@@ -31,10 +37,13 @@ const props = defineProps({
 
 const addMode = ref(false);
 const isLoading = ref(true);
+const isDemo = ref(useStatesStore().userHasRole('demo'));
+const isQuestionAddAllowed = ref(false);
 
 const endpoint = `/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created`;
 const { data: questions } = await useApiGetAll(endpoint);
 isLoading.value = false;
+isQuestionAddAllowed.value = checkAddAllowed(questions);
 
 const closeForm = async (e: boolean) => {
     if (e) {
@@ -46,6 +55,18 @@ const closeForm = async (e: boolean) => {
     addMode.value = false;
 }
 
+watch(questions, (newQuestions) => {
+    isQuestionAddAllowed.value = checkAddAllowed(newQuestions);
+});
+
+function checkAddAllowed(newQuestions: any) {
+    if (!isDemo) {
+        return true;
+    }
+
+    const num = newQuestions?.value?.data?.length || newQuestions?.data?.length || 0;
+    return parseInt(useRuntimeConfig().public.demo.maxChatQuestions) > num;
+}
 </script>
 
 <style scoped>
