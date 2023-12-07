@@ -66,7 +66,8 @@ export default {
         const link = '/transcription';
         store.userAccess(link);
         this.menuItem = store.getMenuItem(link);
-        useHead({ title: `${this.menuItem?.title} | Brevia`});
+        const config = useRuntimeConfig();
+        useHead({ title: `${this.menuItem?.title} | ${config.public.appName}`});
     },
 
     methods: {

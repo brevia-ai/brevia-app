@@ -71,7 +71,8 @@
 </template>
 
 <script lang="ts" setup>
-useHead({ title: 'Chatbot | Brevia', });
+const config = useRuntimeConfig();
+useHead({ title: `Chatbot | ${config.public.appName}`});
 
 interface DialogItem {
     who: string;
@@ -162,7 +163,7 @@ const streamingFetchRequest = async (currIdx: number) => {
     const question = prompt.value;
     prompt.value = '';
 
-    const response = await fetch('/api/brevia/prompt', {
+    const response = await fetch('/api/brevia/chat', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',

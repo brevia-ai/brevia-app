@@ -11,11 +11,11 @@
 
 <script setup>
 import { buildUserMenu } from '~~/utils/user-data-store';
-useHead({ title: 'Brevia', });
+const config = useRuntimeConfig();
+useHead({ title: config.public.appName, });
 
 const modalStore = useModalStore();
 const statesStore = useStatesStore();
-const config = useRuntimeConfig();
 
 const isAddEnabled = computed(() => {
     if (config.public.maxUserChatbots === '') {
