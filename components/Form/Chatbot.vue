@@ -1,5 +1,5 @@
 <template>
-<form class="flex flex-col space-y-6" @submit="save">
+<form class="flex flex-col space-y-6" @submit.prevent="save">
     <UIXInput :label="$t('TITLE')"
         :placeholder="$t('TITLE_PLACEHOLDER')"
         autocapitalize="on"
