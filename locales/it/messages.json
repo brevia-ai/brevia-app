@@ -60,7 +60,7 @@
     "HELLO": "Ciao {name}",
     "ITALIAN": "Italiano",
     "JOBS_LEFT": "Analisi rimanenti",
-    "LOGIN_PLACEHOLDER": "Nome utente",
+    "LOGIN_PLACEHOLDER": "Email o nome utente",
     "LOGOUT": "Esci",
     "MAIL_TO": "Una email è stata inviata all'indirizzo ",
     "MAX_NUMBER_FILES": "Numero massimo di file",
