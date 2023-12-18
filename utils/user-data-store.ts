@@ -5,6 +5,8 @@ export interface UserDataStore {
     name: string,
     surname: string,
     roles: string[],
+    meta: object,
+    username: string,
 }
 
 export const filterUserDataToStore = (data: any): UserDataStore => ({
@@ -12,6 +14,8 @@ export const filterUserDataToStore = (data: any): UserDataStore => ({
     name: data?.data?.attributes?.name,
     surname: data?.data?.attributes?.surname,
     roles: data?.roles || [],
+    meta: data?.data?.meta || {},
+    username: data?.data?.attributes?.username,
 });
 
 export const userEditLevel = (item: any): ItemEditLevel => {
