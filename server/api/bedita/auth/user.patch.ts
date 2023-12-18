@@ -18,7 +18,6 @@ export default defineEventHandler(async (event) => {
             old_password: reqBody.oldpassword
         }
         const response = await client.patch('/auth/user', changeBody);
-        console.log(response.data);
         return response.data;
     } catch (error) {
         return handleBeditaApiError(event, error);

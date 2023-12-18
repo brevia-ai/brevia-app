@@ -76,11 +76,9 @@
                     recaptcha_token,
                 },
             });
-            console.log(data);
             loading.value = false;
             changeError.value = false;
             success.value = true;
-            //$closeModal();
 
         } catch (changeError) {
             console.log(changeError);
@@ -92,7 +90,6 @@
 
     const checkOldPwd = async () => {
         try{
-            console.log(user);
             // Waiting for recaptcha
             await recaptchaInstance?.recaptchaLoaded();
             const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
@@ -106,7 +103,6 @@
                         recaptcha_token,
                     },
                 });
-            console.log(data)
             pwdError.value = false
         } catch (changeError) {
             console.log(changeError)

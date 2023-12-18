@@ -54,8 +54,6 @@
     let surnameChanging = ref(false);
 
     function revertChanges() {
-        console.log("revert changes");
-        console.log(nameChanging.value);
         if(saveNameVisible.value)saveNameVisible.value = false;
         if(saveSurnameVisible.value)saveSurnameVisible.value = false;
         if(!nameChanging.value)name.value = user.name;
@@ -71,7 +69,6 @@
             return
         }
         try {
-            console.log(newName);
             nameError.value = false;
             // Waiting for recaptcha
             await recaptchaInstance?.recaptchaLoaded();
