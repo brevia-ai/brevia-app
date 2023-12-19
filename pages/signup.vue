@@ -143,6 +143,9 @@
                             username: this.userMail,
                             password: this.userPass,
                             email: this.userMail,
+                            user_preferences: {
+                                lang: this.$i18n.locale,
+                            },
                             recaptcha_token,
                         },
                     });
