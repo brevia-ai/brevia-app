@@ -101,6 +101,7 @@
     "PRIVACY_POLICY": "Privacy Policy",
     "RESET": "Reset",
     "RESET_INSTRUCTIONS": "Enter your email address, you will receive the istructions to change your password",
+    "RETRY": "Retry",
     "SAVE": "Save",
     "SEND": "Send",
     "SET_NEW_PASSWORD": "Set the new password",
@@ -129,6 +130,7 @@
     "TYPE": "Type",
     "UPLOAD_AND_ANALYZE_FILE": "Upload and analyze file",
     "UPLOAD_AND_TRANSCRIBE_FILE": "Upload and transcribe file",
+    "USER_ALREADY_EXISTS": "User already exists",
     "WELCOME_ON_BREVIA": "welcome",
     "WRONG_CREDENTIALS": "Wrong username or password"
 }
