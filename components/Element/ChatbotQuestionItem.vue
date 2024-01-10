@@ -55,9 +55,8 @@ const highlight = (htmltext: string, part: string) => {
     if (!htmltext.includes(part)) {
         return htmltext;
     }
-    const html = htmltext;
     const partIdx = htmltext.indexOf(part);
 
-    return html.substring(0, partIdx) + "<span class='bg-sky-900 text-white'>" + part + "</span>" + html.substring(partIdx + part.length)
+    return `${htmltext.substring(0, partIdx)}<span class='bg-sky-900 text-white'>${part}</span>${htmltext.substring(partIdx + part.length)}`;
 }
 </script>
