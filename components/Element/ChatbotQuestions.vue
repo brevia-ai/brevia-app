@@ -78,13 +78,6 @@ function checkAddAllowed(newQuestions: any) {
     return parseInt(useRuntimeConfig().public.demo.maxChatQuestions) > num;
 }
 
-watch(
-    searchTerm,
-    () => {
-
-    }
-)
-
 </script>
 
 <style scoped>
