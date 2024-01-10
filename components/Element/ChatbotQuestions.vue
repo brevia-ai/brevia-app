@@ -1,14 +1,24 @@
 <template>
 <div class="flex flex-col space-y-10">
     <!-- new -->
-    <div v-if="!addMode">
-        <button class="button button-secondary uppercase justify-between items-start px-3.5 text-left" @click="addMode = true" v-if="isQuestionAddAllowed">
-            <span class="normal-case italic">{{  $t('CLIC_TO_ADD_QUESTION') }}</span>
-            <Icon name="ph:plus-bold" class="text-2xl shrink-0" />
-        </button>
-        <p class="mt-2 text-xs text-center sm:text-left text-slate-600" v-if="isDemo">
-            {{ $t('MAX_NUMBER_QUESTIONS') }}: <span class="font-bold">{{ $config.public.demo.maxChatQuestions }}</span>
-        </p>
+    <div v-if="!addMode" class="flex flex-row justify-between ">
+        <div>
+            <button class="button button-secondary uppercase justify-between items-start px-3.5 text-left" @click="addMode = true" v-if="isQuestionAddAllowed">
+                <span class="normal-case italic">{{  $t('CLIC_TO_ADD_QUESTION') }}</span>
+                <Icon name="ph:plus-bold" class="text-2xl shrink-0" />
+            </button>
+            <p class="mt-2 text-xs text-center sm:text-left text-slate-600" v-if="isDemo">
+                {{ $t('MAX_NUMBER_QUESTIONS') }}: <span class="font-bold">{{ $config.public.demo.maxChatQuestions }}</span>
+            </p>
+        </div>
+        <div class="mb-4 flex flex-row">
+            <Icon name="ph:magnifying-glass-bold" class="m-2 text-4xl"/>
+            <UIXInput
+                autocapitalize="off"
+                v-model="searchTerm"
+                autofocus
+                />
+        </div>
     </div>
 
     <FormChatbotQuestion :collection-id="collection.cmetadata.id" @close="closeForm" v-else />
@@ -16,11 +26,10 @@
     <!-- existing -->
     <div class="-my-6 ellipsis-loading text-sky-700"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
-
     <div class="questions space-y-6" v-else-if="questions?.formattedData.data.length">
-        <div v-for="item in questions.formattedData.data" :key="item.id">
-            <div class="question">
-                <ElementChatbotQuestionItem :item="item" :collection-id="collection.cmetadata.id" @close="closeForm" />
+        <div id="questions" v-for="item in questions.formattedData.data" :key="item.id">
+            <div class="question" v-if="item?.attributes?.title.includes(searchTerm) || item?.attributes?.body.includes(searchTerm)">
+                <ElementChatbotQuestionItem :item="item" :collection-id="collection.cmetadata.id" :search-term="searchTerm" @close="closeForm" />
             </div>
         </div>
     </div>
@@ -39,6 +48,7 @@ const addMode = ref(false);
 const isLoading = ref(true);
 const isDemo = ref(useStatesStore().userHasRole('demo'));
 const isQuestionAddAllowed = ref(false);
+let searchTerm = ref('');
 
 const endpoint = `/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created`;
 const { data: questions } = await useApiGetAll(endpoint);
@@ -67,6 +77,14 @@ function checkAddAllowed(newQuestions: any) {
     const num = newQuestions?.value?.data?.length || newQuestions?.data?.length || 0;
     return parseInt(useRuntimeConfig().public.demo.maxChatQuestions) > num;
 }
+
+watch(
+    searchTerm,
+    () => {
+
+    }
+)
+
 </script>
 
 <style scoped>
