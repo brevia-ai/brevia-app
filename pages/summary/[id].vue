@@ -118,7 +118,7 @@ export default {
 
     created() {
         const store = useStatesStore();
-        const link = '/summary';
+        const link = this.$route.path;
         store.userAccess(link);
         this.menuItem = store.getMenuItem(link);
         const config = useRuntimeConfig();
