@@ -21,6 +21,7 @@ export const useStatesStore = defineStore('states', {
         isLogged: false,
         user: null as UserDataStore | null,
         menu: [] as menuItem[],
+        collection: null as object | null,
     }),
 
     actions: {
