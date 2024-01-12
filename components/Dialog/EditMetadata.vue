@@ -5,34 +5,34 @@
     </div>
 
     <div class="flex flex-col space-y-2.5">
-        <div class="flex flex-col space-y-1" v-for="(meta, name, index) in properties">
+        <div class="mx-12 content-start grid grid-cols-2 gap-2" v-for="(meta, name, index) in properties">
 
             <slot v-if="isSelect(meta)">
-                <label class="flex items-center space-x-2" for="item_{{ index}}">{{ name }}</label>
-                <select name="item_{{ index}}" id="item_{{ index}}" v-model="metadata[name]">
+                <label class="items-center space-x-2 justify-end py-1" for="item_{{ index}}">{{ name }}</label>
+                <select class="justify-self-start border rounded border-slate-300 p-1" name="item_{{ index}}" id="item_{{ index}}" v-model="metadata[name]">
                     <option v-for="(item, index) in meta.enum" :value="item">{{ item }}</option>
                 </select>
-
             </slot>
 
             <slot v-if="isDate(meta)">
                 <label class="flex items-center space-x-2">
                     <span>{{ name }}</span>
-                    <input type="text" name="item_{{ index}}" id="item_{{ index}}" v-model="metadata[name]">
+                    <!-- <input type="text" name="item_{{ index}}" id="item_{{ index}}" v-model="metadata[name]"> -->
                 </label>
+                <VueDatePicker v-model="metadata[name]" :range="false" :enable-time-picker="false" text-input position="center"></VueDatePicker>
             </slot>
 
             <slot v-if="isCheckbox(meta)">
-                <label class="flex items-center space-x-2">
+                <label class="flex flex-row items-center space-x-2">
                     <span>{{ name }}</span>
-                    <input type="checkbox" name="item_{{ index}}" id="item_{{ index}}" v-model="metadata[name]">
                 </label>
+                <input type="checkbox" class="justify-self-start" name="item_{{ index}}" id="item_{{ index}}" v-model="metadata[name]">
             </slot>
         </div>
     </div>
 
 
-    <div class="flex justify-between space-x-4">
+    <div class="flex justify-center space-x-4">
         <button class="button button-secondary uppercase" @click="$closeModal">{{ $t('CANCEL') }}</button>
 
         <button class="button button-danger uppercase"
@@ -44,6 +44,8 @@
 </template>
 
 <script lang="ts" setup>
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 const props = defineProps({
     document: {
         type: Object,
