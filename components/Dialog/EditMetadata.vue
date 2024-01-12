@@ -19,7 +19,13 @@
                     <span>{{ name }}</span>
                     <!-- <input type="text" name="item_{{ index}}" id="item_{{ index}}" v-model="metadata[name]"> -->
                 </label>
-                <VueDatePicker v-model="metadata[name]" :range="false" :enable-time-picker="false" text-input position="center"></VueDatePicker>
+                <VueDatePicker v-model="metadata[name]"
+                    :range="false"
+                    :enable-time-picker="false"
+                    text-input position="center"
+                    model-type="dd/MM/yyyy"
+                    :format="formatDate">
+                </VueDatePicker>
             </slot>
 
             <slot v-if="isCheckbox(meta)">
@@ -105,5 +111,13 @@ const updateMetadata = async () => {
         console.log(err);
         error.value = true;
     }
+}
+
+const formatDate = (date: any) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
 }
 </script>
