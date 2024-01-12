@@ -23,7 +23,7 @@
                     :range="false"
                     :enable-time-picker="false"
                     text-input position="center"
-                    model-type="dd/MM/yyyy"
+                    model-type="yyyy-MM-dd"
                     :format="formatDate">
                 </VueDatePicker>
             </slot>
