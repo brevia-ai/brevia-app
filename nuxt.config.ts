@@ -40,7 +40,7 @@ export default defineNuxtConfig({
         'nuxt-icon',
     ],
     build: {
-        transpile: ['tslib']
+        transpile: ['tslib', '@vuepic/vue-datepicker']
     },
     app: {
         head: {

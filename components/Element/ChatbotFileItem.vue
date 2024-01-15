@@ -15,6 +15,11 @@
     </div>
 
     <div class="space-x-1 whitespace-nowrap">
+        <button class="mr-auto button button-secondary button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
+            @click.stop.prevent="$openModal('DialogEditMetadata', {document: item})">
+            <Icon name="ph:code-bold" class="text-xl" />
+        </button>
+
         <a href="#" class="button-mock border-transparent py-2.5 px-1.5" @click.prevent="download">
             <Icon name="ph:download-simple-bold" class="text-xl" />
             <span class="sr-only">{{ $t('DOWNLOAD') }}</span>

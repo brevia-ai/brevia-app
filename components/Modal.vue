@@ -9,8 +9,9 @@
 
         <!-- modal content -->
         <div class="pt-5 px-6 pb-6 space-y-6 relative w-full sm:max-w-lg bg-white rounded-lg shadow">
-            <LazyDialogNewChatbot    v-if="$isOpenModal('DialogNewChatbot')" />
-            <LazyDialogDeleteChatbot v-if="$isOpenModal('DialogDeleteChatbot')" v-bind="modalStore.actveModalProps" />
+            <LazyDialogNewChatbot v-if="$isOpenModal('DialogNewChatbot')" />
+            <LazyDialogEditMetadata v-if="$isOpenModal('DialogEditMetadata')" v-bind="modalStore.activeModalProps" />
+            <LazyDialogDeleteChatbot v-if="$isOpenModal('DialogDeleteChatbot')" v-bind="modalStore.activeModalProps" />
             <LazyDialogChangePassword v-if="$isOpenModal('DialogChangePassword')" @stopClick="clickableOutside=false" />
             <LazyDialogDeleteAccount v-if="$isOpenModal('DialogDeleteAccount')" @stopClick="clickableOutside=false" />
         </div>
