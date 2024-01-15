@@ -38,6 +38,7 @@
                 </label>
                 <input type="checkbox" class="justify-self-start" name="item_{{ index}}" id="item_{{ index}}" v-model="metadata[name]">
             </slot>
+            <span class="w-full mt-0 text-xs font-semibold opacity-75">{{ meta?.description }}</span>
         </div>
     </div>
 
@@ -118,6 +119,10 @@ const updateMetadata = async () => {
 }
 
 const formatDate = (date: any) => {
+
+    if(!date) {
+        return ``
+    }
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
