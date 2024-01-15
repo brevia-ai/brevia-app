@@ -103,6 +103,7 @@
     "RECAPTCHA": "Questo modulo è protetto da reCAPTCHA e si applicano la {privacyPolicy} e i {termsOfService} di Google",
     "RESET": "Resetta",
     "RESET_INSTRUCTIONS": "Inserisci il tuo indirizzo email, riceverai le istruzioni per reimpostare la tua password.",
+    "RETRY": "Riprova",
     "SAVE": "Salva",
     "SEND": "Invia",
     "SETTINGS": "Impostazioni",
@@ -131,6 +132,7 @@
     "TYPE": "Tipo",
     "UPLOAD_AND_ANALYZE_FILE": "Carica e analizza il file",
     "UPLOAD_AND_TRANSCRIBE_FILE": "Carica e trascrivi il file",
+    "USER_ALREADY_EXISTS": "Esiste già un utente con questa email",
     "WELCOME_ON_BREVIA": "benvenuto su Brevia",
     "WRONG_CREDENTIALS": "Credenziali errate"
 }
