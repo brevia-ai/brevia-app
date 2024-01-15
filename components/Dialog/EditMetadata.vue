@@ -4,7 +4,11 @@
         <p class="text-lg">{{ $t('EDIT_METADATA') }}</p>
     </div>
 
-    <div class="flex flex-col space-y-2.5">
+    <div class="flex justify-center" v-if="noMetadata">
+        <span class="font-semibold">{{ $t('NO_METADATA') }}</span>
+    </div>
+
+    <div class="flex flex-col space-y-2.5" v-else>
         <div class="mx-12 content-start grid grid-cols-2 gap-2" v-for="(meta, name, index) in properties">
 
             <slot v-if="isSelect(meta)">
@@ -37,12 +41,12 @@
         </div>
     </div>
 
-
     <div class="flex justify-center space-x-4">
         <button class="button button-secondary uppercase" @click="$closeModal">{{ $t('CANCEL') }}</button>
 
         <button class="button button-danger uppercase"
-            @click="updateMetadata">
+            @click="updateMetadata"
+            :disabled="noMetadata">
             {{ $t('SAVE') }}
         </button>
     </div>
@@ -67,6 +71,7 @@ const metadata = ref({});
 const schema = statesStore.collection?.cmetadata?.documents_metadata || {};
 const properties = schema?.properties || [];
 const error = ref(false);
+const noMetadata = ref(false);
 
 onBeforeMount(async () => {
     try {
@@ -76,6 +81,7 @@ onBeforeMount(async () => {
         const data = await response.json();
         metadata.value = data?.[0]?.cmetadata || {};
     } catch (error) {
+        noMetadata.value = true;
         console.log(error);
     }
 });
