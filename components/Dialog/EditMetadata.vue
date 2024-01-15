@@ -4,7 +4,7 @@
         <p class="text-lg">{{ $t('EDIT_METADATA') }}</p>
     </div>
 
-    <div class="flex justify-center" v-if="noMetadata">
+    <div class="flex justify-center" v-if="properties.length == 0">
         <span class="font-semibold">{{ $t('NO_METADATA') }}</span>
     </div>
 
@@ -46,7 +46,7 @@
 
         <button class="button button-danger uppercase"
             @click="updateMetadata"
-            :disabled="noMetadata">
+            :disabled="properties.length == 0">
             {{ $t('SAVE') }}
         </button>
     </div>
@@ -71,7 +71,6 @@ const metadata = ref({});
 const schema = statesStore.collection?.cmetadata?.documents_metadata || {};
 const properties = schema?.properties || [];
 const error = ref(false);
-const noMetadata = ref(false);
 
 onBeforeMount(async () => {
     try {
@@ -81,7 +80,6 @@ onBeforeMount(async () => {
         const data = await response.json();
         metadata.value = data?.[0]?.cmetadata || {};
     } catch (error) {
-        noMetadata.value = true;
         console.log(error);
     }
 });
