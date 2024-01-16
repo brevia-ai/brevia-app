@@ -46,6 +46,7 @@
     "DOWNLOAD_SUMMARY": "Scarica il riassunto",
     "DROP_FILE": "Rilascia qui il file",
     "EDIT": "Modifica",
+    "EDIT_METADATA": "Modifica metadati",
     "EXIT": "Esci",
     "ELAPSED_TIME": "Tempo trascorso",
     "EMAIL": "Email",
@@ -79,6 +80,7 @@
     "NEW_QUESTION": "Nuova domanda",
     "NO_AI_TOOL_HAS_BEEN_SET_UP_JUST_FOR_YOU": "Al momento nessuno strumento AI è stato ancora configurato per te",
     "NO_FILES_FOUND": "Nessun file trovato",
+    "NO_METADATA": "Non ci sono metadati da modificare",
     "NO_MORE_ANALYSIS_JOBS": "Hai esaurito il numero di analisi per oggi",
     "NO_MORE_CHAT_MESSAGES": "Hai esaurito il numero di messaggi per oggi",
     "NOT_A_MEMBER": "Non sei ancora registrato?",
@@ -101,6 +103,7 @@
     "RECAPTCHA": "Questo modulo è protetto da reCAPTCHA e si applicano la {privacyPolicy} e i {termsOfService} di Google",
     "RESET": "Resetta",
     "RESET_INSTRUCTIONS": "Inserisci il tuo indirizzo email, riceverai le istruzioni per reimpostare la tua password.",
+    "RETRY": "Riprova",
     "SAVE": "Salva",
     "SEND": "Invia",
     "SETTINGS": "Impostazioni",
@@ -129,6 +132,7 @@
     "TYPE": "Tipo",
     "UPLOAD_AND_ANALYZE_FILE": "Carica e analizza il file",
     "UPLOAD_AND_TRANSCRIBE_FILE": "Carica e trascrivi il file",
+    "USER_ALREADY_EXISTS": "Esiste già un utente con questa email",
     "WELCOME_ON_BREVIA": "benvenuto su Brevia",
     "WRONG_CREDENTIALS": "Credenziali errate"
 }

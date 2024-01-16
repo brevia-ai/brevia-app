@@ -48,7 +48,10 @@ const props = defineProps({
 
 const addMode = ref(false);
 const isLoading = ref(true);
-const isDemo = ref(useStatesStore().userHasRole('demo'));
+const statesStore = useStatesStore();
+statesStore.collection = props.collection;
+
+const isDemo = statesStore.userHasRole('demo');
 const isQuestionAddAllowed = ref(false);
 const searchInput = ref('');
 

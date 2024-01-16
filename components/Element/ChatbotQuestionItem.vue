@@ -10,10 +10,18 @@
             bg-gradient-to-br from-slate-700 to-slate-950 text-white">
             <h2 class="text-lg leading-snug break-words" v-html="highlight(item.attributes.title, searchTerm)"></h2>
 
-            <button class="text-sky-600 hover:text-sky-400" @click="editMode = true">
-                <Icon name="ph:pencil-simple-bold" class="text-2xl" />
-                <span class="sr-only">{{ $t('EDIT') }}</span>
-            </button>
+            <div class="px-4 flex items-start justify-between space-x-4">
+                <button class="button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
+                    @click.stop.prevent="$openModal('DialogEditMetadata', {document: item})">
+                    <Icon name="ph:code-bold" class="text-xl" />
+                </button>
+
+                <button class="text-sky-600 hover:text-sky-400" @click="editMode = true">
+                    <Icon name="ph:pencil-simple-bold" class="text-2xl" />
+                    <span class="sr-only">{{ $t('EDIT') }}</span>
+                </button>
+            </div>
+
         </div>
 
         <div class="pl-3.5 pr-2.5 flex justify-between gap-4 cursor-pointer bg-white hover:bg-sky-50 text-sky-800"
