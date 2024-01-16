@@ -40,7 +40,6 @@ export const buildUserMenu = (hasAccess: any) => {
         const type = item?.type === 'collections'? 'chatbot' : item?.attributes?.feature_type || '';
         const link = item?.type === 'collections'? `/chatbot/${item?.attributes?.uname}` : `/${item?.attributes?.feature_type}/${item?.attributes?.uname}`;
         let params = null;
-
         if (item?.type === 'features') {
             params = item?.attributes?.feature_params || {};
             if (!('payload' in params)) {

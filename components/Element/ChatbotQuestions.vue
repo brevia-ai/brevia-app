@@ -28,7 +28,6 @@
     <!-- existing -->
     <div class="-my-6 ellipsis-loading text-sky-700"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
-
     <div class="questions space-y-6" v-else-if="questions?.formattedData.data.length">
         <div id="questions" v-for="item in questions.formattedData.data" :key="item.id">
             <div class="question" v-if="item?.attributes?.title.includes(searchTerm(searchInput)) || item?.attributes?.body.includes(searchTerm(searchInput)) || searchInput.length <= 3">
@@ -87,6 +86,7 @@ function checkAddAllowed(newQuestions: any) {
     const num = newQuestions?.value?.data?.length || newQuestions?.data?.length || 0;
     return parseInt(useRuntimeConfig().public.demo.maxChatQuestions) > num;
 }
+
 </script>
 
 <style scoped>
