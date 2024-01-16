@@ -11,13 +11,15 @@
                 {{ $t('MAX_NUMBER_QUESTIONS') }}: <span class="font-bold">{{ $config.public.demo.maxChatQuestions }}</span>
             </p>
         </div>
-        <div class="mb-4 flex flex-row">
+        <div class="relative mb-4 flex flex-row">
             <Icon name="ph:magnifying-glass-bold" class="m-2 text-4xl"/>
             <UIXInput
-                autocapitalize="off"
-                v-model="searchTerm"
-                autofocus
-                />
+            autocapitalize="off"
+            v-model="searchInput"
+            autofocus
+            />
+            <Icon name="ph:x-bold" class="text-sky-600 hover:text-sky-400 absolute text-xl hover: top-5 right-3" @click="searchInput = '';"/>
+
         </div>
     </div>
 
@@ -28,8 +30,8 @@
         v-if="isLoading"><span class="sr-only">loading...</span></div>
     <div class="questions space-y-6" v-else-if="questions?.formattedData.data.length">
         <div id="questions" v-for="item in questions.formattedData.data" :key="item.id">
-            <div class="question" v-if="item?.attributes?.title.includes(searchTerm) || item?.attributes?.body.includes(searchTerm)">
-                <ElementChatbotQuestionItem :item="item" :collection-id="collection.cmetadata.id" :search-term="searchTerm" @close="closeForm" />
+            <div class="question" v-if="item?.attributes?.title.includes(searchTerm(searchInput)) || item?.attributes?.body.includes(searchTerm(searchInput)) || searchInput.length <= 3">
+                <ElementChatbotQuestionItem :item="item" :collection-id="collection.cmetadata.id" :search-term="searchTerm(searchInput)" @close="closeForm" />
             </div>
         </div>
     </div>
@@ -48,12 +50,16 @@ const addMode = ref(false);
 const isLoading = ref(true);
 const isDemo = ref(useStatesStore().userHasRole('demo'));
 const isQuestionAddAllowed = ref(false);
-let searchTerm = ref('');
+const searchInput = ref('');
 
 const endpoint = `/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created`;
 const { data: questions } = await useApiGetAll(endpoint);
 isLoading.value = false;
 isQuestionAddAllowed.value = checkAddAllowed(questions);
+
+const searchTerm = (input: string) => {
+    if(input.length > 3) return input
+}
 
 const closeForm = async (e: boolean) => {
     if (e) {
