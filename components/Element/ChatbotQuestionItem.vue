@@ -59,11 +59,11 @@ const expanded = ref(false);
 const editMode = ref(false);
 
 const highlight = (htmltext: string, part: string) => {
-    if (!htmltext.includes(part)) {
+    if (!htmltext.toUpperCase().includes(part.toUpperCase())) {
         return htmltext;
     }
-    const partIdx = htmltext.indexOf(part);
+    const partIdx = htmltext.toUpperCase().indexOf(part.toUpperCase());
 
-    return `${htmltext.substring(0, partIdx)}<span class='bg-sky-900 text-white'>${part}</span>${htmltext.substring(partIdx + part.length)}`;
+    return `${htmltext.substring(0, partIdx)}<span class='bg-sky-600 text-white'>${htmltext.substring(partIdx, partIdx + part.length)}</span>${htmltext.substring(partIdx + part.length)}`;
 }
 </script>
