@@ -11,26 +11,31 @@
                 {{ $t('MAX_NUMBER_QUESTIONS') }}: <span class="font-bold">{{ $config.public.demo.maxChatQuestions }}</span>
             </p>
         </div>
-        <div class="relative mb-4 flex flex-row">
-            <Icon name="ph:magnifying-glass-bold" class="m-2 text-4xl"/>
-            <UIXInput
-            autocapitalize="off"
-            v-model="searchInput"
-            autofocus
-            />
-            <Icon name="ph:x-bold" class="text-sky-600 hover:text-sky-400 absolute text-xl hover: top-5 right-3" @click="searchInput = '';"/>
-
+        <div class="flex flex-col relative">
+            <div class="relative mb-4 flex flex-row">
+                <Icon name="ph:magnifying-glass-bold" class="absolute -left-14 mx-4 my-1 text-4xl"/>
+                <input
+                    type="string"
+                    v-model="searchInput"
+                    :placeholder="$t('SEARCH')"
+                    class="border focus:ring-0 focus:outline-none  pl-4 pr-8 py-3 rounded w-max border-primary"
+                    :class="(searchTerm(searchInput))?'border-2 border-sky-500 focus:border-sky-500':'border focus:border-sky-600'"
+                />
+                <Icon name="ph:x-bold" class="text-sky-600 hover:text-sky-400 hover:cursor-pointer absolute text-2xl hover: top-3 right-2" @click="searchInput = '';"/>
+            </div>
+            <div class="absolute right-4 -bottom-1 text-sm font-bold italic text-sky-600" v-if="searchTerm(searchInput)">
+                {{ questions?.formattedData.data.filter(showThis).length }} {{ $t('ELEMENTS_FOUND') }}
+            </div>
         </div>
     </div>
 
     <FormChatbotQuestion :collection-id="collection.cmetadata.id" @close="closeForm" v-else />
-
     <!-- existing -->
     <div class="-my-6 ellipsis-loading text-sky-700"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
     <div class="questions space-y-6" v-else-if="questions?.formattedData.data.length">
         <div id="questions" v-for="item in questions.formattedData.data" :key="item.id">
-            <div class="question" v-if="item?.attributes?.title.includes(searchTerm(searchInput)) || item?.attributes?.body.includes(searchTerm(searchInput)) || searchInput.length <= 3">
+            <div class="question" v-if="showThis(item)">
                 <ElementChatbotQuestionItem :item="item" :collection-id="collection.cmetadata.id" :search-term="searchTerm(searchInput)" @close="closeForm" />
             </div>
         </div>
@@ -45,6 +50,8 @@ const props = defineProps({
         required: true,
     },
 });
+
+const MIN_SEARCH_LENGTH = 3;
 
 const addMode = ref(false);
 const isLoading = ref(true);
@@ -61,7 +68,18 @@ isLoading.value = false;
 isQuestionAddAllowed.value = checkAddAllowed(questions);
 
 const searchTerm = (input: string) => {
-    if(input.length > 3) return input
+    if(input.trim().length > MIN_SEARCH_LENGTH) return input
+    return ''
+}
+
+const showThis = (item: any) => {
+    let term = searchInput.value.toUpperCase()
+    if (searchTerm(term).length <= MIN_SEARCH_LENGTH) {
+        return true
+    }
+    let title = item?.attributes?.title?.toUpperCase()
+    let description = item?.attributes?.body.toUpperCase()
+    return ( title.includes(searchTerm(term)) ||  description.includes(searchTerm(term)) )
 }
 
 const closeForm = async (e: boolean) => {
@@ -73,6 +91,7 @@ const closeForm = async (e: boolean) => {
 
     addMode.value = false;
 }
+
 
 watch(questions, (newQuestions) => {
     isQuestionAddAllowed.value = checkAddAllowed(newQuestions);
