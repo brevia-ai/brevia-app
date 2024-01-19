@@ -56,7 +56,7 @@
                     </div>
                 </div>
 
-                <div v-if="error">{{ $t('AN_ERROR_OCCURRED') }}</div>
+                <div class="text-red-600 text-sm" v-if="error">{{ error }}. {{ $t('RETRY') }}</div>
                 <div class="pt-2">
                     <button type="submit" class="block w-full sm:max-w-xs mx-auto button text-lg"
                         @click.prevent.stop="signup"
@@ -101,7 +101,7 @@
                 done: false,
                 showPassword: false,
                 loading: false,
-                error: false,
+                error: '',
                 recaptchaInstance: useReCaptcha(),
             }
         },
@@ -125,8 +125,15 @@
         },
 
         methods: {
+            errorMessage(err) {
+                if (err?.error?.code === 'be_user_exists') {
+                    return this.$t('USER_ALREADY_EXISTS');
+                }
+
+                return this.$t('AN_ERROR_OCCURRED');
+            },
             async signup() {
-                this.error = false;
+                this.error = '';
                 this.loading = true;
                 // Register user
                 try {
@@ -143,6 +150,9 @@
                             username: this.userMail,
                             password: this.userPass,
                             email: this.userMail,
+                            user_preferences: {
+                                lang: this.$i18n.locale,
+                            },
                             recaptcha_token,
                         },
                     });
@@ -150,7 +160,7 @@
                     this.done = true;
                 } catch (error) {
                     console.error(error.data);
-                    this.error = true;
+                    this.error = this.errorMessage(error.data);
                 }
 
                 this.loading = false;

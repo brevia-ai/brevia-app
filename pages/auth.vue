@@ -5,14 +5,14 @@
                 <UIXInput
                     autocomplete="username" autocorrect="off" autocapitalize="none"
                     :placeholder="$t('LOGIN_PLACEHOLDER')"
-                    v-model="username" @keydown.enter="login"
+                    v-model="username" @keydown.enter.stop.prevent="login"
                     required />
 
                 <div class="flex flex-col space-y-3">
                     <UIXInput password
                         autocomplete="current-password" autocorrect="off" autocapitalize="none"
                         :placeholder="$t('PASSWORD_PLACEHOLDER')"
-                        v-model="password" @keydown.enter="login"
+                        v-model="password" @keydown.enter.stop.prevent="login"
                         required />
 
                     <NuxtLink to="/forgot-password" class="text-xs text-end mt-0 pt-0 text-sky-600">{{ $t('FORGOT_PASS') }}</NuxtLink>

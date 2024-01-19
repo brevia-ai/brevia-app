@@ -57,17 +57,19 @@ export default {
             isBusy: false,
             transcription: null,
             error: null,
+            isDemo: false,
             menuItem: {},
         }
     },
 
     created() {
         const store = useStatesStore();
-        const link = '/transcription';
+        const link = this.$route.path;
         store.userAccess(link);
         this.menuItem = store.getMenuItem(link);
         const config = useRuntimeConfig();
         useHead({ title: `${this.menuItem?.title} | ${config.public.appName}`});
+        this.isDemo = store.userHasRole('demo');
     },
 
     methods: {

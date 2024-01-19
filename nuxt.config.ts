@@ -20,6 +20,14 @@ export default defineNuxtConfig({
             maxUserChatbots: '',
             recaptchaKey: '',
             cookiesPrivacyTerms: '',
+            // demo limits
+            demo: {
+                maxChatMessages: '30', // max chatbot msg number per day
+                maxChatFiles: '3', // max number of files per Chatbot
+                maxChatQuestions: '20', // max number of Q&A per Chatbot
+                maxFileSize: '5', // max file size in MB
+                maxNumAnalysis: '5', // max num analysis per day
+            },
         },
     },
 
@@ -34,7 +42,7 @@ export default defineNuxtConfig({
         'nuxt-gtag',
     ],
     build: {
-        transpile: ['tslib']
+        transpile: ['tslib', '@vuepic/vue-datepicker']
     },
     app: {
         head: {

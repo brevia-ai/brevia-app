@@ -37,11 +37,11 @@
                         class="grow text-lg p-2 rounded border border-sky-500 disabled:bg-neutral-100 disabled:border-neutral-300 shadow-md disabled:shadow-none"
                         ref="input"
                         v-model.trim="prompt"
-                        :disabled="isBusy"
+                        :disabled="isBusy || messagesLeft == '0'"
                         @keydown.enter="submit">
 
                     <button class="px-6 button shadow-md disabled:shadow-none"
-                        :disabled="isBusy"
+                        :disabled="isBusy || messagesLeft == '0'"
                         @click="submit">
                         <span class="sm:hidden">›</span>
                         <span class="hidden sm:inline">{{ $t('SEND') }}</span>
@@ -53,6 +53,16 @@
                         <input type="checkbox" v-model="showDocs" :disabled="isBusy">
                         <span>{{ $t('SHOW_DOCUMENTS_FOUND') }}</span>
                     </label>
+                </div>
+
+                <div class="flex space-x-4" v-if="isDemo">
+                    <span class="grow text-lg">{{ $t('MESSAGES_LEFT') }}: {{ messagesLeft }}</span>
+                </div>
+
+                <div class="space-x-4" v-if="isDemo && messagesLeft == '0'">
+                    <div class="w-full bg-red-100 border border-red-400 rounded text-center">
+                        {{ $t('NO_MORE_CHAT_MESSAGES') }}
+                    </div>
                 </div>
             </div>
 
@@ -72,6 +82,7 @@
 
 <script lang="ts" setup>
 const config = useRuntimeConfig();
+const store = useStatesStore();
 useHead({ title: `Chatbot | ${config.public.appName}`});
 
 interface DialogItem {
@@ -89,6 +100,8 @@ const input = ref<HTMLElement|null>(null);
 const dialog = ref<DialogItem[]>([]);
 const showDocs = ref(false);
 const docs = ref<any>([]);
+const isDemo = ref(store.userHasRole('demo'));
+const messagesLeft = ref('');
 
 let sessionId = '';
 let collectionName = '';
@@ -99,7 +112,6 @@ onBeforeMount(async () => {
     collectionName = route.params.id as string;
 
     // check if user has access to this page (TODO: refactor to use middleware)
-    const store = useStatesStore();
     const link = `/chatbot/${collectionName}`;
     store.userAccess(link);
     const item = store.getMenuItem(link);
@@ -119,6 +131,7 @@ onBeforeMount(async () => {
 
     sessionId = crypto.randomUUID();
     isBusy.value = false;
+    updateLeftMessages();
 });
 
 watch(isBusy, (val) => {
@@ -183,6 +196,7 @@ const streamingFetchRequest = async (currIdx: number) => {
             const text = new TextDecoder().decode(chunk);
             handleStreamText(text, currIdx);
         }
+        await updateLeftMessages();
     }
 };
 
@@ -237,5 +251,23 @@ const showErrorInDialog = (index: number) => {
     }
 
     dialog.value.push(dialogItem);
+};
+
+const updateLeftMessages = async () => {
+    if (!isDemo.value) {
+        return;
+    }
+
+    const today = new Date().toISOString().substring(0, 10);
+    const query = `min_date=${today}&collection=${collection.value?.name}`
+    try {
+        const response = await fetch(`/api/brevia/chat_history?${query}`);
+        const data = await response.json();
+        const numItems = data?.meta?.pagination?.count || 0;
+        const left = Math.max(0, parseInt(config.public.demo.maxChatMessages) - parseInt(numItems));
+        messagesLeft.value = String(left);
+    } catch (error) {
+        console.log(error);
+    }
 };
 </script>
