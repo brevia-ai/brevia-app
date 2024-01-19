@@ -49,6 +49,7 @@
 <script lang="ts" setup>
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import { mkConfig, generateCsv, download } from 'export-to-csv';
 
 const config = useRuntimeConfig();
 useHead({ title: `Chat history | ${config.public.appName}`});
@@ -74,26 +75,6 @@ if (!collection.value?.uuid) {
         fatal: true
     });
 }
-console.log(collection);
-
-const downloadCsv = async () => {
-    isBusy.value = true;
-    const items = await loadHistoryItems();
-    const fileName = `chat-history-${collectionName}-${startDate.value}-${endDate.value}.csv`;
-    const file = new File([csvContent(items)], fileName, {
-        type: 'text/csv',
-    });
-
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(file);
-    link.href = url;
-    link.download = file.name;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-    isBusy.value = false;
-}
 
 const csvKeys = [
     'question',
@@ -105,26 +86,16 @@ const csvKeys = [
     'chat_source',
 ];
 
-const csvContent = (items) => {
-    const columnDelimiter = ',';
-    const lineDelimiter = "\n";
+const downloadCsv = async () => {
+    isBusy.value = true;
+    const items = await loadHistoryItems();
+    const fileName = `chat-history-${collectionName}-${startDate.value}-${endDate.value}`;
 
-    let result = csvKeys.join(columnDelimiter) + lineDelimiter;
-    items.forEach(item => {
-        let ctr = 0;
-        csvKeys.forEach(key => {
-            if (ctr > 0) {
-                result += columnDelimiter;
-            }
-            result += typeof item?.[key] === 'string' && item?.[key]?.includes(columnDelimiter) ? `"${item?.[key]}"` : item?.[key];
-            ctr++;
-        })
-        result += lineDelimiter;
-    })
-
-    return result;
+    const csvConfig = mkConfig({columnHeaders: csvKeys, filename: fileName});
+    const csv = generateCsv(csvConfig)(items);
+    download(csvConfig)(csv);
+    isBusy.value = false;
 }
-
 
 const loadHistoryItems = async () => {
     let query = `min_date=${startDate.value}&max_date=${endDate.value}&collection=${collectionName}`;
