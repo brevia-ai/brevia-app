@@ -39,6 +39,15 @@ export default defineNuxtPlugin(async nuxtApp => {
 
                 return fileName.charAt(0).toUpperCase() + fileName.slice(1);
             },
+
+            // Format Date to 'YYYY-MM-DD' format
+            formatDate(date) {
+                if(!date) {
+                    return ''
+                }
+                date.setHours(12); // avoid timezone issues
+                return date.toISOString().slice(0, 10);
+            },
         }
     }
 });
