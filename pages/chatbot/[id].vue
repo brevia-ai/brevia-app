@@ -8,6 +8,10 @@
                         v-html="collection.cmetadata?.description" v-if="collection.cmetadata?.description"></div>
                 </div>
 
+                <NuxtLink class="mt-0.5 text-sky-700 hover:text-sky-500" :to="`history-${collectionName}`">
+                    <Icon name="ph:clock-bold" class="text-4xl" />
+                </NuxtLink>
+
                 <NuxtLink class="mt-0.5 text-sky-700 hover:text-sky-500" :to="`edit-${collectionName}`"
                     v-if="editLevel != ItemEditLevel.None">
                     <Icon name="ph:gear-fine-bold" class="text-4xl" />
