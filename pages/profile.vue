@@ -38,7 +38,6 @@
 </template>
 
 <script setup>
-    import { useReCaptcha } from 'vue-recaptcha-v3';
     const statesStore = useStatesStore();
     const recaptchaInstance = useReCaptcha();
     let user = statesStore.user;
@@ -71,15 +70,15 @@
         try {
             nameError.value = false;
             // Waiting for recaptcha
-            await recaptchaInstance?.recaptchaLoaded();
-            const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
-            const recaptcha_token = await recaptcha();
+            // await recaptchaInstance?.recaptchaLoaded();
+            // const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
+            // const recaptcha_token = await recaptcha();
 
             const data = await $fetch('/api/bedita/auth/user', {
                 method: 'PATCH',
                 body: {
                     newname: newName,
-                    recaptcha_token,
+                    // recaptcha_token,
                 },
             });
             statesStore.userLogin(filterUserDataToStore(data));
@@ -104,15 +103,15 @@
         try {
             surnameError.value = false;
             // Waiting for recaptcha
-            await recaptchaInstance?.recaptchaLoaded();
-            const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
-            const recaptcha_token = await recaptcha();
+            // await recaptchaInstance?.recaptchaLoaded();
+            // const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
+            // const recaptcha_token = await recaptcha();
 
             const data = await $fetch('/api/bedita/auth/user', {
                 method: 'PATCH',
                 body: {
                     newsurname: newSurname,
-                    recaptcha_token,
+                    // recaptcha_token,
                 },
             });
             statesStore.userLogin(filterUserDataToStore(data));

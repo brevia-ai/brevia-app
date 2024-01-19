@@ -87,7 +87,6 @@
 
 <script>
     import { useStatesStore } from '~~/store/states';
-    import { useReCaptcha } from 'vue-recaptcha-v3';
 
     export default {
         data(){
@@ -138,9 +137,9 @@
                 // Register user
                 try {
                     // Waiting for recaptcha
-                    await this.recaptchaInstance?.recaptchaLoaded();
-                    const recaptcha = async () => await this.recaptchaInstance?.executeRecaptcha('login');
-                    const recaptcha_token = await recaptcha();
+                    // await this.recaptchaInstance?.recaptchaLoaded();
+                    // const recaptcha = async () => await this.recaptchaInstance?.executeRecaptcha('login');
+                    // const recaptcha_token = await recaptcha();
 
                     await $fetch('/api/bedita/signup', {
                         method: 'POST',
@@ -153,7 +152,7 @@
                             user_preferences: {
                                 lang: this.$i18n.locale,
                             },
-                            recaptcha_token,
+                            // recaptcha_token,
                         },
                     });
 

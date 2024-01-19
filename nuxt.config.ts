@@ -1,16 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     runtimeConfig: {
-        allowedBeditaEndpoints: [],
         apiSecret: '',
         apiBaseUrl: '',
-        beditaApiBaseUrl: '',
-        beditaApiKey: '',
-        recaptchaSecret: '',
-        session: {
-            secret: '',
-            name: 'Brevia',
-        },
         public: {
             appName: 'BREVIA',
             appDescription: '',
@@ -18,7 +10,6 @@ export default defineNuxtConfig({
                 signupAvailable: '',
             },
             maxUserChatbots: '',
-            recaptchaKey: '',
             // demo limits
             demo: {
                 maxChatMessages: '30', // max chatbot msg number per day
@@ -38,6 +29,7 @@ export default defineNuxtConfig({
         '@pinia/nuxt',
         '@nuxtjs/i18n',
         'nuxt-icon',
+        '@atlasconsulting/nuxt-bedita',
     ],
     build: {
         transpile: ['tslib', '@vuepic/vue-datepicker']

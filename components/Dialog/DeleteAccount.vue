@@ -46,7 +46,6 @@
 </template>
 
 <script setup>
-    import { useReCaptcha } from 'vue-recaptcha-v3';
     import { useStatesStore } from '~~/store/states';
     const { $closeModal } = useNuxtApp();
     const emit = defineEmits(['stopClick']);
@@ -64,19 +63,18 @@
 
     const deleteAccount = async () => {
         let userName = states.user.username;
-        // Waiting for recaptcha
         try {
             loading.value=true;
-            await recaptchaInstance?.recaptchaLoaded();
-            const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
-            const recaptcha_token = await recaptcha();
+            // await recaptchaInstance?.recaptchaLoaded();
+            // const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
+            // const recaptcha_token = await recaptcha();
 
             const data = await $fetch('/api/bedita/auth/optout', {
                 method: 'POST',
                 body: {
                     username: userName,
                     password: passWord.value,
-                    recaptcha_token,
+                    // recaptcha_token,
                 },
             });
             loading.value = false

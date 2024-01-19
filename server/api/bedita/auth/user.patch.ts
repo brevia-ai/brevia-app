@@ -2,15 +2,9 @@ export default defineEventHandler(async (event) => {
     try {
         const reqBody = await readBody(event);
         // Verify the captcha
-        const recaptchaVerify =  await recaptchaVerifyToken(reqBody.recaptcha_token);
-        if (recaptchaVerify === false) {
-            throw createError({
-                statusCode: 400,
-                message: 'Recaptcha token not valid',
-            });
-        }
+        await recaptchaVerifyToken(reqBody.recaptcha_token, 'user-patch');
         // Creating a new body
-        const client = await beditaApiClient(event);
+        const client = await beditaClient(event);
         const changeBody = {
             name: reqBody.newname,
             surname: reqBody.newsurname,

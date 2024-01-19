@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
     try {
         const body = await readBody(event);
-        const client = await beditaApiClient(event);
+        const client = await beditaClient(event);
         const response = await client.patch(`/collections/${body.id}`, {
             data: {
                 id: `${body.id}`,

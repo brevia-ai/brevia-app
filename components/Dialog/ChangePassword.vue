@@ -41,7 +41,6 @@
 </template>
 
 <script setup>
-    import { useReCaptcha } from 'vue-recaptcha-v3';
     import { useStatesStore } from '~~/store/states';
     const { $closeModal } = useNuxtApp();
     const recaptchaInstance = useReCaptcha();
@@ -63,17 +62,12 @@
     const changePassword = async () => {
         try {
             loading.value = true;
-            // Waiting for recaptcha
-            await recaptchaInstance?.recaptchaLoaded();
-            const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
-            const recaptcha_token = await recaptcha();
-
             const data = await $fetch('/api/bedita/auth/user', {
                 method: 'PATCH',
                 body: {
                     newpassword: newPass.value,
                     oldpassword: oldPass.value,
-                    recaptcha_token,
+                    // recaptcha_token,
                 },
             });
             loading.value = false;
@@ -91,16 +85,16 @@
     const checkOldPwd = async () => {
         try{
             // Waiting for recaptcha
-            await recaptchaInstance?.recaptchaLoaded();
-            const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
-            const recaptcha_token = await recaptcha();
+            // await recaptchaInstance?.recaptchaLoaded();
+            // const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
+            // const recaptcha_token = await recaptcha();
 
             const data = await $fetch('/api/bedita/auth/login', {
                     method: 'POST',
                     body: {
                         username: user.username,
                         password: oldPass.value,
-                        recaptcha_token,
+                        // recaptcha_token,
                     },
                 });
             pwdError.value = false

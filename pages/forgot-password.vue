@@ -47,14 +47,12 @@
 </template>
 
 <script setup lang="ts">
-import { useReCaptcha } from 'vue-recaptcha-v3';
 
 const loading = ref(false);
 const mailSent = ref(false);
 const error = ref(false);
 const resetMail = ref('');
 const mailInput = ref(null);
-const recaptchaInstance = useReCaptcha();
 
 const isValidEmail = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -66,15 +64,15 @@ async function sendResetMail() {
     error.value = false;
     try {
         // Waiting for recaptcha
-        await recaptchaInstance?.recaptchaLoaded();
-        const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
-        const recaptcha_token = await recaptcha();
+        // await recaptchaInstance?.recaptchaLoaded();
+        // const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
+        // const recaptcha_token = await recaptcha();
 
         await $fetch('/api/bedita/auth/reset', {
             method: 'POST',
             body: {
                 contact: resetMail.value,
-                recaptcha_token,
+                // recaptcha_token,
             }
         });
         mailSent.value = true;

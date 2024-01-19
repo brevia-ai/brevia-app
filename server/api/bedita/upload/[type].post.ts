@@ -5,7 +5,7 @@ const getFormData = (multiPartFormData: MultiPartData[]) : Map<string |undefined
 
 export default defineEventHandler(async (event) => {
     try {
-        const client = await beditaApiClient(event);
+        const client = await beditaClient(event);
         const formData = await readMultipartFormData(event) as MultiPartData[];
         const formDataMap = getFormData(formData);
 
