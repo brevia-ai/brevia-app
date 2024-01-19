@@ -56,13 +56,13 @@ const cookieConfig: CookieConsentConfig = {
                 consentModal: {
                     title: "Consenso all'utilizzo dei cookie",
                     description:
-                        'Il nostro sito utilizza i cookie per migliorare la tua esperienza di navigazione. Per maggiori informazioni, consulta la nostra <a href="#link" class="cc__link">privacy policy</a>. Puoi gestire le tue preferenze sui cookie in seguito cliccando sul relativo pulsante a pié di pagina.',
+                        'Il nostro sito utilizza i cookie per migliorare la tua esperienza di navigazione. Per maggiori informazioni, consulta la nostra <a href="https://www.iubenda.com/privacy-policy/49496944/cookie-policy" target="_blank" rel="noopener">Cookie Policy</a>. Puoi gestire le tue preferenze sui cookie in seguito cliccando sul relativo pulsante a pié di pagina.',
                     acceptAllBtn: 'Accetta',
                     acceptNecessaryBtn: 'Rifiuta',
                     showPreferencesBtn: 'Opzioni avanzate',
                     footer: `
-                        <a href="https://formacamera.it/formacamerawebinarhub-tec/" target="_blank" rel="noopener">Cookie Policy</a>
-                        <a href="https://formacamera.it/privacy-policy" target="_blank" rel="noopener">Termini d'uso</a>
+                        <a href="https://www.iubenda.com/privacy-policy/49496944/cookie-policy" target="_blank" rel="noopener">Cookie Policy</a>
+                        <a href="https://www.iubenda.com/privacy-policy/49496944" target="_blank" rel="noopener">Privacy Policy</a>
                     `,
                 },
                 preferencesModal: {
@@ -85,28 +85,18 @@ const cookieConfig: CookieConsentConfig = {
                             body: [
                             {
                                 name: 'sessionid',
-                                domain: 'formacamerahub.it',
+                                domain: 'playground.brevia.app',
                                 desc: 'Gesione della sessione utente',
                             },
                             {
                                 name: 'cc_cookie',
-                                domain: 'formacamerahub.it',
+                                domain: 'playground.brevia.app',
                                 desc: 'Gestione del consenso all’utilizzo dei cookie',
-                            },
-                            {
-                                name: '_GRECAPTCHA',
-                                domain: 'formacamera.it',
-                                desc: 'Protezione anti spam',
                             },
                             {
                                 name: '_GRECAPTCHA',
                                 domain: 'recaptcha.net',
                                 desc: 'Protezione anti spam',
-                            },
-                            {
-                                name: 'VIMEO...',
-                                domain: 'player.vimeo.com',
-                                desc: 'Piattaforma di hosting video',
                             },
                             ],
                         },
@@ -124,12 +114,12 @@ const cookieConfig: CookieConsentConfig = {
                             body: [
                                 {
                                     name: '_ga',
-                                    domain: 'formacamera.it',
+                                    domain: 'playground.brevia.app',
                                     desc: 'description ...',
                                 },
                                 {
                                     name: '_gid',
-                                    domain: 'formacamera.it',
+                                    domain: 'playground.brevia.app',
                                     desc: 'description ...',
                                 },
                             ],

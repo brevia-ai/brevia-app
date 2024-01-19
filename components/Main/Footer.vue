@@ -25,12 +25,12 @@
 
     <div class="grid grid-cols-3 items-center text-xs font-bold leading-none tracking-wider text-white"
         v-if="cookiesPrivacyTerms">
-        <a href="https://www.iubenda.com/privacy-policy/49496944"
-            class="iubenda-embed iubenda-noiframe "
-            title="iubenda-white Privacy Policy ">Privacy Policy</a>
-        <a href="https://www.iubenda.com/termini-e-condizioni/49496944"
-            class="iubenda-white iubenda-noiframe iubenda-embed iubenda-noiframe "
-            title="Termini e Condizioni ">Termini e Condizioni</a>
+        <a href="https://www.iubenda.com/privacy-policy/49496944" target="_blank" rel="noopener"
+            title="Privacy Policy">Privacy Policy</a>
+        <!-- <a href="https://www.iubenda.com/privacy-policy/49496944/cookie-policy" target="_blank" rel="noopener"
+            title="Cookie Policy">Cookie Policy</a> -->
+        <a href="https://www.iubenda.com/termini-e-condizioni/49496944" target="_blank" rel="noopener"
+            :title="$t('TERMS_AND_CONDITIONS')">{{ $t('TERMS_AND_CONDITIONS') }}</a>
         <button class="hover:text-sky-300" @click="$CookieConsent.show">Cookies</button>
     </div>
 </footer>
