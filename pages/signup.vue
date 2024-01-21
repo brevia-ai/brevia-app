@@ -57,6 +57,14 @@
                 </div>
 
                 <div class="text-red-600 text-sm" v-if="error">{{ error }}. {{ $t('RETRY') }}</div>
+
+                <div class="pt-2" v-if="displayTerms">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" v-model="termsAccepted">
+                        <span class="text-sm ml-2">{{ $t('CONFIRM_READ_ACCEPT') }} <a href="https://www.iubenda.com/termini-e-condizioni/49496944" target="_blank" rel="noopener"
+            :title="$t('TERMS_AND_CONDITIONS')">{{ $t('TERMS_AND_CONDITIONS') }}</a></span>
+                    </label>
+                </div>
                 <div class="pt-2">
                     <button type="submit" class="block w-full sm:max-w-xs mx-auto button text-lg"
                         @click.prevent.stop="signup"
@@ -100,6 +108,8 @@
 
                 done: false,
                 showPassword: false,
+                displayTerms: false,
+                termsAccepted: false,
                 loading: false,
                 error: '',
                 recaptchaInstance: useReCaptcha(),
@@ -108,7 +118,8 @@
         computed: {
             formIsValid() {
                 const completed = this.firstName && this.lastName && this.userMail && this.userPass && this.confirmPass && (this.userPass === this.confirmPass);
-                return completed && this.emailIsValid;
+                const accepted = this.displayTerms ? this.termsAccepted : true;
+                return completed && accepted && this.emailIsValid;
             },
 
             emailIsValid() {
@@ -120,6 +131,7 @@
 
         created() {
             const statesStore = useStatesStore();
+            this.displayTerms = useRuntimeConfig().public.cookiesPrivacyTerms !== '';
             if (statesStore.isLogged)
                 navigateTo('/');
         },
@@ -142,6 +154,7 @@
                     const recaptcha = async () => await this.recaptchaInstance?.executeRecaptcha('login');
                     const recaptcha_token = await recaptcha();
 
+                    const acceptedDate = this.displayTerms? new Date().toISOString().slice(0, 10) : null;
                     await $fetch('/api/bedita/signup', {
                         method: 'POST',
                         body: {
@@ -154,6 +167,7 @@
                                 lang: this.$i18n.locale,
                             },
                             recaptcha_token,
+                            terms_accepted_date: acceptedDate,
                         },
                     });
 
