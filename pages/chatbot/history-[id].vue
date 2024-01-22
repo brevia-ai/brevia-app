@@ -5,10 +5,10 @@
                 <h2 class="text-2xl leading-tight">{{ $t('Chat history') }} “{{ collection.cmetadata?.title }}”</h2>
             </div>
 
-            <div class="flex flex-col space-y-8">
-                <div class="mx-12 content-start grid grid-cols-2 gap-2">
-                    <label class="flex items-center space-x-2">
-                        <span>{{ $t('From') }}</span>
+            <div class="flex justify-between space-x-10">
+                <div>
+                    <label>
+                        <span>{{ $t('START_DATE') }}</span>
                     </label>
                     <VueDatePicker v-model="startDate"
                         :range="false"
@@ -19,9 +19,9 @@
                         :format="$formatDate">
                     </VueDatePicker>
                 </div>
-                <div class="mx-12 content-start grid grid-cols-2 gap-2">
-                    <label class="flex items-center space-x-2">
-                        <span>{{ $t('To') }}</span>
+                <div>
+                    <label>
+                        <span>{{ $t('END_DATE') }}</span>
                     </label>
                     <VueDatePicker v-model="endDate"
                         :range="false"
