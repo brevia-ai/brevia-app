@@ -55,7 +55,7 @@ definePageMeta({
         function () {
             const { isLogged } = useBeditaAuth();
             if (isLogged.value) {
-                navigateTo('/');
+                return navigateTo('/');
             }
         },
     ],
