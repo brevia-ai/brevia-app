@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
     try {
-        const client = await beditaClient(event);
+        const client = await beditaApiClient(event);
         const response = await client.get('/auth/user', {
             params: {
                 include: 'has_access',

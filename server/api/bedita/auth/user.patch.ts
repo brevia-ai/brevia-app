@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
         // Verify the captcha
         await recaptchaVerifyToken(reqBody.recaptcha_token, 'user-patch');
         // Creating a new body
-        const client = await beditaClient(event);
+        const client = await beditaApiClient(event);
         const changeBody = {
             name: reqBody.newname,
             surname: reqBody.newsurname,

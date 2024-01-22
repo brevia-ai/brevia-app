@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
     try {
         const body = await readBody(event);
-        const client = await beditaClient(event);
+        const client = await beditaApiClient(event);
         const responseQuestions = await client.post('/questions', {
             data: {
                 type: 'questions',
