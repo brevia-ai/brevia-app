@@ -33,6 +33,7 @@
     "CONFIRM_PASSWORD": "Conferma la password",
     "CONFIRM_PASSWORD_PLACEHOLDER": "Conferma la password",
     "CONFIRM_PWD_TO_DELETE": "Conferma la tua password per cancellare {permanently} il tuo account" ,
+    "CONFIRM_READ": "Confermo di avere preso visione della",
     "CONFIRM_READ_ACCEPT": "Confermo di avere letto e accettato",
     "CREATE": "Crea",
     "CREATE_NEW_CHATBOT": "Crea un nuovo chatbot",

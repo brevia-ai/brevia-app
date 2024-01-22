@@ -58,13 +58,26 @@
 
                 <div class="text-red-600 text-sm" v-if="error">{{ error }}. {{ $t('RETRY') }}</div>
 
-                <div class="pt-2" v-if="displayTerms">
-                    <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="checkbox" v-model="termsAccepted">
-                        <span class="text-sm ml-2">{{ $t('CONFIRM_READ_ACCEPT') }} <a href="https://www.iubenda.com/termini-e-condizioni/49496944" target="_blank" rel="noopener"
-            :title="$t('TERMS_AND_CONDITIONS')">{{ $t('TERMS_AND_CONDITIONS') }}</a></span>
-                    </label>
-                </div>
+                <slot v-if="displayTerms">
+                    <div class="pt-2">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" v-model="termsAccepted">
+                            <span class="text-sm ml-2">
+                                {{ $t('CONFIRM_READ_ACCEPT') }} <a href="https://www.iubenda.com/termini-e-condizioni/49496944" target="_blank" rel="noopener"
+                :title="$t('TERMS_AND_CONDITIONS')">{{ $t('TERMS_AND_CONDITIONS') }}</a>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="pt-2">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" v-model="privacyAccepted">
+                            <span class="text-sm ml-2">{{ $t('CONFIRM_READ') }}
+                                <a href="https://www.iubenda.com/privacy-policy/49496944" target="_blank" rel="noopener"
+                                    title="Privacy Policy">Privacy Policy</a>
+                            </span>
+                        </label>
+                    </div>
+                </slot>
                 <div class="pt-2">
                     <button type="submit" class="block w-full sm:max-w-xs mx-auto button text-lg"
                         @click.prevent.stop="signup"
@@ -110,6 +123,7 @@
                 showPassword: false,
                 displayTerms: false,
                 termsAccepted: false,
+                privacyAccepted: false,
                 loading: false,
                 error: '',
                 recaptchaInstance: useReCaptcha(),
@@ -118,7 +132,7 @@
         computed: {
             formIsValid() {
                 const completed = this.firstName && this.lastName && this.userMail && this.userPass && this.confirmPass && (this.userPass === this.confirmPass);
-                const accepted = this.displayTerms ? this.termsAccepted : true;
+                const accepted = this.displayTerms ? this.termsAccepted && this.privacyAccepted : true;
                 return completed && accepted && this.emailIsValid;
             },
 
@@ -167,7 +181,7 @@
                                 lang: this.$i18n.locale,
                             },
                             recaptcha_token,
-                            terms_accepted_date: acceptedDate,
+                            terms_accepted: acceptedDate,
                         },
                     });
 
