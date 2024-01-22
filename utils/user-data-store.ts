@@ -9,15 +9,6 @@ export interface UserDataStore {
     username: string,
 }
 
-export const filterUserDataToStore = (data: any): UserDataStore => ({
-    id: data?.data?.id,
-    name: data?.data?.attributes?.name,
-    surname: data?.data?.attributes?.surname,
-    roles: data?.roles || [],
-    meta: data?.data?.meta || {},
-    username: data?.data?.attributes?.username,
-});
-
 export const userEditLevel = (item: any): ItemEditLevel => {
     const store = useStatesStore();
     const userId = store.user?.id;
