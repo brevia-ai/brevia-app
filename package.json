@@ -10,8 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@atlasconsulting/nuxt-bedita": "^0.2.0",
-    "@nuxtjs/i18n": "^8.0.0-rc.5",
+    "@atlasconsulting/nuxt-bedita": "^0.2.1",
+    "@nuxtjs/i18n": "^8.0.0",
     "@nuxtjs/tailwindcss": "^6.6.5",
     "nuxt": "^3.7.4",
     "nuxt-icon": "^0.5.0"
