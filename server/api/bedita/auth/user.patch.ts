@@ -1,9 +1,10 @@
+import { FormatUserInterceptor } from '@atlasconsulting/bedita-sdk';
+import { UserAuth } from '@atlasconsulting/nuxt-bedita';
+
 export default defineEventHandler(async (event) => {
     try {
         const reqBody = await readBody(event);
-        // Verify the captcha
         await recaptchaVerifyToken(reqBody.recaptcha_token, 'user-patch');
-        // Creating a new body
         const client = await beditaApiClient(event);
         const changeBody = {
             name: reqBody.newname,
@@ -11,8 +12,15 @@ export default defineEventHandler(async (event) => {
             password: reqBody.newpassword,
             old_password: reqBody.oldpassword
         }
-        const response = await client.patch('/auth/user', changeBody);
-        return response.data;
+        await client.patch('/auth/user', changeBody);
+
+        // update session data
+        const response = await client.get('/auth/user', {
+            responseInterceptors: [new FormatUserInterceptor(client)],
+        });
+        await client.getStorageService().set('user', filterUserDataToStore(response?.formattedData));
+
+        return response.formattedData as UserAuth;
     } catch (error) {
         return handleBeditaApiError(event, error);
     }
