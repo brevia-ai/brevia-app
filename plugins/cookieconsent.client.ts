@@ -74,7 +74,7 @@ const cookieConfig: CookieConsentConfig = {
                         {
                         title: 'Cookie strettamente necessari',
                         description:
-                            'Questi cookie sono strettamente necessari in quanto legati al funzionamento della piattaforma Forma Camera Webinar Hub e alla visione dei video webinar pubblicati.',
+                            'Questi cookie sono strettamente necessari in quanto legati al funzionamento della piattaforma Brevia Playground.',
                         linkedCategory: 'necessary',
                         cookieTable: {
                             headers: {
@@ -128,7 +128,7 @@ const cookieConfig: CookieConsentConfig = {
                         {
                             title: 'Maggiori informazioni',
                             description:
-                                'Per maggiori informazioni visita la pagina sulla <a class="cc__link" href="#yourdomain.com">Cookie Policy su Forma Camera</a>.',
+                                'Per maggiori informazioni visita la pagina sulla <a class="cc__link" href="https://www.iubenda.com/privacy-policy/49496944/cookie-policy" target="_blank" rel="noopener">Cookie Policy</a>.',
                         },
                     ],
                 },
