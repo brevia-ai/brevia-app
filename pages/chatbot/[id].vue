@@ -100,6 +100,7 @@ const input = ref<HTMLElement|null>(null);
 const dialog = ref<DialogItem[]>([]);
 const showDocs = ref(false);
 const docs = ref<any>([]);
+const historyId = ref('');
 const isDemo = ref(store.userHasRole('demo'));
 const messagesLeft = ref('');
 
@@ -175,6 +176,8 @@ const submit = async () => {
 const streamingFetchRequest = async (currIdx: number) => {
     const question = prompt.value;
     prompt.value = '';
+    docs.value = [];
+    historyId.value = '';
 
     const response = await fetch('/api/brevia/chat', {
         method: 'POST',
@@ -213,19 +216,19 @@ const readChunks = (reader: ReadableStreamDefaultReader) => {
 };
 
 const handleStreamText = (text: string, currIdx: number) => {
-    if (text.includes('[{"page_content":')) {
-        const idx = text.indexOf('[{"page_content":')
+    if (text.includes('[{"chat_history_id":') || text.includes('[{"page_content":')) {
+        const idx1 = text.indexOf('[{"chat_history_id":')
+        const idx2 = text.indexOf('[{"page_content":')
+        const idx = Math.max(idx1, idx2)
         dialog.value[currIdx].message += text.slice(0, idx);
         try {
-            docs.value = JSON.parse(text.slice(idx));
-            if (!showDocs.value)
-                return;
+            let parsed = JSON.parse(text.slice(idx));
+            if (idx1 !== -1) {
+                const item = parsed?.shift() || {};
+                historyId.value = item?.chat_history_id || '';
+            }
+            docs.value = parsed;
 
-            docs.value.forEach((doc: any, i: number) => {
-                console.log('\n\n' + (i + 1) + ').');
-                console.log(doc.page_content);
-                console.log(doc.metadata);
-            });
         } catch (e) {
             return console.error(e);
         }
