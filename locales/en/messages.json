@@ -35,6 +35,7 @@
     "CONFIRM_PWD_TO_DELETE": "Confirm your password to {permanently} delete your account",
     "CONFIRM_READ": "I confirm that I have read the",
     "CONFIRM_READ_ACCEPT": "I confirm that I have read and accepted the",
+    "COOKIE_OPTIONS": "Cookie Options",
     "CREATE": "Create",
     "CREATE_NEW_CHATBOT": "Create a new chatbot",
     "CURRENT_PASSWORD": "Current password",
