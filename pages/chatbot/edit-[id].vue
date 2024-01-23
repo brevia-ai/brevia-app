@@ -3,7 +3,7 @@
     <div class="space-y-10" v-if="collection.uuid">
         <div class="flex items-start justify-between space-x-4">
             <h2 class="text-2xl leading-tight">{{ $t('EDIT') }} “{{ collection.cmetadata?.title }}”</h2>
-            <button class="mt-1" title="Delete chatbot" @click="$openModal('DialogDeleteChatbot', { collection })">
+            <button class="mt-1" :title="$t('DELETE_CHATBOT')" @click="$openModal('DialogDeleteChatbot', { collection })">
                 <Icon name="ph:trash-simple-bold" class="text-3xl text-sky-700 hover:text-pink-700" />
             </button>
         </div>
