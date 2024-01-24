@@ -32,7 +32,7 @@ export default defineNuxtConfig({
         '@atlasconsulting/nuxt-bedita',
     ],
     build: {
-        transpile: ['tslib', '@vuepic/vue-datepicker']
+        transpile: ['@vuepic/vue-datepicker']
     },
     app: {
         head: {
