@@ -57,6 +57,27 @@
                 </div>
 
                 <div class="text-red-600 text-sm" v-if="error">{{ error }}. {{ $t('RETRY') }}</div>
+
+                <slot v-if="displayTerms">
+                    <div class="pt-2">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" v-model="termsAccepted">
+                            <span class="text-sm ml-2">
+                                {{ $t('CONFIRM_READ_ACCEPT') }} <a href="https://www.iubenda.com/termini-e-condizioni/49496944" target="_blank" rel="noopener"
+                :title="$t('TERMS_AND_CONDITIONS')">{{ $t('TERMS_AND_CONDITIONS') }}</a>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="pt-2">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" v-model="privacyAccepted">
+                            <span class="text-sm ml-2">{{ $t('CONFIRM_READ') }}
+                                <a href="https://www.iubenda.com/privacy-policy/49496944" target="_blank" rel="noopener"
+                                    title="Privacy Policy">Privacy Policy</a>
+                            </span>
+                        </label>
+                    </div>
+                </slot>
                 <div class="pt-2">
                     <button type="submit" class="block w-full sm:max-w-xs mx-auto button text-lg"
                         @click.prevent.stop="userSignup"
@@ -109,12 +130,16 @@ const userPass = ref('');
 const confirmPass = ref('');
 const done = ref(false);
 const showPassword = ref(false);
+const displayTerms = ref(useRuntimeConfig().public?.cookiesPrivacyTerms !== '');
+const termsAccepted = ref(false);
+const privacyAccepted = ref(false);
 const loading = ref(false);
 const error = ref('');
 
 const formIsValid = computed(() => {
     const completed = firstName.value && lastName.value && userMail.value && userPass.value && confirmPass.value && (userPass.value == confirmPass.value);
-    return completed && emailIsValid.value;
+    const accepted = displayTerms.value ? termsAccepted.value && privacyAccepted.value : true;
+    return completed && accepted && emailIsValid.value;
 });
 const emailIsValid = computed(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -134,6 +159,7 @@ const userSignup = async () => {
     error.value = '';
     loading.value = true;
     try {
+        const terms_accepted = displayTerms.value ? new Date().toISOString().slice(0, 10) : null;
         await signup({
             name: firstName.value,
             surname: lastName.value,
@@ -143,6 +169,7 @@ const userSignup = async () => {
             user_preferences: {
                 lang: locale.value,
             },
+            terms_accepted,
         });
 
         done.value = true;

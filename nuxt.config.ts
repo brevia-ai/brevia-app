@@ -10,6 +10,7 @@ export default defineNuxtConfig({
                 signupAvailable: '',
             },
             maxUserChatbots: '',
+            cookiesPrivacyTerms: '',
             // demo limits
             demo: {
                 maxChatMessages: '30', // max chatbot msg number per day
@@ -29,6 +30,7 @@ export default defineNuxtConfig({
         '@pinia/nuxt',
         '@nuxtjs/i18n',
         'nuxt-icon',
+        'nuxt-gtag',
         '@atlasconsulting/nuxt-bedita',
     ],
     build: {
@@ -43,5 +45,9 @@ export default defineNuxtConfig({
     i18n: {
         strategy: 'no_prefix',
         locales: ['it', 'en'],
+    },
+    gtag: {
+        id: 'G-XXXXXXXXXX',
+        initialConsent: false,
     },
 })

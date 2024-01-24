@@ -22,5 +22,17 @@
         </div>
         <span class="col-span-3 whitespace-nowrap">made by ATLAS srl</span>
     </div>
+
+    <div class="flex gap-3 text-xs tracking-wider text-white"
+        v-if="cookiesPrivacyTerms">
+        <a href="https://www.iubenda.com/privacy-policy/49496944" target="_blank" rel="noopener"
+            title="Privacy Policy">Privacy Policy</a>
+        <a href="https://www.iubenda.com/termini-e-condizioni/49496944" target="_blank" rel="noopener"
+            :title="$t('TERMS_AND_CONDITIONS')">{{ $t('TERMS_AND_CONDITIONS') }}</a>
+        <button class="hover:text-sky-300" @click="$CookieConsent.show">{{ $t('COOKIE_OPTIONS') }}</button>
+    </div>
 </footer>
 </template>
+<script setup lang="ts">
+const cookiesPrivacyTerms = useRuntimeConfig().public.cookiesPrivacyTerms !== '';
+</script>
