@@ -50,4 +50,11 @@ export default defineNuxtConfig({
         id: 'G-XXXXXXXXXX',
         initialConsent: false,
     },
+    bedita: {
+        recaptcha: {
+            enabled: true,
+            hideBadge: true,
+            useRecaptchaNet: true,
+        },
+    }
 })
