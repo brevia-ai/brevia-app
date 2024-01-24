@@ -56,5 +56,9 @@ export default defineNuxtConfig({
             hideBadge: true,
             useRecaptchaNet: true,
         },
-    }
+        session: {
+            name: 'Brevia',
+            secret: '',
+        },
+    },
 })
