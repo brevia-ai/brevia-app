@@ -10,10 +10,9 @@ export interface UserDataStore {
 }
 
 export const userEditLevel = (item: any): ItemEditLevel => {
-    const store = useStatesStore();
-    const userId = store.user?.id;
+    const { user } = useBeditaAuth()
     const createdId = item?.meta?.created_by;
-    if (userId == createdId) {
+    if (user.value?.id == createdId) {
         return ItemEditLevel.ReadWrite;
     }
 
