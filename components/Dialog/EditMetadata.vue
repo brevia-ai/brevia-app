@@ -8,6 +8,10 @@
         <span class="font-semibold">{{ $t('NO_METADATA') }}</span>
     </div>
 
+    <div class="flex justify-center" v-else-if="!docsFound">
+        <span class="font-semibold">{{ $t('NO_INDEXED_DOCUMENTS') }}</span>
+    </div>
+
     <div class="flex flex-col space-y-2.5" v-else>
         <div class="mx-12 content-start grid grid-cols-2 gap-2" v-for="(meta, name, index) in properties">
 
@@ -47,7 +51,7 @@
 
         <button class="button button-danger uppercase"
             @click="updateMetadata"
-            :disabled="properties.length == 0">
+            :disabled="properties.length == 0 || !docsFound">
             {{ $t('SAVE') }}
         </button>
     </div>
@@ -67,6 +71,7 @@ const props = defineProps({
 const statesStore = useStatesStore();
 
 const metadata = ref({});
+const docsFound = ref(false);
 
 // documents metadata JSON Schema
 const schema = statesStore.collection?.cmetadata?.documents_metadata || {};
@@ -79,6 +84,7 @@ onBeforeMount(async () => {
             `/api/brevia/index/${statesStore.collection?.uuid}/${props.document.id}`
         )
         const data = await response.json();
+        docsFound.value = (data?.length || 0) > 0;
         metadata.value = data?.[0]?.cmetadata || {};
     } catch (error) {
         console.log(error);
