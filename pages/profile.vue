@@ -92,7 +92,7 @@ async function changeName() {
         const response = await $fetch<UserAuth>('/api/bedita/auth/user', {
             method: 'PATCH',
             body: {
-                newname: newName,
+                name: newName,
             },
         });
         sessionUser.value = filterUserDataToStore(response);
@@ -119,7 +119,7 @@ async function changeSurname() {
         const response = await $fetch<UserAuth>('/api/bedita/auth/user', {
             method: 'PATCH',
             body: {
-                newsurname: newSurname,
+                surname: newSurname,
             },
         });
         sessionUser.value = filterUserDataToStore(response);
