@@ -26,6 +26,7 @@
     "pinia": "^2.0.34",
     "vanilla-cookieconsent": "^3.0.0-rc.16",
     "vue": "^3.2.47",
-    "vue-recaptcha-v3": "^2.0.1"
+    "vue-recaptcha-v3": "^2.0.1",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz"
   }
 }
