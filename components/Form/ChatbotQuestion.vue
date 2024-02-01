@@ -116,7 +116,7 @@ const update = async () => {
                 },
             },
         });
-        // restore metadata first
+        // restore previous metadata
         await updateMetadata(String(props.item?.id), meta);
 
     } catch (err) {
