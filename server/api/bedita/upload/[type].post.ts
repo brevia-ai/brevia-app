@@ -20,17 +20,18 @@ export default defineEventHandler(async (event) => {
         const response = await client.upload(fileObject, type);
         const id = response.data?.data?.id;
 
-        // title and description
-        const title = formDataMap.get('title')?.data.toString();
-        if (title) {
-            await client.patch(`/${type}/${id}`, {
-                data: { id, type, attributes: { title } }
-            });
+        // update object attributes (title, description & extra)
+        const extra = formDataMap.get('extra')?.data ?
+            JSON.parse(formDataMap.get('extra')?.data?.toString() || '') : null;
+        const fileAttr = {
+            title: formDataMap.get('title')?.data.toString() || null,
+            description: formDataMap.get('description')?.data.toString() || null,
+            extra,
         }
-        const description = formDataMap.get('description')?.data.toString();
-        if (description) {
+        const attributes = Object.fromEntries(Object.entries(fileAttr).filter(([, v]) => v !== null));
+        if (attributes) {
             await client.patch(`/${type}/${id}`, {
-                data: { id, type, attributes: { description } }
+                data: { id, type, attributes }
             });
         }
 

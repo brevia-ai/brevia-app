@@ -90,6 +90,13 @@ const create = async () => {
                 attributes: {
                     title: title.value,
                     body: answer.value,
+                    extra: {
+                        brevia: {
+                            metadata: {
+                                type: 'questions'
+                            }
+                        }
+                    }
                 },
             },
         });
