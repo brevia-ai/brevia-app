@@ -2,7 +2,7 @@
 <div class="flex flex-col space-y-8">
     <!-- new -->
     <div>
-        <FormChatbotFile :collection="collection" @file-uploaded="reloadFiles" v-if="isUploadAllowed" />
+        <FormChatbotFile @file-uploaded="reloadFiles" v-if="isUploadAllowed" />
 
         <p class="mt-2 text-xs text-center sm:text-left text-slate-600" v-if="isDemo">
             {{ $t('MAX_NUMBER_FILES') }}: <span class="font-bold">{{ $config.public.demo.maxChatFiles }}</span>

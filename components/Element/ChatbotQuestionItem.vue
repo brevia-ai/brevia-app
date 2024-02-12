@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="p-4 sm:p-6 bg-slate-900 text-white shadow-md rounded" v-if="editMode">
-        <FormChatbotQuestion :item="item" :collection-id="collectionId"
+        <FormChatbotQuestion :item="item"
             @close="editMode = false; $emit('close', true)" />
     </div>
 
@@ -40,10 +40,6 @@
 
 <script lang="ts" setup>
 defineProps({
-    collectionId: {
-        type: [ String, Number ],
-        required: true,
-    },
     item: {
         type: Object,
         required: true,

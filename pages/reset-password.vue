@@ -69,7 +69,6 @@
 </template>
 
 <script setup lang="ts">
-import { useReCaptcha } from 'vue-recaptcha-v3';
 
 definePageMeta({
     middleware: [
@@ -81,33 +80,20 @@ definePageMeta({
     ],
 });
 
+const { changePassword } = useBeditaAuth();
+
 const newPass = ref('');
 const confirmPass = ref('');
 const loading = ref(false);
 const error = ref(false);
 const passSet = ref(false);
 const showPassword = ref(false);
-const route = useRoute();
-const recaptchaInstance = useReCaptcha();
 
 async function resetPassword() {
     loading.value = true;
     error.value = false;
     try {
-        // Waiting for recaptcha
-        await recaptchaInstance?.recaptchaLoaded();
-        const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
-        const recaptcha_token = await recaptcha();
-
-        await $fetch('/api/bedita/auth/change', {
-            method: 'PATCH',
-            body: {
-                uuid: route.query?.uuid,
-                password: newPass.value,
-                login: false,
-                recaptcha_token,
-            }
-        });
+        await changePassword(newPass.value);
         passSet.value = true;
     } catch (err) {
         error.value = true;

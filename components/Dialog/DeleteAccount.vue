@@ -24,77 +24,62 @@
                             </template>
                         </i18n-t>
                     </label>
-                    <input id="currentPwd" type="password" autocomplete='off' class="w-full" v-model="passWord" />
+                    <input id="currentPwd" type="password" autocomplete='off' class="w-full" v-model="password" />
                 </div>
             </form>
             <p class="text-red-600 text-md" v-if="deleteError">{{ $t('SOMETHING_WENT_WRONG') }}</p>
             <div class="flex justify-between space-x-4">
                 <button class="button button-secondary uppercase" @click="$closeModal">{{ $t('CANCEL') }}</button>
 
-                <button class="button button-danger uppercase" :disabled="!passWord" :class="{ 'is-loading': loading }" @click="deleteAccount">
+                <button class="button button-danger uppercase" :disabled="!password" :class="{ 'is-loading': loading }" @click="deleteAccount">
                     {{ $t('DELETE') }} account
                 </button>
             </div>
         </div>
         <div v-else class="text-center space-y-4">
-            <p>Il tuo account è stato eliminato con successo.</p>
+            <p>{{ $t('ACCOUNT_DELETED') }}.</p>
             <div class="flex justify-center mt-12 mb-4">
-                <button class="button button-secondary uppercase" @click="logout">{{ $t('CLOSE') }}</button>
+                <button class="button button-secondary uppercase" @click="exit">{{ $t('CLOSE') }}</button>
             </div>
         </div>
     </div>
 </template>
 
-<script setup>
-    import { useReCaptcha } from 'vue-recaptcha-v3';
-    import { useStatesStore } from '~~/store/states';
-    const { $closeModal } = useNuxtApp();
-    const emit = defineEmits(['stopClick']);
-    const recaptchaInstance = useReCaptcha();
-    const states = useStatesStore();
+<script setup lang="ts">
 
-    let passWord = ref('')
-    let loading = ref(false);
-    let deletionSuccess = ref(false);
-    let deleteError = ref(false);
+const { $closeModal } = useNuxtApp();
+const { user, optOut, logout } = useBeditaAuth();
+const statesStore = useStatesStore();
 
-    onMounted(() => {
-        emit('stopClick');
-    });
+const emit = defineEmits(['stopClick']);
 
-    const deleteAccount = async () => {
-        let userName = states.user.username;
-        // Waiting for recaptcha
-        try {
-            loading.value=true;
-            await recaptchaInstance?.recaptchaLoaded();
-            const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
-            const recaptcha_token = await recaptcha();
+let password = ref('')
+let loading = ref(false);
+let deletionSuccess = ref(false);
+let deleteError = ref(false);
 
-            const data = await $fetch('/api/bedita/auth/optout', {
-                method: 'POST',
-                body: {
-                    username: userName,
-                    password: passWord.value,
-                    recaptcha_token,
-                },
-            });
-            loading.value = false
-            deleteError.value = false;
-            deletionSuccess.value = true;
+onMounted(() => {
+    emit('stopClick');
+});
 
-        } catch (error) {
-            loading.value=false;
-            deleteError.value = true;
-            console.log(error)
-        }
+const deleteAccount = async () => {
+    try {
+        loading.value = true;
+        deleteError.value = false;
+        await optOut(user.value?.username as string, password.value);
+        deletionSuccess.value = true;
+    } catch (error) {
+        deleteError.value = true;
+        console.log(error);
     }
+    loading.value = false;
+}
 
-    async function logout() {
-        $closeModal();
-        await $fetch('/api/bedita/auth/logout');
-        states.userLogout();
-        navigateTo('/auth');
-    }
+async function exit() {
+    $closeModal();
+    await logout();
+    statesStore.$reset();
+    navigateTo('/auth');
+}
 
 </script>

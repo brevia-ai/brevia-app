@@ -185,7 +185,7 @@ export default {
             if (!this.isDemo) {
                 return;
             }
-            const userId = useStatesStore().user.id;
+            const userId = useBeditaAuth().user.value.id;
             const query = `service=brevia.services.SummarizeFileService&user_id=${userId}`
             try {
                 const response = await fetch(`/api/brevia/service_usage?${query}`);
@@ -207,7 +207,7 @@ export default {
             let formData = new FormData();
             formData.append('initial_prompt', this.summaryPrompt());
             if (this.isDemo) {
-                formData.append('payload', `{"user_id": "${useStatesStore().user.id}"}`);
+                formData.append('payload', `{"user_id": "${useBeditaAuth().user.value.id}"}`);
             }
             formData.append('file', this.file);
             try {

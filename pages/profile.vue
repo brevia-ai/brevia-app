@@ -2,7 +2,7 @@
     <div class="max-w-sm mx-auto flex flex-col space-y-8">
         <ElementLogo class="mt-0.5 h-[128px] w-auto mx-auto" />
         <div class="flex mx-auto ">
-            <p class="py-1 pl-2 text-xl">{{ user.username }}</p>
+            <p class="py-1 pl-2 text-xl">{{ user?.attributes?.username }}</p>
         </div>
         <div>
             <p class="text-xs text-sky-600">{{ $t('FIRST_NAME') }}</p>
@@ -17,7 +17,7 @@
         <div>
             <p class="text-xs text-sky-600">{{ $t('LAST_NAME') }}</p>
             <div class="relative">
-                <input v-model="surname" @focusin="saveSurnameVisible=true" @focusout="saveSurnameVisible=false; surname=user.surname" class="w-full py-1 pl-2 pr-14 text-xl focus:outline-none text-sky-950 bg-transparent rounded focus:border-sky-500 focus:ring-sky-500 focus:ring-2">
+                <input v-model="surname" @focusin="saveSurnameVisible=true" @focusout="revertChanges" class="w-full py-1 pl-2 pr-14 text-xl focus:outline-none text-sky-950 bg-transparent rounded focus:border-sky-500 focus:ring-sky-500 focus:ring-2">
                 <button v-if="saveSurnameVisible" @mousedown.left="changeSurname" class="absolute right-2 top-1">
                     <Icon name="ic:outline-task-alt" class="text-3xl text-primary hover:text-lime-500" />
                 </button>
@@ -37,93 +37,100 @@
     </div>
 </template>
 
-<script setup>
-    import { useReCaptcha } from 'vue-recaptcha-v3';
-    const statesStore = useStatesStore();
-    const recaptchaInstance = useReCaptcha();
-    let user = statesStore.user;
-    let name = ref(user?.name);
-    let surname = ref(user?.surname);
-    let nameError = ref(false);
-    let surnameError = ref(false);
-    let lastLoginErr = ref(new Date(user.meta.last_login_err).toLocaleDateString() + ' ' + new Date(user.meta.last_login_err).toLocaleTimeString());
-    let lastPassMod = ref(new Date(user?.meta.password_modified).toLocaleDateString() + ' ' + new Date(user?.meta.password_modified).toLocaleTimeString());
-    let saveNameVisible = ref(false);
-    let saveSurnameVisible = ref(false);
-    let nameChanging = ref(false);
-    let surnameChanging = ref(false);
+<script setup lang="ts">
+import { type JsonApiResourceObject } from '@atlasconsulting/bedita-sdk';
+import { ApiResponseBodyResource, UserAuth } from '@atlasconsulting/nuxt-bedita';
 
-    function revertChanges() {
-        if(saveNameVisible.value)saveNameVisible.value = false;
-        if(saveSurnameVisible.value)saveSurnameVisible.value = false;
-        if(!nameChanging.value)name.value = user.name;
-        if(!surnameChanging.value)surname.value = user.surname;
+const { locale } = useI18n();
+const { user: sessionUser } = useBeditaAuth();
+
+const { data } = await useFetch<ApiResponseBodyResource>('/api/bedita/auth/user'); // get complete user data
+const user = ref(data.value?.formattedData?.data as JsonApiResourceObject);
+let name = ref(user.value?.attributes?.name);
+let surname = ref(user.value?.attributes?.surname);
+let nameError = ref(false);
+let surnameError = ref(false);
+let lastLoginErr = ref('');
+let lastPassMod = ref('');
+let saveNameVisible = ref(false);
+let saveSurnameVisible = ref(false);
+let nameChanging = ref(false);
+let surnameChanging = ref(false);
+
+if (user.value?.meta?.last_login_err) {
+    lastLoginErr.value = `${new Date(user.value?.meta?.last_login_err).toLocaleDateString(locale.value)} ${new Date(user.value?.meta?.last_login_err).toLocaleTimeString(locale.value)}`;
+}
+if (user.value?.meta?.password_modified) {
+    lastPassMod.value = `${new Date(user.value?.meta?.password_modified).toLocaleDateString(locale.value)} ${new Date(user.value?.meta?.password_modified).toLocaleTimeString(locale.value)}`;
+}
+
+function revertChanges() {
+    if (saveNameVisible.value) {
+        saveNameVisible.value = false;
     }
-
-    async function changeName() {
-        let newName = name.value;
-        nameChanging.value = true;
-        if(!name.value.length){
-            nameError.value = true;
-            nameChanging.value = false;
-            return
-        }
-        try {
-            nameError.value = false;
-            // Waiting for recaptcha
-            await recaptchaInstance?.recaptchaLoaded();
-            const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
-            const recaptcha_token = await recaptcha();
-
-            const data = await $fetch('/api/bedita/auth/user', {
-                method: 'PATCH',
-                body: {
-                    newname: newName,
-                    recaptcha_token,
-                },
-            });
-            statesStore.userLogin(filterUserDataToStore(data));
-            user = statesStore.user;
-            name.value = user.name;
-            saveNameVisible.value = false;
-            nameChanging.value = false;
-        } catch (error) {
-            console.log(error);
-            nameChanging.value = false;
-        }
+    if (saveSurnameVisible.value) {
+        saveSurnameVisible.value = false;
     }
-
-    async function changeSurname() {
-        let newSurname = surname.value;
-        surnameChanging.value = true;
-        if(!name.value.length){
-            surnameError.value = true;
-            surnameChanging.value = false;
-            return
-        }
-        try {
-            surnameError.value = false;
-            // Waiting for recaptcha
-            await recaptchaInstance?.recaptchaLoaded();
-            const recaptcha = async () => await recaptchaInstance?.executeRecaptcha('login');
-            const recaptcha_token = await recaptcha();
-
-            const data = await $fetch('/api/bedita/auth/user', {
-                method: 'PATCH',
-                body: {
-                    newsurname: newSurname,
-                    recaptcha_token,
-                },
-            });
-            statesStore.userLogin(filterUserDataToStore(data));
-            user = statesStore.user;
-            surname.value = user.surname;
-            saveSurnameVisible.value = false;
-            surnameChanging.value = false;
-        } catch (error) {
-            console.log(error);
-            surnameChanging.value = false;
-        }
+    if (!nameChanging.value) {
+        name.value = user.value?.attributes?.name;
     }
+    if (!surnameChanging.value) {
+        surname.value = user.value?.attributes?.surname;
+    }
+}
+
+async function changeName() {
+    let newName = name.value;
+    nameChanging.value = true;
+    if (!name.value.length) {
+        nameError.value = true;
+        nameChanging.value = false;
+        return;
+    }
+    try {
+        nameError.value = false;
+        const response = await $fetch<UserAuth>('/api/bedita/auth/user', {
+            method: 'PATCH',
+            body: {
+                name: newName,
+            },
+        });
+        sessionUser.value = filterUserDataToStore(response);
+        user.value = response.data;
+        name.value = user.value?.attributes?.name;
+        saveNameVisible.value = false;
+        nameChanging.value = false;
+    } catch (error) {
+        console.log(error);
+        nameChanging.value = false;
+    }
+}
+
+async function changeSurname() {
+    let newSurname = surname.value;
+    surnameChanging.value = true;
+    if (!surname.value.length) {
+        surnameError.value = true;
+        surnameChanging.value = false;
+        return;
+    }
+    try {
+        surnameError.value = false;
+        const response = await $fetch<UserAuth>('/api/bedita/auth/user', {
+            method: 'PATCH',
+            body: {
+                surname: newSurname,
+            },
+        });
+        sessionUser.value = filterUserDataToStore(response);
+        user.value = response.data;
+        surname.value = user.value?.attributes?.surname;
+        saveSurnameVisible.value = false;
+        surnameChanging.value = false;
+    } catch (error) {
+        console.log(error);
+        surnameChanging.value = false;
+    }
+}
 
 </script>
