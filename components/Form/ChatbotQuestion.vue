@@ -35,10 +35,6 @@
 
 <script lang="ts" setup>
 const props = defineProps({
-    collectionId: {
-        type: [ String, Number ],
-        required: true,
-    },
     item: {
         type: Object,
         default: {},
@@ -59,6 +55,10 @@ if (props.item.attributes) {
     answer.value = $html2text(props.item.attributes.body);
 }
 
+const statesStore = useStatesStore();
+const collectionBeditaId = statesStore.collection?.cmetadata?.id || '';
+const collectionUuid = statesStore.collection?.uuid || '';
+const metadataDefaults = statesStore.collection?.cmetadata?.metadata_defaults?.questions || {};
 
 // methods
 const cancel = () => {
@@ -86,13 +86,24 @@ const create = async () => {
         const data = await $fetch('/api/bedita/question', {
             method: 'POST',
             body: {
-                collectionId: props.collectionId,
+                collectionId: collectionBeditaId,
                 attributes: {
                     title: title.value,
                     body: answer.value,
+                    extra: {
+                        brevia: {
+                            metadata: {
+                                type: 'questions'
+                            }
+                        }
+                    }
                 },
             },
         });
+        const docId = String(data.data?.id || '');
+        const meta = await readMetadata(docId);
+        await updateMetadata(docId, {...meta, ...metadataDefaults});
+
     } catch (err) {
         error.value = true;
     }
@@ -100,6 +111,8 @@ const create = async () => {
 
 const update = async () => {
     try {
+        // read current metadata first
+        const meta = await readMetadata(String(props.item?.id));
         await $fetch('/api/bedita/question', {
             method: 'PATCH',
             body: {
@@ -110,6 +123,9 @@ const update = async () => {
                 },
             },
         });
+        // restore previous metadata
+        await updateMetadata(String(props.item?.id), meta);
+
     } catch (err) {
         error.value = true;
     }
@@ -124,5 +140,35 @@ const deleteQuestion = async () => {
     }
     isDeleting.value = false;
     emit('close', true);
+}
+
+const readMetadata = async (docId: string) => {
+    try {
+        const response = await fetch(
+            `/api/brevia/index/${collectionUuid}/${docId}`
+        )
+        const data = await response.json();
+        return data?.[0]?.cmetadata || {};
+    } catch (error) {
+        console.log(error);
+        return {};
+    }
+}
+
+const updateMetadata = async (docId: string, meta: any) => {
+    try {
+        await $fetch('/api/brevia/index/metadata', {
+            method: 'POST',
+            body: {
+                collection_id: collectionUuid,
+                document_id: docId,
+                metadata: meta,
+            },
+        });
+
+    } catch (err) {
+        console.log(err);
+        error.value = true;
+    }
 }
 </script>
