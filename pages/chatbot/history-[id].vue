@@ -39,7 +39,7 @@
                     :to="collectionName">{{ $t('EXIT') }}</NuxtLink>
 
                 <div class="flex justify-between space-x-4">
-                    <select class="border rounded border-primary bg-white hover:bg-sky-100 text-primary" name="download_format" id="download_format" v-model="downloadFormat">
+                    <select class="border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary" name="download_format" id="download_format" v-model="downloadFormat">
                         <option value="CSV">CSV</option>
                         <option value="XSLX">XSLX</option>
                     </select>
