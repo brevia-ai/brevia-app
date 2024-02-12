@@ -58,197 +58,199 @@
     </main>
 </template>
 
-<script>
+<script lang="ts" setup>
 import { useStatesStore } from '~~/store/states';
 
 const INTERVAL = 15000; // 15 seconds in ms
 
-export default {
-    data() {
-        return {
-            file: null,
-            isBusy: false,
-            result: null,
-            jobId: null,
-            jobData: null,
-            jobName: null,
-            pollingId: null,
-            error: null,
-            isDemo: false,
-            jobsLeft: null,
-            menuItem: {},
-        }
-    },
+const result = ref(null);
+const file = ref(null);
+const isBusy = ref(false);
+const summary = ref(null);
+const jobId = ref(null);
+const jobData = ref(null);
+const jobName = ref('');
+let pollingId: any = null;
+const error = ref('');
+const isDemo = ref(false);
+const jobsLeft= ref('');
+const menuItem = ref();
+const store = useStatesStore();
+const fileDrop = ref(null);
 
-    created() {
-        const store = useStatesStore();
-        const link = this.$route.path;
-        store.userAccess(link);
-        this.menuItem = store.getMenuItem(link);
-        const config = useRuntimeConfig();
-        useHead({ title: `${this.menuItem?.title} | ${config.public.appName}`});
-        this.jobName = this.menuItem?.title?.toLowerCase()?.replace(' ', '-') || 'analysis';
-        const info = store.getJobInfo(this.jobName);
-        this.jobId = info?.id || null;
-        this.file = info?.file || null;
-        this.startPolling();
-        this.isBusy = !!this.jobId;
-        this.isDemo = store.userHasRole('demo');
-        this.updateJobsLeft();
-    },
+const { $createPdf } = useNuxtApp();
 
-    computed: {
-        jobStatus() {
-            if (this.jobData?.completed) {
-                return 'completed';
-            }
-            if (this.jobData?.locked_until) {
-                return 'in progress';
-            }
+onBeforeRouteLeave(() => {
+    stopPolling();
+});
 
-            return 'idle';
-        },
+onBeforeMount(() => {
+    const link = useRoute().path;
+    store.userAccess(link);
+    menuItem.value = store.getMenuItem(link);
+    const config = useRuntimeConfig();
+    useHead({ title: `${menuItem.value?.title} | ${config.public.appName}`});
+    jobName.value = menuItem.value?.title?.toLowerCase()?.replace(' ', '-') || 'analysis';
+    const info = store.getJobInfo(jobName.value);
+    jobId.value = info?.id || null;
+    file.value = info?.file || null;
+    startPolling();
+    isBusy.value = !!jobId.value;
+    isDemo.value = store.userHasRole('demo');
+    updateJobsLeft();
+});
 
-        resetDisabled() {
-            return !this.file || (this.isBusy && !this.pollingId);
-        },
-
-        acceptTypes() {
-            return this.menuItem?.params?.accept || 'application/pdf';
-        },
-
-        elapsedTime() {
-            const dt = Date.parse(this.jobData?.created + 'Z');
-            const now = new Date().getTime();
-            const seconds = Math.round((now - dt) / 1000);
-            if (seconds < 60) {
-                return `${seconds} sec`
-            }
-            const minutes = Math.round((now - dt) / 60000);
-
-            return `${minutes} min`
-        },
-    },
-
-    methods: {
-        reset() {
-            this.file = null;
-            this.result = null;
-            this.error = null;
-            this.isBusy = false;
-            this.clearJob();
-            this.jobData = null;
-            this.$refs.fileDrop.reset();
-        },
-
-        clearJob() {
-            this.jobId = null;
-            useStatesStore().setJobInfo(this.jobName, null);
-            this.stopPolling();
-        },
-
-        startPolling() {
-            if (!this.jobId) {
-                return;
-            }
-            // read first after 1 sec, then every 15 sec
-            setTimeout(() => this.readJobData(), 1000);
-            this.pollingId = setInterval(() => this.readJobData(), INTERVAL);
-        },
-
-        stopPolling() {
-            if (this.pollingId) {
-                clearInterval(this.pollingId);
-            }
-            this.pollingId = null;
-        },
-
-        async updateJobsLeft() {
-            if (!this.isDemo) {
-                return;
-            }
-            const userId = useBeditaAuth().user.value.id;
-            const query = `service=${this.menuItem?.params?.service || ''}&user_id=${userId}`
-            try {
-                const response = await fetch(`/api/brevia/service_usage?${query}`);
-                const data = await response.json();
-                const usage = data?.usage || 0;
-                const left = Math.max(0, parseInt(useRuntimeConfig().public.demo.maxNumAnalysis) - parseInt(usage));
-                this.jobsLeft = String(left);
-            } catch (error) {
-                console.log(error);
-            }
-        },
-
-        async submit() {
-            this.isBusy = true;
-            this.result = null;
-            this.error = null;
-            this.jobId = null;
-            this.jobData = null;
-            let formData = new FormData();
-            let payload = this.menuItem?.params?.payload || {}
-            payload['file_name'] = this.file.name;
-            if (this.isDemo) {
-                payload['user_id'] = useBeditaAuth().user.value.id;
-            }
-            formData.append('service', this.menuItem?.params?.service || '');
-            formData.append('payload', JSON.stringify(payload));
-            formData.append('file', this.file);
-            try {
-                const data = await $fetch('/api/brevia/upload_analyze', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (data.error) {
-                    this.isBusy = false;
-                    this.error = `There has been an error\n${data.error}`;
-                    console.log(data.error);
-                } else {
-                    this.jobId = data.job?.trim() || '';
-                    useStatesStore().setJobInfo(this.jobName, {id: this.jobId, file: {name: this.file?.name}});
-                    this.startPolling();
-                }
-            } catch (error) {
-                this.error = error;
-                console.log(error);
-            }
-        },
-
-        downloadPdf() {
-            const doc = this.$createPdf(this.result?.output || '');
-            let date = new Date().toISOString().split('T')[0];
-            const pdfTitle = `Analysis-${this.file?.name}-${date}.pdf`;
-            doc.save(pdfTitle);
-        },
-
-        async readJobData() {
-            if (!this.jobId) {
-                return;
-            }
-            try {
-                const data = await $fetch(`/api/brevia/jobs/${this.jobId}`);
-                const err = data?.error || data.result?.error || null;
-                if (err) {
-                    this.isBusy = false;
-                    this.error = `There has been an error\n${err}`;
-                    console.log(err);
-                    this.clearJob();
-                } else {
-                    this.jobData = data;
-                    if (this.jobData?.completed) {
-                        this.isBusy = false;
-                        this.result = this.jobData?.result;
-                        this.clearJob();
-                        this.updateJobsLeft();
-                    }
-                }
-            } catch (error) {
-                this.error = error;
-                console.log(error);
-            }
-        },
+const jobStatus = computed(() => {
+    if (jobData.value?.completed) {
+        return 'completed';
     }
-}
+    if (jobData.value?.locked_until) {
+        return 'in progress';
+    }
+
+    return 'idle';
+});
+
+const resetDisabled = computed(() => {
+    return !file.value || (isBusy.value && !pollingId);
+});
+
+const acceptTypes = computed(() => {
+    return menuItem.value?.params?.accept || 'application/pdf';
+});
+
+const elapsedTime = computed(() => {
+    const dt = Date.parse(jobData.value?.created + 'Z');
+    const now = new Date().getTime();
+    const seconds = Math.round((now - dt) / 1000);
+    if (seconds < 60) {
+        return `${seconds} sec`
+    }
+    const minutes = Math.round((now - dt) / 60000);
+
+    return `${minutes} min`
+});
+
+const reset = () => {
+    file.value = null;
+    summary.value = null;
+    error.value = '';
+    isBusy.value = false;
+    jobData.value = null;
+    clearJob();
+    stopPolling();
+    fileDrop.value?.reset();
+};
+
+const clearJob = () => {
+    jobId.value = null;
+    useStatesStore().setJobInfo(jobName.value, null);
+    stopPolling();
+};
+
+const startPolling = () => {
+    if (!jobId.value) {
+        return;
+    }
+            // read first after 1 sec, then every 15 sec
+    setTimeout(() => readJobData(), 1000);
+    pollingId = setInterval(() => readJobData(), INTERVAL);
+};
+
+const stopPolling = () => {
+    if (pollingId) {
+        clearInterval(pollingId);
+    }
+    pollingId = null;
+};
+
+const updateJobsLeft = async () => {
+    if (!isDemo.value) {
+        return;
+    }
+
+    const userId = store.user?.id;
+    const query = `service=${menuItem.value?.params?.service || ''}&user_id=${userId}`
+    try {
+        const response = await fetch(`/api/brevia/service_usage?${query}`);
+        const data = await response.json();
+        const usage = data?.usage || 0;
+        const left = Math.max(0, parseInt(useRuntimeConfig().public.demo.maxNumAnalysis) - parseInt(usage));
+        jobsLeft.value = String(left);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+
+const submit = async () => {
+    result.value = null;
+    isBusy.value = true;
+    error.value = '';
+    jobId.value = null;
+    jobData.value = null;
+    let formData = new FormData();
+    let payload = menuItem.value?.params?.payload || {}
+    payload['file_name'] = file.value?.name;
+    if (isDemo.value) {
+        payload['user_id'] = store.user?.id;
+    }
+    formData.append('service', menuItem.value?.params?.service || '');
+    formData.append('payload', JSON.stringify(payload));
+    formData.append('file', file.value);
+    try {
+        const data = await $fetch('/api/brevia/upload_analyze', {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (data.error) {
+            isBusy.value = false;
+            error.value = `There has been an error\n${data.error}`;
+            console.log(data.error);
+        } else {
+            jobId.value = data.job?.trim() || '';
+            store.setJobInfo(jobName.value, {id: jobId.value, file: {name: file.value?.name}});
+            startPolling();
+        }
+    } catch (error) {
+        error.value = error;
+        console.log(error);
+    }
+};
+
+const downloadPdf = () => {
+    const doc = $createPdf(result.value?.output || '');
+    let date = new Date().toISOString().split('T')[0];
+    const pdfTitle = `Analysis-${file.value?.name}-${date}.pdf`;
+    doc.save(pdfTitle);
+};
+
+
+const readJobData = async () => {
+    if (!jobId.value) {
+        return;
+    }
+    try {
+        const data = await $fetch(`/api/brevia/jobs/${jobId.value}`);
+        const err = data?.error || data.result?.error || null;
+        if (err) {
+            isBusy.value = false;
+            error.value = `There has been an error\n${err}`;
+            console.log(err);
+            clearJob();
+        } else {
+            jobData.value = data;
+            if (jobData.value?.completed) {
+                isBusy.value = false;
+                result.value = jobData.value?.result;
+                clearJob();
+                updateJobsLeft();
+            }
+        }
+    } catch (error) {
+        error.value = error;
+        console.log(error);
+    }
+};
 </script>
