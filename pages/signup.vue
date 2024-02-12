@@ -80,7 +80,7 @@
                 </slot>
                 <div class="pt-2">
                     <button type="submit" class="block w-full sm:max-w-xs mx-auto button text-lg"
-                        @click.prevent.stop="signup"
+                        @click.prevent.stop="userSignup"
                         :disabled="!formIsValid">
                         {{ $t('SIGN_UP') }}
                     </button>
@@ -106,93 +106,79 @@
     </main>
 </template>
 
-<script>
-    import { useStatesStore } from '~~/store/states';
-    import { useReCaptcha } from 'vue-recaptcha-v3';
+<script setup lang="ts">
+import { ApiResponseBodyError } from '@atlasconsulting/bedita-sdk';
 
-    export default {
-        data(){
-            return{
-                firstName: '',
-                lastName: '',
-                userMail: '',
-                userPass: '',
-                confirmPass: '',
-
-                done: false,
-                showPassword: false,
-                displayTerms: false,
-                termsAccepted: false,
-                privacyAccepted: false,
-                loading: false,
-                error: '',
-                recaptchaInstance: useReCaptcha(),
+definePageMeta({
+    middleware: [
+        function () {
+            const { isLogged } = useBeditaAuth();
+            if (isLogged.value) {
+                return navigateTo('/');
             }
         },
-        computed: {
-            formIsValid() {
-                const completed = this.firstName && this.lastName && this.userMail && this.userPass && this.confirmPass && (this.userPass === this.confirmPass);
-                const accepted = this.displayTerms ? this.termsAccepted && this.privacyAccepted : true;
-                return completed && accepted && this.emailIsValid;
-            },
+    ],
+});
 
-            emailIsValid() {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const { t, locale } = useI18n();
+const { signup } = useBeditaSignup();
 
-                return emailRegex.test(this.userMail);
-            },
-        },
+const firstName = ref('');
+const lastName = ref('');
+const userMail = ref('');
+const userPass = ref('');
+const confirmPass = ref('');
+const done = ref(false);
+const showPassword = ref(false);
+const displayTerms = ref(useRuntimeConfig().public?.cookiesPrivacyTerms !== '');
+const termsAccepted = ref(false);
+const privacyAccepted = ref(false);
+const loading = ref(false);
+const error = ref('');
 
-        created() {
-            const statesStore = useStatesStore();
-            this.displayTerms = useRuntimeConfig().public.cookiesPrivacyTerms !== '';
-            if (statesStore.isLogged)
-                navigateTo('/');
-        },
+const formIsValid = computed(() => {
+    const completed = firstName.value && lastName.value && userMail.value && userPass.value && confirmPass.value && (userPass.value == confirmPass.value);
+    const accepted = displayTerms.value ? termsAccepted.value && privacyAccepted.value : true;
+    return completed && accepted && emailIsValid.value;
+});
+const emailIsValid = computed(() => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        methods: {
-            errorMessage(err) {
-                if (err?.error?.code === 'be_user_exists') {
-                    return this.$t('USER_ALREADY_EXISTS');
-                }
+    return emailRegex.test(userMail.value);
+});
 
-                return this.$t('AN_ERROR_OCCURRED');
-            },
-            async signup() {
-                this.error = '';
-                this.loading = true;
-                // Register user
-                try {
-                    // Waiting for recaptcha
-                    await this.recaptchaInstance?.recaptchaLoaded();
-                    const recaptcha = async () => await this.recaptchaInstance?.executeRecaptcha('login');
-                    const recaptcha_token = await recaptcha();
-
-                    const acceptedDate = this.displayTerms? new Date().toISOString().slice(0, 10) : null;
-                    await $fetch('/api/bedita/signup', {
-                        method: 'POST',
-                        body: {
-                            name: this.firstName,
-                            surname: this.lastName,
-                            username: this.userMail,
-                            password: this.userPass,
-                            email: this.userMail,
-                            user_preferences: {
-                                lang: this.$i18n.locale,
-                            },
-                            recaptcha_token,
-                            terms_accepted: acceptedDate,
-                        },
-                    });
-
-                    this.done = true;
-                } catch (error) {
-                    console.error(error.data);
-                    this.error = this.errorMessage(error.data);
-                }
-
-                this.loading = false;
-            },
-        },
+const errorMessage = (err: ApiResponseBodyError) => {
+    if (err?.error?.code === 'be_user_exists') {
+        return t('USER_ALREADY_EXISTS');
     }
+
+    return t('AN_ERROR_OCCURRED');
+};
+
+const userSignup = async () => {
+    error.value = '';
+    loading.value = true;
+    try {
+        const terms_accepted = displayTerms.value ? new Date().toISOString().slice(0, 10) : null;
+        await signup({
+            name: firstName.value,
+            surname: lastName.value,
+            username: userMail.value,
+            password: userPass.value,
+            email: userMail.value,
+            user_preferences: {
+                lang: locale.value,
+            },
+            terms_accepted,
+        });
+
+        done.value = true;
+    } catch (e: any) {
+        console.error(e?.data);
+        error.value = errorMessage(e?.data);
+    }
+
+    loading.value = false;
+};
+
 </script>

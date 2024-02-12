@@ -1,16 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     runtimeConfig: {
-        allowedBeditaEndpoints: [],
         apiSecret: '',
         apiBaseUrl: '',
-        beditaApiBaseUrl: '',
-        beditaApiKey: '',
-        recaptchaSecret: '',
-        session: {
-            secret: '',
-            name: 'Brevia',
-        },
         public: {
             appName: 'BREVIA',
             appDescription: '',
@@ -18,7 +10,6 @@ export default defineNuxtConfig({
                 signupAvailable: '',
             },
             maxUserChatbots: '',
-            recaptchaKey: '',
             cookiesPrivacyTerms: '',
             // demo limits
             demo: {
@@ -40,9 +31,10 @@ export default defineNuxtConfig({
         '@nuxtjs/i18n',
         'nuxt-icon',
         'nuxt-gtag',
+        '@atlasconsulting/nuxt-bedita',
     ],
     build: {
-        transpile: ['tslib', '@vuepic/vue-datepicker']
+        transpile: ['@vuepic/vue-datepicker']
     },
     app: {
         head: {
@@ -57,5 +49,16 @@ export default defineNuxtConfig({
     gtag: {
         id: 'G-XXXXXXXXXX',
         initialConsent: false,
+    },
+    bedita: {
+        recaptcha: {
+            enabled: true,
+            hideBadge: true,
+            useRecaptchaNet: true,
+        },
+        session: {
+            name: 'Brevia',
+            secret: '',
+        },
     },
 })

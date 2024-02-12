@@ -14,26 +14,33 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps({
-    collection: {
-        type: Object,
-        required: true,
-    },
-});
-
 const emit = defineEmits(['file-uploaded']);
 const { $fileName2title } = useNuxtApp();
 
 const inputFile = ref();
 const isLoading = ref(false);
 
+const statesStore = useStatesStore();
+const collection = statesStore.collection;
+
 const upload = async (newFile: File) => {
     isLoading.value = true;
 
+    // add some parameters to be used in Brevia `POST /index/upload`
+    const extra = {
+        brevia: {
+            metadata: {
+                type: 'files',
+                file: newFile?.name
+            },
+            options: collection?.cmetadata?.file_upload_options || null,
+        }
+    };
     const formData = new FormData();
     formData.append('title', $fileName2title(newFile?.name));
     formData.append('file', newFile);
-    formData.append('relatedId', props.collection.cmetadata.id);
+    formData.append('extra', JSON.stringify(extra));
+    formData.append('relatedId', collection?.cmetadata?.id || '');
     formData.append('relatedType', 'collections');
     formData.append('relationName', 'has_documents');
 
