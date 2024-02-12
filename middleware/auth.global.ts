@@ -1,17 +1,7 @@
 import { useStatesStore } from '~~/store/states';
-import { useSession } from 'h3';
-import { getSessionConfig } from '~~/server/utils/session';
 
 export default defineNuxtRouteMiddleware(async (to) => {
-    const statesStore = useStatesStore();
     if (process.server) {
-        const event = useRequestEvent();
-        const session = await useSession(event, getSessionConfig());
-        const userData = session.data?.['bedita.user'];
-        if (userData) {
-            statesStore.userLogin(userData);
-        }
-
         return;
     }
 
@@ -20,7 +10,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
         return;
     }
 
-    if (!statesStore.isLogged) {
+    const statesStore = useStatesStore();
+    const { isLogged } = useBeditaAuth();
+    if (!isLogged.value) {
         statesStore.menu = [];
         return navigateTo('/auth', { redirectCode: 301 });
     }

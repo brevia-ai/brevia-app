@@ -167,7 +167,7 @@ export default {
             if (!this.isDemo) {
                 return;
             }
-            const userId = useStatesStore().user.id;
+            const userId = useBeditaAuth().user.value.id;
             const query = `service=${this.menuItem?.params?.service || ''}&user_id=${userId}`
             try {
                 const response = await fetch(`/api/brevia/service_usage?${query}`);
@@ -190,7 +190,7 @@ export default {
             let payload = this.menuItem?.params?.payload || {}
             payload['file_name'] = this.file.name;
             if (this.isDemo) {
-                payload['user_id'] = useStatesStore().user.id;
+                payload['user_id'] = useBeditaAuth().user.value.id;
             }
             formData.append('service', this.menuItem?.params?.service || '');
             formData.append('payload', JSON.stringify(payload));

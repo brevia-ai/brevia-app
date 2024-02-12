@@ -4,16 +4,17 @@
             :menu="statesStore.menu" :add-enabled="isAddEnabled"
             v-if="statesStore.menu.length" />
 
-        <DashboardWelcome :user="statesStore.user" :add-enabled="isAddEnabled"
-            v-else-if="statesStore.user" />
+        <DashboardWelcome :user="user" :add-enabled="isAddEnabled"
+            v-else-if="isLogged" />
     </main>
 </template>
 
 <script setup>
 import { buildUserMenu } from '~~/utils/user-data-store';
 const config = useRuntimeConfig();
-useHead({ title: config.public.appName, });
+useHead({ title: config.public.appName });
 
+const { user, isLogged } = useBeditaAuth();
 const modalStore = useModalStore();
 const statesStore = useStatesStore();
 

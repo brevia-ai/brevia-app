@@ -1,5 +1,5 @@
-import { UserDataStore } from './../utils/user-data-store';
 import { defineStore } from 'pinia';
+import { UserDataStore } from '@atlasconsulting/nuxt-bedita';
 
 export enum ItemEditLevel {
     ReadWrite = 'READ_WRITE',
@@ -18,24 +18,12 @@ export interface menuItem {
 
 export const useStatesStore = defineStore('states', {
     state: () => ({
-        isLogged: false,
         user: null as UserDataStore | null,
         menu: [] as menuItem[],
         collection: null as object | null,
     }),
 
     actions: {
-        userLogin(user: UserDataStore) {
-            this.isLogged = true;
-            this.user = user;
-        },
-
-        userLogout() {
-            this.isLogged = false;
-            this.user = null;
-            this.menu = [];
-        },
-
         /**
          * Verify if user has access to internal link, redirect to `/` if not
          */
@@ -51,10 +39,6 @@ export const useStatesStore = defineStore('states', {
 
         getMenuItem(link: string) {
             return this.menu.find(m => m.link === link);
-        },
-
-        setIsLogged(value = true) {
-            this.isLogged = value;
         },
 
         getJobInfo(name: string) {
@@ -75,7 +59,8 @@ export const useStatesStore = defineStore('states', {
         },
 
         userHasRole(name: string) {
-            return !!this.user?.roles?.find(r => r === name);
+            const { user } = useBeditaAuth();
+            return !!(user.value as UserDataStore)?.roles?.find(r => r === name);
         },
     },
 });
