@@ -237,7 +237,8 @@ const submit = async () => {
 
 const summaryPrompt = () => {
     const prompts = menuItem.value?.params?.payload?.prompts || {};
-    const summPrompt = prompts?.[summaryType.value] || null;
+    const originalPrompt = prompts?.[summaryType.value] || null;
+    const summPrompt = { ...originalPrompt };
     if (summPrompt.template) {
         const lang = summaryLanguage.value || 'the same language of the text';
         summPrompt.template = summPrompt.template.replace('%lang%', lang);
