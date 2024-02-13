@@ -236,7 +236,8 @@ export default {
 
         summaryPrompt() {
             const prompts = this.menuItem?.params?.payload?.prompts || {};
-            const summPrompt = prompts?.[this.summaryType] || null;
+            const originalPrompt = prompts?.[this.summaryType] || null;
+            const summPrompt = { ...originalPrompt };
             if (summPrompt.template) {
                 const lang = this.summaryLanguage || 'the same language of the text';
                 summPrompt.template = summPrompt.template.replace('%lang%', lang);
