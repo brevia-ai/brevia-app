@@ -38,9 +38,15 @@
                 <NuxtLink class="button button-secondary uppercase"
                     :to="collectionName">{{ $t('EXIT') }}</NuxtLink>
 
-                <button type="submit" class="button button-primary uppercase" @click="downloadCsv">
-                    {{ $t('Download') }}
-                </button>
+                <div class="flex justify-between space-x-4">
+                    <select class="border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary" name="download_format" id="download_format" v-model="downloadFormat">
+                        <option value="CSV">CSV</option>
+                        <option value="XSLX">XSLX</option>
+                    </select>
+                    <button type="submit" class="button button-primary uppercase" @click="downloadHistory">
+                        {{ $t('Download') }}
+                    </button>
+                </div>
             </div>
         </div>
     </main>
@@ -50,6 +56,7 @@
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
+import { utils, writeFile } from 'xlsx';
 
 const config = useRuntimeConfig();
 useHead({ title: `Chat history | ${config.public.appName}`});
@@ -60,6 +67,7 @@ const priorDate = new Date();
 priorDate.setDate(today.getDate() - 30)
 const startDate = ref($formatDate(priorDate));
 const endDate = ref($formatDate(today));
+const downloadFormat = ref('CSV');
 
 const isBusy = ref(false);
 
@@ -86,6 +94,14 @@ const csvKeys = [
     'chat_source',
 ];
 
+const downloadHistory = async () => {
+    if (downloadFormat.value === 'CSV') {
+        await downloadCsv();
+    } else {
+        await downloadXslx();
+    }
+}
+
 const downloadCsv = async () => {
     isBusy.value = true;
     const items = await loadHistoryItems();
@@ -94,6 +110,18 @@ const downloadCsv = async () => {
     const csvConfig = mkConfig({columnHeaders: csvKeys, filename: fileName});
     const csv = generateCsv(csvConfig)(items);
     download(csvConfig)(csv);
+    isBusy.value = false;
+}
+
+const downloadXslx = async () => {
+    isBusy.value = true;
+    const items = await loadHistoryItems();
+    const fileName = `chat-history-${collectionName}-${startDate.value}-${endDate.value}`;
+
+    const worksheet = utils.json_to_sheet(items);
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, "Chat History");
+    writeFile(workbook, `${fileName}.xlsx`, { compression: true });
     isBusy.value = false;
 }
 

@@ -15,7 +15,7 @@
             v-for="(lang, i) in availableLocales" :key="i"
             @click="setLocale(lang as string)">{{ lang }}</button>
 
-        <button class="h-10 px-4  button border-none text-sm uppercase" v-if="stateStore.isLogged">
+        <button class="h-10 px-4  button border-none text-sm uppercase" v-if="isLogged">
             <NuxtLink to="/profile">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path
@@ -28,7 +28,7 @@
         </button>
 
         <button class="h-10 px-4 sm:px-8 button text-sm leading-none bg-slate-900 hover:bg-danger hover:border-pink-800"
-            @click="logout" v-if="stateStore.isLogged">
+            @click="onLogout" v-if="isLogged">
             <div class="sm:hidden">
                 <Icon name="ph:sign-out-bold" class="text-lg" />
             </div>
@@ -38,25 +38,24 @@
         <NuxtLink class="w-12 h-10 button border-none" to="/" v-if="$route.name === 'about'">
             <Icon name="ph:house-simple-bold" class="text-lg" />
         </NuxtLink>
-        <NuxtLink class="w-12 h-10 button font-bold text-lg" to="/about" v-else-if="!stateStore.isLogged">?</NuxtLink>
+        <NuxtLink class="w-12 h-10 button font-bold text-lg" to="/about" v-else-if="!isLogged">?</NuxtLink>
     </div>
 </header>
 </template>
 
 <script setup lang="ts">
-import { useStatesStore } from '~~/store/states';
-
 const config = useRuntimeConfig();
 const { locale, locales, setLocale } = useI18n();
-const stateStore = useStatesStore();
+const { isLogged, logout } = useBeditaAuth();
+const statesStore = useStatesStore();
 
 const availableLocales = computed(() => {
     return (locales.value as Array<String>).filter(lang => lang !== locale.value);
 });
 
-async function logout() {
-    await $fetch('/api/bedita/auth/logout');
-    stateStore.userLogout();
+async function onLogout() {
+    await logout();
+    statesStore.menu = [];
     navigateTo('/auth');
 }
 </script>

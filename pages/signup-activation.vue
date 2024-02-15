@@ -22,12 +22,8 @@
     </main>
 </template>
 
-<script setup>
-const route = useRoute();
-const { pending: loading, error } = await useFetch('api/bedita/signup/activation',{
-    method:'POST',
-    body: {
-        uuid: route.query?.uuid,
-    },
-});
+<script setup lang="ts">
+const { signupActivation } = useBeditaSignup();
+
+const { pending: loading, error } = await signupActivation();
 </script>
