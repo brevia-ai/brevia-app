@@ -11,7 +11,6 @@ export interface UserDataStore {
 
 export const userEditLevel = (item: any): ItemEditLevel => {
     const { user } = useBeditaAuth()
-    console.log('item', item);
     const relationEditLevel = item?.meta?.relation?.params?.edit_level || null;
     if (relationEditLevel == 'read_write') {
         return ItemEditLevel.ReadWrite;
