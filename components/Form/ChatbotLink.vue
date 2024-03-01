@@ -66,17 +66,40 @@ const save = async () => {
     isSaving.value = true;
     if (props.item.id) {
         await update();
-        emit('close', true);
     } else {
-        console.log('create');
         await create();
+    }
+    if (!error.value) {
         emit('close', true);
     }
     isSaving.value = false;
 }
 
+const checkUrl = async () => {
+    if (!url.value) {
+        return false;
+    }
+    const regex = new RegExp('^(http|https)://', 'i');
+    if (!regex.test(url.value)) {
+        url.value = 'http://' + url.value;
+    }
+    let result = false;
+    try {
+        const response = await fetch(url.value);
+        result = response.status == 200;
+    } catch (err) {
+        console.log(err);
+    }
+
+    return result;
+}
+
 const create = async () => {
     try {
+        if (!await checkUrl()) {
+            error.value = true;
+            return;
+        }
         const data = await $fetch('/api/bedita/link', {
             method: 'POST',
             body: {
@@ -105,6 +128,10 @@ const create = async () => {
 
 const update = async () => {
     try {
+        if (!await checkUrl()) {
+            error.value = true;
+            return;
+        }
         // read current metadata first
         const meta = await readMetadata(String(props.item?.id));
         await $fetch('/api/bedita/link', {
