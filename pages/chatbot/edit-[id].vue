@@ -9,17 +9,20 @@
         </div>
 
         <div class="space-y-8">
-            <UIXTabs :tabs="[t('OVERVIEW'), t('FILES'), 'Q & A']">
+            <UIXTabs :tabs="[t('OVERVIEW'), t('FILES'), 'Q & A', t('LINKS')]">
                 <template #0>
-                    <FormChatbot :collection="collection"
+                    <FormChatbot
                         @save-title="collection.cmetadata.title = $event"
                         @save-descriprion="collection.cmetadata.description = $event" />
                 </template>
                 <template #1>
-                    <ElementChatbotFiles :collection="collection" />
+                    <ElementChatbotFiles/>
                 </template>
                 <template #2>
-                    <ElementChatbotQuestions :collection="collection" />
+                    <ElementChatbotQuestions/>
+                </template>
+                <template #3>
+                    <ElementChatbotLinks/>
                 </template>
             </UIXTabs>
         </div>
@@ -43,4 +46,8 @@ if (!collection.value?.uuid) {
         fatal: true
     });
 }
+
+const statesStore = useStatesStore();
+statesStore.collection = collection.value;
+
 </script>
