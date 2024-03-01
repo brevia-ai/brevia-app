@@ -85,8 +85,13 @@ const checkUrl = async () => {
     }
     let result = false;
     try {
-        const response = await fetch(url.value);
-        result = response.status == 200;
+        const response = await $fetch('/api/check_link', {
+            method: 'POST',
+            body: {
+                url: url.value,
+            },
+        });
+        result = !!(response && !response?.error);
     } catch (err) {
         console.log(err);
     }
