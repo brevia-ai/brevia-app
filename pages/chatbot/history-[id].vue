@@ -16,7 +16,9 @@
                         text-input position="center"
                         model-type="yyyy-MM-dd"
                         :max-date="new Date()"
-                        :format="$formatDate">
+                        :format="$formatDate"
+                        @update:model-value="showHistory"
+                        >
                     </VueDatePicker>
                 </div>
                 <div>
@@ -29,7 +31,9 @@
                         text-input position="center"
                         model-type="yyyy-MM-dd"
                         :max-date="new Date()"
-                        :format="$formatDate">
+                        :format="$formatDate"
+                        @update:model-value="showHistory"
+                        >
                     </VueDatePicker>
                 </div>
             </div>
@@ -50,7 +54,7 @@
             </div>
             <div class="flex flex-col space-y-3">
                 <div class="flex justify-between border-b border-slate-300">
-                    <span>Anteprima delle chat</span>
+                    <span>{{ $t('CHAT_HISTORY_PREVIEW') }}</span>
                     <div id="customSelect" class="w-80 px-1 border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary  hover:cursor-default">
                         <div class="flex flex-row justify-between" @click="openSelect = !openSelect">
                             <span>{{ selectedChat.title }}</span>
@@ -153,15 +157,7 @@ const csvKeys = [
     'chat_source',
 ];
 
-onBeforeMount(async() => {
-    historyItems.value = await loadHistoryList();
-    let firstChat = historyItems.value[0].sessionId;
-    selectedChat.value = {
-        title: historyItems.value[0].sessionTitle,
-        id: historyItems.value[0].sessionId
-    };
-    loadChat(firstChat);
-})
+onBeforeMount(async() => showHistory());
 
 const formatDialogItem = (who: string, message: string, evaluation = null, uuid = '', error = false): DialogItem => {
     return {
@@ -204,8 +200,20 @@ const downloadXslx = async () => {
     isBusy.value = false;
 }
 
+const showHistory = async () => {
+    historyItems.value = await loadHistoryList();
+    console.log(historyItems.value);
+    let firstChat = historyItems.value[0].sessionId;
+    selectedChat.value = {
+        title: historyItems.value[0].sessionTitle,
+        id: historyItems.value[0].sessionId
+    };
+    loadChat(firstChat);
+}
+
 const loadHistoryList = async () => {
     const items = await loadHistoryItems();
+    console.log("Items",items);
     items.sort((a:any, b:any) => {return +new Date(b.created) - +new Date(a.created);}).reverse();
     const sessions: any[] = [];
     for (let i in items) {
