@@ -53,6 +53,7 @@ const statesStore = useStatesStore();
 const collectionBeditaId = statesStore.collection?.cmetadata?.id || '';
 const collectionUuid = statesStore.collection?.uuid || '';
 const metadataDefaults = statesStore.collection?.cmetadata?.metadata_defaults?.links || {};
+const linkLoadOptions = statesStore.collection?.cmetadata?.link_load_options || {};
 
 // methods
 const cancel = () => {
@@ -116,9 +117,10 @@ const create = async () => {
                         brevia: {
                             metadata: {
                                 type: 'links'
-                            }
-                        }
-                    }
+                            },
+                            options: linkOptions(url.value),
+                        },
+                    },
                 },
             },
         });
@@ -155,6 +157,17 @@ const update = async () => {
     } catch (err) {
         error.value = true;
     }
+}
+
+const linkOptions = (url: string) => {
+    let options = null;
+    const loadOptions = Object.keys(linkLoadOptions);
+    loadOptions.forEach(key => {
+        if (url.startsWith(key)) {
+            options = linkLoadOptions[key];
+        }
+    })
+    return options;
 }
 
 const deleteLink = async () => {
