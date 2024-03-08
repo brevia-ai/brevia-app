@@ -16,6 +16,7 @@ export default defineNuxtConfig({
                 maxChatMessages: '30', // max chatbot msg number per day
                 maxChatFiles: '3', // max number of files per Chatbot
                 maxChatQuestions: '20', // max number of Q&A per Chatbot
+                maxChatLinks: '5', // max number of links per Chatbot
                 maxFileSize: '5', // max file size in MB
                 maxNumAnalysis: '5', // max num analysis per day
             },

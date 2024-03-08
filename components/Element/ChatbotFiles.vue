@@ -23,15 +23,9 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps({
-    collection: {
-        type: Object,
-        required: true,
-    },
-});
 const isLoading = ref(true);
 const statesStore = useStatesStore();
-statesStore.collection = props.collection;
+const collection = statesStore.collection;
 
 const isDemo = statesStore.userHasRole('demo');
 const isUploadAllowed = ref(false);
@@ -45,7 +39,7 @@ function checkUploadAllowed(newFiles: any) {
     return parseInt(useRuntimeConfig().public.demo.maxChatFiles) > num;
 }
 
-const endpoint = `/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=files&sort=-created`;
+const endpoint = `/api/bedita/collections/${collection?.cmetadata?.id}/has_documents?filter[type]=files&sort=-created`;
 const { data: files } = await useApiGetAll(endpoint);
 isLoading.value = false;
 isUploadAllowed.value = checkUploadAllowed(files);

@@ -29,14 +29,14 @@
         </div>
     </div>
 
-    <FormChatbotQuestion :collection-id="collection.cmetadata.id" @close="closeForm" v-else />
+    <FormChatbotQuestion :collection-id="collection?.cmetadata.id" @close="closeForm" v-else />
     <!-- existing -->
     <div class="-my-6 ellipsis-loading text-sky-700"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
     <div class="questions space-y-6" v-else-if="questions?.formattedData.data.length">
         <div id="questions" v-for="item in questions.formattedData.data" :key="item.id">
             <div class="question" v-if="showThis(item)">
-                <ElementChatbotQuestionItem :item="item" :collection-id="collection.cmetadata.id" :search-term="searchTerm(searchInput)" @close="closeForm" />
+                <ElementChatbotQuestionItem :item="item" :collection-id="collection?.cmetadata.id" :search-term="searchTerm(searchInput)" @close="closeForm" />
             </div>
         </div>
     </div>
@@ -44,25 +44,18 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps({
-    collection: {
-        type: Object,
-        required: true,
-    },
-});
-
 const MIN_SEARCH_LENGTH = 3;
 
 const addMode = ref(false);
 const isLoading = ref(true);
 const statesStore = useStatesStore();
-statesStore.collection = props.collection;
+const collection = statesStore.collection;
 
 const isDemo = statesStore.userHasRole('demo');
 const isQuestionAddAllowed = ref(false);
 const searchInput = ref('');
 
-const endpoint = `/api/bedita/collections/${props.collection.cmetadata.id}/has_documents?filter[type]=questions&sort=-created`;
+const endpoint = `/api/bedita/collections/${collection?.cmetadata?.id}/has_documents?filter[type]=questions&sort=-created`;
 const { data: questions } = await useApiGetAll(endpoint);
 isLoading.value = false;
 isQuestionAddAllowed.value = checkAddAllowed(questions);

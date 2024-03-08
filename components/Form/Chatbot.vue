@@ -35,10 +35,6 @@
 
 <script lang="ts" setup>
 const props = defineProps({
-    collection: {
-        type: Object,
-        default: null,
-    },
     isModal: {
         type: Boolean,
         default: false,
@@ -47,15 +43,16 @@ const props = defineProps({
 
 const { $closeModal, $html2text } = useNuxtApp();
 const statesStore = useStatesStore();
+const collection = statesStore.collection;
 
 const error = ref(false);
 const isLoading = ref(false);
 const title = ref('');
 const description = ref('');
 
-if (props.collection) {
-    title.value = props.collection.cmetadata?.title || '';
-    description.value = $html2text(props.collection.cmetadata?.description);
+if (collection) {
+    title.value = collection.cmetadata?.title || '';
+    description.value = $html2text(collection.cmetadata?.description);
 }
 
 const emit = defineEmits(['saveTitle', 'saveDescription']);
@@ -66,7 +63,7 @@ const save = async () => {
         return;
 
     isLoading.value = true;
-    if (props.collection) {
+    if (collection) {
         await update();
         emit('saveTitle', title.value);
         emit('saveDescription', description.value);
@@ -107,7 +104,7 @@ const update = async () => {
         await $fetch('/api/bedita/collection', {
             method: 'PATCH',
             body: {
-                id: String(props.collection.cmetadata?.id),
+                id: String(collection?.cmetadata?.id),
                 attributes: {
                     title: title.value,
                     description: description.value,
@@ -117,7 +114,7 @@ const update = async () => {
 
         // update menu
         const newMenu = statesStore.menu.map((item: any) => {
-            if (item.type === 'chatbot' && item.link === `/chatbot/${props.collection.name}`) {
+            if (item.type === 'chatbot' && item.link === `/chatbot/${collection?.name}`) {
                 item.title = title.value;
                 item.description = description.value;
             }
