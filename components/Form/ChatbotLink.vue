@@ -6,6 +6,7 @@
         v-model.trim="url"
         @keydown.enter.stop.prevent="save"
         autofocus
+        :readonly="item.id"
         required />
 
     <div class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary" v-if="error">
@@ -20,11 +21,9 @@
 
         <button class="button button-secondary uppercase" @click.prevent="cancel">{{ $t('CANCEL') }}</button>
 
-        <button type="submit" class="px-8 button button-primary uppercase"
+        <button v-if="!item.id" type="submit" class="px-8 button button-primary uppercase"
             :class="{ 'is-loading': isSaving }"
-            :disabled="!url">
-                <template v-if="item.id">{{ $t('SAVE') }}</template>
-                <template v-else>{{ $t('ADD') }}</template>
+            :disabled="!url">{{ $t('ADD') }}
         </button>
     </div>
 </form>
@@ -116,7 +115,8 @@ const create = async () => {
                     extra: {
                         brevia: {
                             metadata: {
-                                type: 'links'
+                                type: 'links',
+                                url: url.value,
                             },
                             options: linkOptions(url.value),
                         },
