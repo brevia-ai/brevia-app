@@ -13,6 +13,7 @@
         :placeholder="placeholder"
         :required="required"
         :value="modelValue"
+        :readonly="readonly"
         @input="handleInput"
         @change="handleChange"
         ref="input">
@@ -58,6 +59,10 @@ const props = defineProps({
         default: false,
     },
     autofocus: {
+        type: Boolean,
+        default: false,
+    },
+    readonly: {
         type: Boolean,
         default: false,
     },
