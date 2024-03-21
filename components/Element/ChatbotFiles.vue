@@ -15,9 +15,7 @@
 
     <div class="flex flex-col space-y-2.5" v-else-if="files?.formattedData.data.length">
         <ElementChatbotFileItem
-            v-for="item in files.formattedData.data" :key="item.id"
-            :item="item"
-            @file-deleted="reloadFiles" />
+            v-for="item in files.formattedData.data" :key="item.id" :item="item" :indexed="checkIndexed(item.id)"  @file-deleted="reloadFiles" />
     </div>
 </div>
 </template>
@@ -25,7 +23,7 @@
 <script lang="ts" setup>
 const isLoading = ref(true);
 const statesStore = useStatesStore();
-const collection = statesStore.collection;
+const collection = <any>statesStore.collection;
 
 const isDemo = statesStore.userHasRole('demo');
 const isUploadAllowed = ref(false);
@@ -41,6 +39,7 @@ function checkUploadAllowed(newFiles: any) {
 
 const endpoint = `/api/bedita/collections/${collection?.cmetadata?.id}/has_documents?filter[type]=files&sort=-created`;
 const { data: files } = await useApiGetAll(endpoint);
+const indexedItems = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=files`);
 isLoading.value = false;
 isUploadAllowed.value = checkUploadAllowed(files);
 
@@ -48,6 +47,13 @@ const reloadFiles = async () => {
     isLoading.value = true;
     await useApiGetAll(endpoint);
     isLoading.value = false;
+}
+
+const checkIndexed = (id: string | undefined) => {
+    if(indexedItems.filter((element :any) => element.custom_id == id ).length == 0){
+        return false;
+    }
+    return true;
 }
 
 watch(files, (newFiles) => {

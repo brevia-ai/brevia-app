@@ -1,6 +1,7 @@
 <template>
 <div class="pl-3.5 pr-2.5 py-2.5 flex justify-between items-center space-x-4
-    bg-gradient-to-br from-slate-700 to-slate-950 text-white hover:text-sky-400 rounded cursor-pointer"
+    text-white hover:text-sky-400 rounded cursor-pointer"
+    :class="(indexed)?'bg-gradient-to-br from-slate-700 to-slate-950':'bg-gradient-to-br from-red-700 to-slate-950'"
     @click.stop="download">
 
     <div class="flex space-x-3.5 items-center">
@@ -15,7 +16,7 @@
     </div>
 
     <div class="space-x-1 whitespace-nowrap">
-        <button class="mr-auto button button-secondary button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
+        <button v-if="indexed" class="mr-auto button button-secondary button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
             @click.stop.prevent="$openModal('DialogEditMetadata', {document: item})">
             <Icon name="ph:code-bold" class="text-xl" />
         </button>
@@ -40,6 +41,7 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    indexed: Boolean
 });
 
 const emit = defineEmits(['file-deleted']);
