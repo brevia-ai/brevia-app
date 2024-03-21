@@ -31,7 +31,7 @@
                                 <p class="text-xs">{{ item.who }}</p>
                                 <div class="chat-balloon-status" :class="{'busy': isBusy && i === dialog.length - 1}"></div>
                             </div>
-                            <p>{{ item.message }} &nbsp;</p>
+                            <p class="whitespace-break-spaces">{{ item.message }} &nbsp;</p>
                         </div>
 
                     </div>
