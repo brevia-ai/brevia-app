@@ -20,6 +20,7 @@
     "CANCEL": "Cancel",
     "CATEGORIZE_CONTENT": "Categorize content",
     "CHANGE_PASSWORD": "Change password",
+    "CHAT_HISTORY_EMPTY": "There are no chats in the selected date range",
     "CHAT_HISTORY_PREVIEW": "Chat history preview",
     "CHATBOT_HISTORY": "Chatbot messages history",
     "CHECKING": "Checking",
