@@ -20,7 +20,7 @@
     <div class="links space-y-6" v-else-if="links?.formattedData.data.length">
         <div id="links" v-for="item in links.formattedData.data" :key="item.id">
             <div class="link" >
-                <ElementChatbotLinkItem :item="item" :collection-id="collection?.cmetadata.id" @close="closeForm" />
+                <ElementChatbotLinkItem :item="item" :collection-id="collection?.cmetadata.id" :indexed="checkindexed(item.id)" @close="closeForm" />
             </div>
         </div>
     </div>
@@ -31,13 +31,14 @@
 const addMode = ref(false);
 const isLoading = ref(true);
 const statesStore = useStatesStore();
-const collection = statesStore.collection;
+const collection = <any>statesStore.collection;
 
 const isDemo = statesStore.userHasRole('demo');
 const isLinkAddAllowed = ref(false);
 
 const endpoint = `/api/bedita/links?filter[document_of]=${collection?.cmetadata?.id}&sort=-created`;
 const { data: links } = await useApiGetAll(endpoint);
+const indexedItems = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=links`);
 isLoading.value = false;
 isLinkAddAllowed.value = checkAddAllowed(links);
 
@@ -51,6 +52,12 @@ const closeForm = async (e: boolean) => {
     addMode.value = false;
 }
 
+const checkindexed = (id: string | undefined) => {
+    if(indexedItems.filter((element :any) => element.custom_id == id ).length == 0){
+        return false;
+    }
+    return true;
+}
 
 watch(links, (newLinks) => {
     isLinkAddAllowed.value = checkAddAllowed(newLinks);
