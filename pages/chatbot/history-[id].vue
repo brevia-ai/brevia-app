@@ -47,12 +47,12 @@
                         <option value="CSV">CSV</option>
                         <option value="XSLX">XSLX</option>
                     </select>
-                    <button type="submit" class="button button-primary uppercase" @click="downloadHistory" :disabled="dialog.length === 0">
+                    <button type="submit" class="button button-primary uppercase" @click="downloadHistory" :disabled="historyItems.length === 0">
                         {{ $t('Download') }}
                     </button>
                 </div>
             </div>
-            <div v-if="!loadingChats && dialog.length === 0" class="flex flex-col space-y-3">
+            <div v-if="!loadingChats && historyItems.length === 0" class="flex flex-col space-y-3">
                 <span>{{ $t('CHAT_HISTORY_EMPTY') }}</span>
             </div>
             <div v-else class="flex flex-col space-y-3">
@@ -205,14 +205,13 @@ const downloadXslx = async () => {
 
 const showHistory = async () => {
     historyItems.value = await loadHistoryList();
-    const firstChat = historyItems.value?.[0]?.sessionId;
-    if (!firstChat) {
-        dialog.value = [];
+    if (historyItems.value.length === 0) {
         return;
     }
+    const firstChat = historyItems.value[0]?.sessionId;
     selectedChat.value = {
-        title: historyItems.value[0].sessionTitle,
-        id: historyItems.value[0].sessionId
+        title: historyItems.value[0]?.sessionTitle,
+        id: historyItems.value[0]?.sessionId
     };
     loadChat(firstChat);
 }
