@@ -235,7 +235,7 @@ const loadHistoryList = async () => {
 const loadChat = async(id:any) => {
         try {
             loadingChats.value = true;
-            const data:any = await $fetch('/api/brevia/chat_history?session_id='+id+'&collection=enpacl-assistant');
+            const data:any = await $fetch(`/api/brevia/chat_history?session_id=${id}&collection=${collectionName}`);
             let loadedDialog:DialogItem[] = []
             for(let i=data.data.length-1; i>=0; i--) {
                 loadedDialog.push(formatDialogItem('TU', data.data[i].question, data.data[i].user_evaluation, data.data[i].uuid));
