@@ -1,7 +1,12 @@
 <template>
 <div class="pl-3.5 pr-2.5 py-2.5 flex justify-between items-center space-x-4
     text-white hover:text-sky-400 rounded cursor-pointer"
-    :class="(indexed)?'bg-gradient-to-br from-slate-700 to-slate-950':'bg-gradient-to-br from-red-700 to-slate-950'"
+    :class="{
+        'bg-gradient-to-br from-slate-700 to-slate-950':!isPolling && isIndexed,
+        'bg-gradient-to-br from-red-700 to-slate-950':!isPolling && ! isIndexed,
+        'animate-pulse bg-gradient-to-br from-slate-700 to-slate-950 opacity-75':isPolling,
+
+        }"
     @click.stop="download">
 
     <div class="flex space-x-3.5 items-center">
@@ -16,7 +21,7 @@
     </div>
 
     <div class="space-x-1 whitespace-nowrap">
-        <button v-if="indexed" class="mr-auto button button-secondary button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
+        <button v-if="isIndexed" class="mr-auto button button-secondary button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
             @click.stop.prevent="$openModal('DialogEditMetadata', {document: item})">
             <Icon name="ph:code-bold" class="text-xl" />
         </button>
@@ -36,17 +41,66 @@
 </template>
 
 <script lang="ts" setup>
+
+//TIME LIMIT FOR POLLING ITEMS 1 MONTH AGO
+const OLDEST_CREATED = new Date(new Date().setMonth(new Date().getMonth() - 1));
+const MAX_POLLING_TIME = 300000 //5 min
+const INTERVAL = 10000 //10 sec
+
 const props = defineProps({
     item: {
         type: Object,
         required: true,
     },
-    indexed: Boolean
+    indexed: Boolean,
 });
 
 const emit = defineEmits(['file-deleted']);
 
+const statesStore = useStatesStore();
+const collection = <any>statesStore.collection;
 const isDeleting = ref(false);
+const isPolling = ref(true);
+const isIndexed = ref(props.indexed);
+let intervalId: any = null;
+
+onMounted(() => {
+    console.log(collection);
+    console.log(new Date(props.item.meta.created) > OLDEST_CREATED);
+    (props.indexed)
+    ? isPolling.value = false
+    : startPolling();
+})
+
+const startPolling = () => {
+    //First indexing after 1 second
+    setTimeout(() => indexFile(props.item.id), 1000);
+    let startTime = new Date().getTime();
+    //Continuous indexing for 5 minutes, every 10 seconds
+    intervalId = setInterval(() => {
+        if(new Date().getTime() - startTime > MAX_POLLING_TIME) {
+            clearInterval(intervalId);
+            isPolling.value = false;
+            return;
+        }
+        indexFile(props.item.id);
+    }, INTERVAL);
+}
+
+const indexFile = async(id: String) => {
+    try{
+        console.log('polling', id);
+        let data = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=files&filter[document_id]=${props.item?.id}`);
+        if(data.length > 0) {
+            isPolling.value = false;
+            isIndexed.value = true;
+            clearInterval(intervalId);
+            return
+        }
+    } catch(err) {
+        console.error(err)
+    }
+}
 
 const deleteFile = async () => {
     isDeleting.value = true;
