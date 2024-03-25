@@ -65,8 +65,6 @@ const isIndexed = ref(props.indexed);
 let intervalId: any = null;
 
 onMounted(() => {
-    console.log(collection);
-    console.log(new Date(props.item.meta.created) > OLDEST_CREATED);
     (props.indexed)
     ? isPolling.value = false
     : startPolling();
@@ -89,7 +87,6 @@ const startPolling = () => {
 
 const indexFile = async(id: String) => {
     try{
-        console.log('polling', id);
         let data = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=files&filter[document_id]=${props.item?.id}`);
         if(data.length > 0) {
             isPolling.value = false;
