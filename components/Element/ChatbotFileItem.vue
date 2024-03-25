@@ -43,8 +43,8 @@
 <script lang="ts" setup>
 
 //TIME LIMIT FOR POLLING ITEMS 1 MONTH AGO
-const OLDEST_CREATED = new Date(new Date().setMonth(new Date().getMonth() - 1));
-const MAX_POLLING_TIME = 300000 //5 min
+const OLDEST_CREATED = new Date(new Date().setDate(new Date().getDate() - 1));
+const MAX_POLLING_TIME = 180000 //5 min
 const INTERVAL = 10000 //10 sec
 
 const props = defineProps({
@@ -76,7 +76,7 @@ const startPolling = () => {
     //First indexing after 1 second
     setTimeout(() => indexFile(props.item.id), 1000);
     let startTime = new Date().getTime();
-    //Continuous indexing for 5 minutes, every 10 seconds
+    //Continuous indexing for 3 minutes, every 10 seconds
     intervalId = setInterval(() => {
         if(new Date().getTime() - startTime > MAX_POLLING_TIME) {
             clearInterval(intervalId);
