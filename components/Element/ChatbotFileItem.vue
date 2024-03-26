@@ -67,8 +67,13 @@ let intervalId: any = null;
 onMounted(() => {
     (props.indexed)
     ? isPolling.value = false
-    : startPolling();
+    : (props.item.meta.created > OLDEST_CREATED) ? startPolling() : isPolling.value = false
 })
+
+onBeforeUnmount(() => {
+    //Stopping polling when leaving files section
+    clearInterval(intervalId);
+});
 
 const startPolling = () => {
     //First indexing after 1 second
