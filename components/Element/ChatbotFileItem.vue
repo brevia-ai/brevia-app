@@ -67,7 +67,7 @@ let intervalId: any = null;
 onMounted(() => {
     (props.indexed)
     ? isPolling.value = false
-    : (props.item.meta.created > OLDEST_CREATED) ? startPolling() : isPolling.value = false
+    : (new Date(props.item.meta.created) > OLDEST_CREATED) ? startPolling() : isPolling.value = false
 })
 
 onBeforeUnmount(() => {
@@ -92,7 +92,7 @@ const startPolling = () => {
 
 const indexFile = async(id: String) => {
     try{
-        let data = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=files&filter[document_id]=${props.item?.id}`);
+        let data = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?document_id=${props.item?.id}`);
         if(data.length > 0) {
             isPolling.value = false;
             isIndexed.value = true;
