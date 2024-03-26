@@ -42,7 +42,7 @@
 
 <script lang="ts" setup>
 
-//TIME LIMIT FOR POLLING ITEMS 1 MONTH AGO
+//TIME LIMIT FOR POLLING ITEMS 1 DAY AGO
 const OLDEST_CREATED = new Date(new Date().setDate(new Date().getDate() - 1));
 const MAX_POLLING_TIME = 180000 //5 min
 const INTERVAL = 10000 //10 sec
@@ -77,7 +77,7 @@ onBeforeUnmount(() => {
 
 const startPolling = () => {
     //First indexing after 1 second
-    setTimeout(() => indexFile(props.item.id), 1000);
+    setTimeout(() => checkFileIndex(), 1000);
     let startTime = new Date().getTime();
     //Continuous indexing for 3 minutes, every 10 seconds
     intervalId = setInterval(() => {
@@ -86,11 +86,11 @@ const startPolling = () => {
             isPolling.value = false;
             return;
         }
-        indexFile(props.item.id);
+        checkFileIndex();
     }, INTERVAL);
 }
 
-const indexFile = async(id: String) => {
+const checkFileIndex = async() => {
     try{
         let data = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?document_id=${props.item?.id}`);
         if(data.length > 0) {
