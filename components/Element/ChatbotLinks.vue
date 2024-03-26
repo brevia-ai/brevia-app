@@ -38,7 +38,8 @@ const isLinkAddAllowed = ref(false);
 
 const endpoint = `/api/bedita/links?filter[document_of]=${collection?.cmetadata?.id}&sort=-created`;
 const { data: links } = await useApiGetAll(endpoint);
-const indexedItems = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=links`);
+const metadataEndpoint = `/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=links`;
+let indexedItems = await $fetch(metadataEndpoint);
 isLoading.value = false;
 isLinkAddAllowed.value = checkAddAllowed(links);
 
@@ -46,6 +47,7 @@ const closeForm = async (e: boolean) => {
     if (e) {
         isLoading.value = true;
         await useApiGetAll(endpoint);
+        indexedItems = await $fetch(metadataEndpoint);
         isLoading.value = false;
     }
 
@@ -53,7 +55,7 @@ const closeForm = async (e: boolean) => {
 }
 
 const checkindexed = (id: string | undefined) => {
-    if(indexedItems.filter((element :any) => element.custom_id == id ).length == 0){
+    if (indexedItems?.filter((element :any) => element.custom_id == id )?.length == 0) {
         return false;
     }
     return true;
