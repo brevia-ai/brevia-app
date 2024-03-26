@@ -96,8 +96,8 @@ onBeforeMount(async () => {
         docsFound.value = (data?.length || 0) > 0;
         metadata.value = data?.[0]?.cmetadata || {};
         loaded.value = true;
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        console.log(err);
         loaded.value = true;
     }
 });
