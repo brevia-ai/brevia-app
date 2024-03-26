@@ -8,7 +8,7 @@
         <span class="font-semibold">{{ $t('NO_METADATA') }}</span>
     </div>
 
-    <div class="flex justify-center" v-else-if="!docsFound">
+    <div class="flex justify-center" v-else-if="!docsFound && properties.length == 0">
         <span class="font-semibold">{{ $t('NO_INDEXED_DOCUMENTS') }}</span>
     </div>
 
@@ -68,9 +68,9 @@ const props = defineProps({
     },
 });
 
-const statesStore = useStatesStore();
+const statesStore = useStatesStore() as any;
 
-const metadata = ref({});
+const metadata = ref<any>({});
 const docsFound = ref(false);
 
 // documents metadata JSON Schema
