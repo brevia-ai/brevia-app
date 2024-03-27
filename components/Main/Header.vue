@@ -13,8 +13,8 @@
     <div class="flex space-x-2 sm:space-x-4 md:space-x-5">
         <button class="w-12 h-10 button border-none text-xs uppercase"
             v-for="(lang, i) in availableLocales" :key="i"
-            @click="setLocale(lang as string)">{{ lang }}</button>
-
+            @click="setLocale(lang as string)">{{ lang }}
+        </button>
         <button class="h-10 px-4  button border-none text-sm uppercase" v-if="isLogged">
             <NuxtLink to="/profile">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

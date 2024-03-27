@@ -6,6 +6,7 @@ export default defineNuxtConfig({
         public: {
             appName: 'BREVIA',
             appDescription: '',
+            appLogo: '/brevia-logo.svg',
             features: {
                 signupAvailable: '',
             },
