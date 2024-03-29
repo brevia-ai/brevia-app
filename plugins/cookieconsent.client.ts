@@ -61,8 +61,8 @@ const cookieConfig: CookieConsentConfig = {
                     acceptNecessaryBtn: 'Rifiuta',
                     showPreferencesBtn: 'Opzioni avanzate',
                     footer: `
-                        <a href="https://www.iubenda.com/privacy-policy/49496944/cookie-policy" target="_blank" rel="noopener">Cookie Policy</a>
-                        <a href="https://www.iubenda.com/privacy-policy/49496944" target="_blank" rel="noopener">Privacy Policy</a>
+                        <a href="/privacy/cookie-policy" target="_blank" rel="noopener">Cookie Policy</a>
+                        <a href="/privacy/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
                     `,
                 },
                 preferencesModal: {
@@ -128,7 +128,7 @@ const cookieConfig: CookieConsentConfig = {
                         {
                             title: 'Maggiori informazioni',
                             description:
-                                'Per maggiori informazioni visita la pagina sulla <a class="cc__link" href="https://www.iubenda.com/privacy-policy/49496944/cookie-policy" target="_blank" rel="noopener">Cookie Policy</a>.',
+                                'Per maggiori informazioni visita la pagina sulla <a class="cc__link" href="/privacy/cookie-policy" target="_blank" rel="noopener">Cookie Policy</a>.',
                         },
                     ],
                 },

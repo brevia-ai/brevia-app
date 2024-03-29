@@ -5,7 +5,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
         return;
     }
 
-    const publicPages = ['/auth', '/about', '/signup', '/signup-activation', '/forgot-password', '/reset-password'];
+    const publicPages = ['/auth', '/about', '/signup', '/signup-activation', '/forgot-password', '/reset-password', '/privacy/privacy-policy','/privacy/terms-conditions','/privacy/cookie-policy'];
     if (publicPages.includes(to.path)) {
         return;
     }
