@@ -14,6 +14,7 @@
             <LazyDialogDeleteChatbot v-if="$isOpenModal('DialogDeleteChatbot')" v-bind="modalStore.activeModalProps" />
             <LazyDialogChangePassword v-if="$isOpenModal('DialogChangePassword')" @stopClick="clickableOutside=false" />
             <LazyDialogDeleteAccount v-if="$isOpenModal('DialogDeleteAccount')" @stopClick="clickableOutside=false" />
+            <LazyDialogShowFeedback v-if="$isOpenModal('ShowAnswerFeedback')" v-bind="modalStore.activeModalProps" />
         </div>
     </div>
 </div>

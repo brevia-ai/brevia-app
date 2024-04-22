@@ -63,7 +63,7 @@
                             <span>{{ selectedChat.title }}</span>
                             <Icon class="text-xs self-center" name="ph:caret-down-bold"/>
                         </div>
-                        <div v-if="openSelect" class="w-80 -mx-1 absolute z-50 bg-white border border-primary rounded shadow-md">
+                        <div v-if="openSelect" class="w-80 -mx-1 max-h-96 absolute z-50 bg-white border border-primary rounded shadow-md overflow-y-scroll">
                             <div
                                 v-for="(item, i) in historyItems"
                                 class="px-3 text-sm italics flex justify-between"
@@ -88,9 +88,19 @@
                                 <div class="chat-balloon space-y-2" v-for="(item, i) in dialog" :key="i" :class="{ 'bg-pink-800': item.error}">
                                     <div class="flex space-x-3 justify-between">
                                         <p class="text-xs">{{ item.who }}</p>
-                                        <div class="chat-balloon-status" :class="{'busy': isBusy && i === dialog.length - 1}"></div>
                                     </div>
                                     <p class="whitespace-break-spaces">{{ item.message }} &nbsp;</p>
+                                    <div v-if="item.who === 'ENPACL-ASSISTANT'"
+                                    class="p-2 absolute -bottom-4 right-4 z-20 bg-neutral-700 rounded-full flex flex-row
+                                        hover:cursor-pointer hover:bg-neutral-500"
+                                    @click="$openModal('ShowAnswerFeedback', {evaluation: item.evaluation, feedback: item.feedback })"
+                                    >
+                                        <Icon  v-if="item.evaluation!==null"
+                                        class="self-center"
+                                        :class="(item.evaluation === true)?'text-green-600':'text-red-600'"
+                                        :name="(item.evaluation === true)?'material-symbols:thumb-up':'material-symbols:thumb-down'"/>
+                                        <Icon v-else class="self-center" name="ph:empty" />
+                                    </div>
                                 </div>
 
                             </div>
@@ -115,6 +125,7 @@ interface DialogItem {
     who: string;
     message: string;
     evaluation: any;
+    feedback: string;
     uuid: string;
     error: boolean;
 }
@@ -162,11 +173,12 @@ const csvKeys = [
 
 onBeforeMount(async() => showHistory());
 
-const formatDialogItem = (who: string, message: string, evaluation = null, uuid = '', error = false): DialogItem => {
+const formatDialogItem = (who: string, message: string, evaluation = null, feedback: string, uuid = '', error = false): DialogItem => {
     return {
         who,
         message,
         evaluation,
+        feedback,
         uuid,
         error,
     }
@@ -238,8 +250,8 @@ const loadChat = async(id:any) => {
             const data:any = await $fetch(`/api/brevia/chat_history?session_id=${id}&collection=${collectionName}`);
             let loadedDialog:DialogItem[] = []
             for(let i=data.data.length-1; i>=0; i--) {
-                loadedDialog.push(formatDialogItem('TU', data.data[i].question, data.data[i].user_evaluation, data.data[i].uuid));
-                loadedDialog.push(formatDialogItem('ENPACL-ASSISTANT', data.data[i].answer, data.data[i].user_evaluation, data.data[i].uuid));
+                loadedDialog.push(formatDialogItem('TU', data.data[i].question, data.data[i].user_evaluation, data.data[i].user_feedback, data.data[i].uuid));
+                loadedDialog.push(formatDialogItem('ENPACL-ASSISTANT', data.data[i].answer, data.data[i].user_evaluation, data.data[i].user_feedback, data.data[i].uuid));
             }
             dialog.value = loadedDialog;
             loadingChats.value = false;
