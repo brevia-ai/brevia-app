@@ -63,6 +63,8 @@
     "EMAIL": "Email",
     "EMAIL_PLACEHOLDER": "e.g. {email}",
     "END_DATE": "End date",
+    "FEEDBACK": "Feedback",
+    "FEEDBACK_SUBTITLE": "Here you can see the feedback provided for this answer",
     "FILE_SIZE_ERROR": "The file size is too large",
     "FILE_TYPE_MUST_BE": "Accepted file type:",
     "FILE_TYPE_NOT_ACCEPTED": "File type not supported",
