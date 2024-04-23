@@ -281,7 +281,7 @@ const getLocalCreationDate = (data: string) => {
     let utcDate = new Date(data);
     let timeOffset = new Date().getTimezoneOffset();
     let localDate = new Date(utcDate.getTime() - (timeOffset * 60 * 1000));
-    return moment(localDate).format('L hh:mm');
+    return moment(localDate).format('DD/MM/YYYY - hh:mm');
 }
 
 </script>
