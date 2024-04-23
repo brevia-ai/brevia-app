@@ -90,16 +90,15 @@
                                         <p class="text-xs">{{ item.who }}</p>
                                     </div>
                                     <p class="whitespace-break-spaces">{{ item.message }} &nbsp;</p>
-                                    <div v-if="item.who === 'ENPACL-ASSISTANT'"
-                                    class="p-2 absolute -bottom-4 right-4 z-20 bg-neutral-700 rounded-full flex flex-row
-                                        hover:cursor-pointer hover:bg-neutral-500"
-                                    @click="$openModal('ShowAnswerFeedback', {evaluation: item.evaluation, feedback: item.feedback })"
+                                    <div v-if="item.who === 'ASSISTANT' && item.evaluation !== null"
+                                        class="p-2 absolute -bottom-4 right-4 z-20 bg-neutral-700 rounded-full flex flex-row"
+                                        :class="{'hover:cursor-pointer hover:bg-neutral-500': item.feedback}"
+                                        @click="item.feedback ? $openModal('ShowAnswerFeedback', {evaluation: item.evaluation, feedback: item.feedback }): ''"
                                     >
-                                        <Icon  v-if="item.evaluation!==null"
+                                        <Icon
                                         class="self-center"
                                         :class="(item.evaluation === true)?'text-green-600':'text-red-600'"
                                         :name="(item.evaluation === true)?'material-symbols:thumb-up':'material-symbols:thumb-down'"/>
-                                        <Icon v-else class="self-center" name="ph:empty" />
                                     </div>
                                 </div>
 
@@ -250,8 +249,8 @@ const loadChat = async(id:any) => {
             const data:any = await $fetch(`/api/brevia/chat_history?session_id=${id}&collection=${collectionName}`);
             let loadedDialog:DialogItem[] = []
             for(let i=data.data.length-1; i>=0; i--) {
-                loadedDialog.push(formatDialogItem('TU', data.data[i].question, data.data[i].user_evaluation, data.data[i].user_feedback, data.data[i].uuid));
-                loadedDialog.push(formatDialogItem('ENPACL-ASSISTANT', data.data[i].answer, data.data[i].user_evaluation, data.data[i].user_feedback, data.data[i].uuid));
+                loadedDialog.push(formatDialogItem('USER', data.data[i].question, data.data[i].user_evaluation, data.data[i].user_feedback, data.data[i].uuid));
+                loadedDialog.push(formatDialogItem('ASSISTANT', data.data[i].answer, data.data[i].user_evaluation, data.data[i].user_feedback, data.data[i].uuid));
             }
             dialog.value = loadedDialog;
             loadingChats.value = false;
