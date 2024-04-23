@@ -221,7 +221,7 @@ const showHistory = async () => {
     }
     const firstChat = historyItems.value[0]?.sessionId;
     selectedChat.value = {
-        title: historyItems.value[0]?.sessionTitle,
+        title: historyItems.value[0]?.sessionFullTitle,
         id: historyItems.value[0]?.sessionId
     };
     loadChat(firstChat);
