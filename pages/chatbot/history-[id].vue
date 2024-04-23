@@ -116,6 +116,7 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
 import { utils, writeFile } from 'xlsx';
+import moment from 'moment';
 
 const config = useRuntimeConfig();
 useHead({ title: `Chat history | ${config.public.appName}`});
@@ -279,8 +280,8 @@ const loadHistoryItems = async () => {
 const getLocalCreationDate = (data: string) => {
     let utcDate = new Date(data);
     let timeOffset = new Date().getTimezoneOffset();
-    let localDate = new Date(utcDate.getTime() - (timeOffset * 60 * 1000)).toLocaleString().slice(0, -3);
-    return localDate;
+    let localDate = new Date(utcDate.getTime() - (timeOffset * 60 * 1000));
+    return moment(localDate).format('L hh:mm');
 }
 
 </script>
