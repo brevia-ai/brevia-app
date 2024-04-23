@@ -68,7 +68,7 @@
                                 v-for="(item, i) in historyItems"
                                 class="px-3 text-sm italics flex justify-between"
                                 :class="(item.sessionId == selectedChat.id)?'bg-primary text-white':'hover:bg-primary hover:text-white'"
-                                @click="loadChat(item.sessionId); selectedChat = { id: item.sessionId, title: item.sessionTitle}; openSelect = !openSelect"
+                                @click="loadChat(item.sessionId); selectedChat = { id: item.sessionId, title: item.sessionFullTitle}; openSelect = !openSelect"
                                 >
                                     {{ item.sessionTitle }}
                                     <span class="self-center text-xs italic">{{ getLocalCreationDate(item.sessionStart) }}</span>
@@ -235,8 +235,9 @@ const loadHistoryList = async () => {
         if(!sessions.some(el => el.sessionId === items[i].session_id)) {
             sessions.push({
                 sessionId: items[i].session_id,
-                sessionTitle: (items[i].question.length > 20)?items[i].question[0].toUpperCase() + items[i].question.slice(1, 25) + '...':items[i].question[0].toUpperCase() + items[i].question.slice(1, 25),
-                sessionStart: items[i].created.substring(0,10) + ' ' + items[i].created.substring(11,16)
+                sessionTitle: (items[i].question.length > 20)?items[i].question[0].toUpperCase() + items[i].question.slice(1, 20) + '...':items[i].question[0].toUpperCase() + items[i].question.slice(1, 25),
+                sessionStart: items[i].created.substring(0,10) + ' ' + items[i].created.substring(11,16),
+                sessionFullTitle: (items[i].question.length > 40)?items[i].question[0].toUpperCase() + items[i].question.slice(1, 40) + '...':items[i].question[0].toUpperCase() + items[i].question.slice(1, 40),
             });
         }
     }
@@ -278,7 +279,7 @@ const loadHistoryItems = async () => {
 const getLocalCreationDate = (data: string) => {
     let utcDate = new Date(data);
     let timeOffset = new Date().getTimezoneOffset();
-    let localDate = new Date(utcDate.getTime() - (timeOffset * 60 * 1000)).toLocaleString();
+    let localDate = new Date(utcDate.getTime() - (timeOffset * 60 * 1000)).toLocaleString().slice(0, -3);
     return localDate;
 }
 
