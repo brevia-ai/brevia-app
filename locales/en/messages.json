@@ -64,7 +64,6 @@
     "EMAIL_PLACEHOLDER": "e.g. {email}",
     "END_DATE": "End date",
     "FEEDBACK": "Feedback",
-    "FEEDBACK_NOT_PRESENT": "No feedback has been provided for this answer",
     "FEEDBACK_SUBTITLE": "Here you can see the feedback provided for this answer",
     "FILE_SIZE_ERROR": "The file size is too large",
     "FILE_TYPE_MUST_BE": "Accepted file type:",
