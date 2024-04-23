@@ -58,20 +58,20 @@
             <div v-else class="flex flex-col space-y-3">
                 <div class="flex justify-between border-b border-slate-300">
                     <span>{{ $t('CHAT_HISTORY_PREVIEW') }}</span>
-                    <div id="customSelect" class="w-80 px-1 border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary  hover:cursor-default">
+                    <div id="customSelect" class="w-96 px-1 border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary  hover:cursor-default">
                         <div class="flex flex-row justify-between" @click="openSelect = !openSelect">
                             <span>{{ selectedChat.title }}</span>
                             <Icon class="text-xs self-center" name="ph:caret-down-bold"/>
                         </div>
-                        <div v-if="openSelect" class="w-80 -mx-1 max-h-96 absolute z-50 bg-white border border-primary rounded shadow-md overflow-y-scroll">
+                        <div v-if="openSelect" class="w-96 -mx-1 max-h-96 absolute z-50 bg-white border border-primary rounded shadow-md overflow-y-scroll">
                             <div
                                 v-for="(item, i) in historyItems"
                                 class="px-3 text-sm italics flex justify-between"
                                 :class="(item.sessionId == selectedChat.id)?'bg-primary text-white':'hover:bg-primary hover:text-white'"
-                                @click="loadChat(item.sessionId); selectedChat = { id: item.sessionId, title: item.sessionTitle}; openSelect = !openSelect"
+                                @click="loadChat(item.sessionId); selectedChat = { id: item.sessionId, title: item.sessionFullTitle}; openSelect = !openSelect"
                                 >
                                     {{ item.sessionTitle }}
-                                    <span class="self-center text-xs italic">{{ item.sessionStart }}</span>
+                                    <span class="self-center text-xs italic">{{ getLocalCreationDate(item.sessionStart) }}</span>
                             </div>
                         </div>
                     </div>
@@ -116,6 +116,7 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
 import { utils, writeFile } from 'xlsx';
+import moment from 'moment';
 
 const config = useRuntimeConfig();
 useHead({ title: `Chat history | ${config.public.appName}`});
@@ -221,7 +222,7 @@ const showHistory = async () => {
     }
     const firstChat = historyItems.value[0]?.sessionId;
     selectedChat.value = {
-        title: historyItems.value[0]?.sessionTitle,
+        title: historyItems.value[0]?.sessionFullTitle,
         id: historyItems.value[0]?.sessionId
     };
     loadChat(firstChat);
@@ -235,8 +236,9 @@ const loadHistoryList = async () => {
         if(!sessions.some(el => el.sessionId === items[i].session_id)) {
             sessions.push({
                 sessionId: items[i].session_id,
-                sessionTitle: (items[i].question.length > 25)?items[i].question[0].toUpperCase() + items[i].question.slice(1, 25) + '...':items[i].question[0].toUpperCase() + items[i].question.slice(1, 25),
-                sessionStart: items[i].created.substring(0,10) + ' ' + items[i].created.substring(11,16)
+                sessionTitle: (items[i].question.length > 20)?items[i].question[0].toUpperCase() + items[i].question.slice(1, 20) + '...':items[i].question[0].toUpperCase() + items[i].question.slice(1, 25),
+                sessionStart: items[i].created.substring(0,10) + ' ' + items[i].created.substring(11,16),
+                sessionFullTitle: (items[i].question.length > 40)?items[i].question[0].toUpperCase() + items[i].question.slice(1, 40) + '...':items[i].question[0].toUpperCase() + items[i].question.slice(1, 40),
             });
         }
     }
@@ -272,8 +274,14 @@ const loadHistoryItems = async () => {
     } catch (error) {
         console.error(error);
     }
-
     return items;
 };
+
+const getLocalCreationDate = (data: string) => {
+    let utcDate = new Date(data);
+    let timeOffset = new Date().getTimezoneOffset();
+    let localDate = new Date(utcDate.getTime() - (timeOffset * 60 * 1000));
+    return moment(localDate).format('DD/MM/YYYY - hh:mm');
+}
 
 </script>
