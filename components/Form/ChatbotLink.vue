@@ -129,6 +129,7 @@ const create = async () => {
         await updateMetadata(docId, {...meta, ...metadataDefaults});
 
     } catch (err) {
+        console.log(err);
         error.value = true;
     }
 }
@@ -155,6 +156,7 @@ const update = async () => {
         await updateMetadata(String(props.item?.id), meta);
 
     } catch (err) {
+        console.log(err);
         error.value = true;
     }
 }
@@ -174,6 +176,7 @@ const deleteLink = async () => {
     try {
         await $fetch(`/api/bedita/link/${props.item.id}`, { method: 'DELETE' });
     } catch (err) {
+        console.log(err);
         error.value = true;
     }
     isDeleting.value = false;
