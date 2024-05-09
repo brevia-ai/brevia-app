@@ -26,12 +26,24 @@
                 <div class="px-4 pt-6 pb-4 bg-white shadow-md rounded space-y-3">
                     <div class="flex flex-col space-y-6 pb-4">
 
-                        <div class="chat-balloon space-y-2" v-for="(item, i) in dialog" :key="i" :class="{ 'bg-pink-800': item.error}">
+                        <div class="chat-balloon space-y-2" v-for="(item, i) in dialog" :key="i" :class="{ 'bg-pink-800': item.error}"
+                            @mouseover="showResponseMenu = true; hovered = i"
+                            @mouseleave="showResponseMenu = false">
                             <div class="flex space-x-3 justify-between">
                                 <p class="text-xs">{{ item.who }}</p>
                                 <div class="chat-balloon-status" :class="{'busy': isBusy && i === dialog.length - 1}"></div>
                             </div>
                             <p class="whitespace-break-spaces">{{ item.message }} &nbsp;</p>
+                            <!--MENU CONTESTUALE-->
+                            <div class="px-2 py-0.5 absolute -bottom-5 right-4 z-50 bg-neutral-700 rounded-full flex flex-row"
+                                    v-if="!isBusy && showResponseMenu && hovered === i && (i % 2) == 1 ">
+                                <div v-if="(i === dialog.length - 1)"
+                                    class="px-1.5 pb-1 hover:bg-neutral-600 hover:rounded-full hover:cursor-pointer"
+                                    @click="$openModal('ChatDocuments', { session_id: sessionId, documents: docs })"
+                                    :title="$t('SHOW_DOCUMENTS_FOUND')">
+                                    <Icon name="fluent:document-question-mark-16-regular"></Icon>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -55,13 +67,6 @@
                     </button>
                 </div>
 
-                <div class="flex space-x-4">
-                    <label class="grow text-lg space-x-2 cursor-pointer">
-                        <input type="checkbox" v-model="showDocs" :disabled="isBusy">
-                        <span>{{ $t('SHOW_DOCUMENTS_FOUND') }}</span>
-                    </label>
-                </div>
-
                 <div class="flex space-x-4" v-if="isDemo">
                     <span class="grow text-lg">{{ $t('MESSAGES_LEFT') }}: {{ messagesLeft }}</span>
                 </div>
@@ -70,17 +75,6 @@
                     <div class="w-full bg-red-100 border border-red-400 rounded text-center">
                         {{ $t('NO_MORE_CHAT_MESSAGES') }}
                     </div>
-                </div>
-            </div>
-
-            <div class="flex flex-col space-y-3" v-if="!isBusy && docs.length > 0">
-                <div class="text-xl">
-                    <p>{{ $t('DOCUMENTS') }}</p>
-                </div>
-                <div v-for="(doc, n) in docs" :key="n">
-                    <p class="text-xs">{{ (n + 1) }}.</p>
-                    <p>{{ doc.page_content }}</p>
-                    <p class="text-xs italic">{{ doc.metadata }}</p>
                 </div>
             </div>
         </div>
@@ -105,11 +99,13 @@ const isBusy = ref(false);
 const prompt = ref('');
 const input = ref<HTMLElement|null>(null);
 const dialog = ref<DialogItem[]>([]);
-const showDocs = ref(false);
+const showDocs = ref(true);
 const docs = ref<any>([]);
 const historyId = ref('');
 const isDemo = ref(store.userHasRole('demo'));
 const messagesLeft = ref('');
+const hovered = ref(-1);
+const showResponseMenu = ref(true);
 
 let sessionId = '';
 let collectionName = '';

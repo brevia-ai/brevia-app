@@ -8,13 +8,16 @@
     <div class="flex items-center sm:justify-center min-h-full p-3 sm:p-0">
 
         <!-- modal content -->
-        <div class="pt-5 px-6 pb-6 space-y-6 relative w-full sm:max-w-lg bg-white rounded-lg shadow">
+        <div class="pt-5 px-6 pb-6 space-y-6 relative w-full bg-white rounded-lg shadow"
+            :class="(largerModal) ? 'sm:max-w-4xl' : 'sm:max-w-lg'">
             <LazyDialogNewChatbot v-if="$isOpenModal('DialogNewChatbot')" />
             <LazyDialogEditMetadata v-if="$isOpenModal('DialogEditMetadata')" v-bind="modalStore.activeModalProps" />
             <LazyDialogDeleteChatbot v-if="$isOpenModal('DialogDeleteChatbot')" v-bind="modalStore.activeModalProps" />
             <LazyDialogChangePassword v-if="$isOpenModal('DialogChangePassword')" @stopClick="clickableOutside=false" />
             <LazyDialogDeleteAccount v-if="$isOpenModal('DialogDeleteAccount')" @stopClick="clickableOutside=false" />
             <LazyDialogShowFeedback v-if="$isOpenModal('ShowAnswerFeedback')" v-bind="modalStore.activeModalProps" />
+            <LazyDialogChatDocuments v-if="$isOpenModal('ChatDocuments')" v-bind="modalStore.activeModalProps"
+                    @enlarge-window="largerModal = true" />
         </div>
     </div>
 </div>
@@ -23,6 +26,7 @@
 <script setup lang="ts">
 import { useModalStore } from '~~/store/modal';
 const modalStore = useModalStore();
+const largerModal = ref(false);
 const { $closeModal } = useNuxtApp();
 let clickableOutside = ref(true);
 
