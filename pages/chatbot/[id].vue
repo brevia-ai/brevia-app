@@ -33,7 +33,7 @@
                                 <p class="text-xs">{{ item.who }}</p>
                                 <div class="chat-balloon-status" :class="{'busy': isBusy && i === dialog.length - 1}"></div>
                             </div>
-                            <p class="whitespace-break-spaces">{{ item.message }} &nbsp;</p>
+                            <p class="whitespace-break-spaces" v-html="formatResponse(item.message)"></p>
                             <!--MENU CONTESTUALE-->
                             <div class="px-2 py-0.5 absolute -bottom-5 right-4 z-50 bg-neutral-700 rounded-full flex flex-row"
                                     v-if="!isBusy && showResponseMenu && hovered === i && (i % 2) == 1 && (i === dialog.length - 1)">
@@ -275,4 +275,9 @@ const updateLeftMessages = async () => {
         console.log(error);
     }
 };
+
+const formatResponse = (response: string) => {
+    return response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+}
+
 </script>
