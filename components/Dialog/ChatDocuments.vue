@@ -30,7 +30,6 @@
 const props = defineProps(['session_id', 'documents'])
 const emit = defineEmits(['enlargeWindow']);
 onMounted(() => {
-        console.log(props.documents);
         emit('enlargeWindow');
     });
 </script>
