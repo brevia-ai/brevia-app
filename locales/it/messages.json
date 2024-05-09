@@ -48,7 +48,8 @@
     "DELETE_CHATBOT": "Elimina chatbot",
     "DESCRIPTION_PLACEHOLDER": "Inserisci qui la descrizione",
     "DOCUMENT_LANGUAGE": "Lingua del documento",
-    "DOCUMENTS": "Documenti",
+    "DOCUMENT": "Documento",
+    "DOCUMENTS_FOUND": "Documenti trovati",
     "DOWNLOAD": "Download",
     "DOWNLOAD_ANALYSIS": "Scarica l'analisi",
     "DOWNLOAD_SUMMARY": "Scarica il riassunto",
@@ -95,6 +96,7 @@
     "NEW_PASSWORD": "Nuova password",
     "NEW_QUESTION": "Nuova domanda",
     "NO_AI_TOOL_HAS_BEEN_SET_UP_JUST_FOR_YOU": "Al momento nessuno strumento AI è stato ancora configurato per te",
+    "NO_DOCUMENTS": "Non ci sono documenti per questa risposta",
     "NO_INDEXED_DOCUMENTS": "Il documento non è ancora stato indicizzato. Riprova tra qualche minuto.",
     "NO_FILES_FOUND": "Nessun file trovato",
     "NO_METADATA": "Non ci sono metadati da modificare",
@@ -153,6 +155,8 @@
     "UPLOAD_AND_ANALYZE_FILE": "Carica e analizza il file",
     "UPLOAD_AND_TRANSCRIBE_FILE": "Carica e trascrivi il file",
     "USER_ALREADY_EXISTS": "Esiste già un utente con questa email",
+    "VALID_FROM": "Valido dal",
+    "VALIT_TO": "fino al",
     "WELCOME_ON_BREVIA": "benvenuto su Brevia",
     "WRONG_CREDENTIALS": "Credenziali errate"
 }

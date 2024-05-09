@@ -48,7 +48,8 @@
     "DELETE": "Delete",
     "DELETE_CHATBOT": "Delete chatbot",
     "DOCUMENT_LANGUAGE": "Document language",
-    "DOCUMENTS": "Documents",
+    "DOCUMENT": "Document",
+    "DOCUMENTS_FOUND": "Documents found",
     "DOWNLOAD": "Download",
     "DOWNLOAD_ANALYSIS": "Download analysis",
     "DOWNLOAD_SUMMARY": "Download summary",
@@ -95,6 +96,7 @@
     "NEW_PASSWORD": "New password",
     "NEW_QUESTION": "New question",
     "NO_AI_TOOL_HAS_BEEN_SET_UP_JUST_FOR_YOU": "At this time, no AI tool has been set up for you",
+    "NO_DOCUMENTS": "There are no Documents for this reply",
     "NO_INDEXED_DOCUMENTS": "The document has not yet been indexed. Please try again in a few minutes.",
     "NO_FILES_FOUND": "No files found",
     "NO_METADATA": "No metadata found for editing",
@@ -153,6 +155,8 @@
     "UPLOAD_AND_ANALYZE_FILE": "Upload and analyze file",
     "UPLOAD_AND_TRANSCRIBE_FILE": "Upload and transcribe file",
     "USER_ALREADY_EXISTS": "User already exists",
+    "VALID_FROM": "Valid from",
+    "VALIT_TO": "to",
     "WELCOME_ON_BREVIA": "welcome",
     "WRONG_CREDENTIALS": "Wrong username or password"
 }
