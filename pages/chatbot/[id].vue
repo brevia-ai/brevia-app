@@ -31,7 +31,7 @@
                                 <p class="text-xs">{{ item.who }}</p>
                                 <div class="chat-balloon-status" :class="{'busy': isBusy && i === dialog.length - 1}"></div>
                             </div>
-                            <p class="whitespace-break-spaces">{{ item.message }} &nbsp;</p>
+                            <p class="whitespace-break-spaces" v-html="formatResponse(item.message)"></p>
                         </div>
 
                     </div>
@@ -280,4 +280,9 @@ const updateLeftMessages = async () => {
         console.log(error);
     }
 };
+
+const formatResponse = (response: string) => {
+    return response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+}
+
 </script>
