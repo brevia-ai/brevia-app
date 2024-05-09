@@ -36,9 +36,8 @@
                             <p class="whitespace-break-spaces">{{ item.message }} &nbsp;</p>
                             <!--MENU CONTESTUALE-->
                             <div class="px-2 py-0.5 absolute -bottom-5 right-4 z-50 bg-neutral-700 rounded-full flex flex-row"
-                                    v-if="!isBusy && showResponseMenu && hovered === i && (i % 2) == 1 ">
-                                <div v-if="(i === dialog.length - 1)"
-                                    class="px-1.5 pb-1 hover:bg-neutral-600 hover:rounded-full hover:cursor-pointer"
+                                    v-if="!isBusy && showResponseMenu && hovered === i && (i % 2) == 1 && (i === dialog.length - 1)">
+                                <div class="px-1.5 pb-1 hover:bg-neutral-600 hover:rounded-full hover:cursor-pointer"
                                     @click="$openModal('ChatDocuments', { session_id: sessionId, documents: docs })"
                                     :title="$t('SHOW_DOCUMENTS_FOUND')">
                                     <Icon name="fluent:document-question-mark-16-regular"></Icon>
