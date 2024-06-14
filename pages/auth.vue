@@ -66,7 +66,7 @@ const error = ref(false);
 const username = ref('');
 const password = ref('');
 const isLoading = ref(false);
-const enableSignup = ref(config.public.features.signupAvailable);
+const enableSignup = useIntegrationFeatures()?.signup || false;
 
 const signIn = async () => {
     isLoading.value = true;

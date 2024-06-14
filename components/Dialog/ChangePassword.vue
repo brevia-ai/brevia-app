@@ -69,10 +69,11 @@ onMounted(() => {
 
 const changePassword = async () => {
     try {
+        const integration = useIntegration();
         pwdError.value = false
         changeError.value = false;
         loading.value = true;
-        await $fetch('/api/bedita/auth/user', {
+        await $fetch(`/api/${integration}/auth/user`, {
             method: 'PATCH',
             body: {
                 password: newPass.value,

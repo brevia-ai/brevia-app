@@ -2,7 +2,7 @@
 <div class="grow w-full max-w-lg mx-auto p-8 sm:p-16 sm:bg-white sm:shadow-lg rounded space-y-5">
     <h1 class="text-lg">
         <i18n-t keypath="HELLO">
-            <template #name><span class="font-bold">{{ user.name }} {{ user.surname }}</span>,</template>
+            <template #name><span class="font-bold">{{ user?.name }} {{ user?.surname }}</span>,</template>
         </i18n-t>
     </h1>
 

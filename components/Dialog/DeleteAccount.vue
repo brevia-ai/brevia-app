@@ -48,7 +48,6 @@
 <script setup lang="ts">
 
 const { $closeModal } = useNuxtApp();
-const { user, optOut, logout } = useBeditaAuth();
 const statesStore = useStatesStore();
 
 const emit = defineEmits(['stopClick']);
@@ -57,6 +56,7 @@ let password = ref('')
 let loading = ref(false);
 let deletionSuccess = ref(false);
 let deleteError = ref(false);
+const integration = useIntegration();
 
 onMounted(() => {
     emit('stopClick');
@@ -66,7 +66,12 @@ const deleteAccount = async () => {
     try {
         loading.value = true;
         deleteError.value = false;
-        await optOut(user.value?.username as string, password.value);
+        await $fetch(`/api/${integration}/optout`, {
+            method: 'POST',
+            body: {
+                password: password.value,
+            },
+        });
         deletionSuccess.value = true;
     } catch (error) {
         deleteError.value = true;
@@ -77,7 +82,7 @@ const deleteAccount = async () => {
 
 async function exit() {
     $closeModal();
-    await logout();
+    await $fetch(`/api/${integration}/logout`, {method: 'POST'});
     statesStore.$reset();
     navigateTo('/auth');
 }

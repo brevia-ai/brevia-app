@@ -3,13 +3,11 @@ export default defineNuxtConfig({
     runtimeConfig: {
         apiSecret: '',
         apiBaseUrl: '',
+        integration: 'brevia', // possibile values: brevia, bedita
         public: {
             appName: 'BREVIA',
             appDescription: '',
             appLogo: '/brevia-logo.svg',
-            features: {
-                signupAvailable: '',
-            },
             maxUserChatbots: '',
             cookiesPrivacyTerms: '',
             // demo limits
@@ -20,6 +18,15 @@ export default defineNuxtConfig({
                 maxChatLinks: '5', // max number of links per Chatbot
                 maxFileSize: '5', // max file size in MB
                 maxNumAnalysis: '5', // max num analysis per day
+            },
+        },
+        // integration features
+        brevia : {
+            features: {
+                signup: false,
+                changePassword: false,
+                deleteAccount: false,
+                demoVersion: false,
             },
         },
     },

@@ -42,16 +42,17 @@ const { $closeModal } = useNuxtApp();
 
 const error = ref<string|null>(null);
 const isDeleting = ref(false);
+const { t } = useI18n();
 
 const deleteChatbot = async () => {
-    if (!props.collection.cmetadata?.id)
+    if (!props.collection.uuid)
         return;
 
     isDeleting.value = true;
     try {
-        await $fetch(`/api/bedita/collection/${props.collection.cmetadata.id}`, { method: 'DELETE' });
+        await $fetch(`/api/${integration}/collection/${props.collection.uuid}`, { method: 'DELETE' });
     } catch (err) {
-        error.value = 'Error delating';
+        error.value = t('ERROR_DELETING_CHATBOT');
     }
     isDeleting.value = false;
 
