@@ -3,8 +3,8 @@ export default defineNuxtConfig({
     runtimeConfig: {
         apiSecret: '',
         apiBaseUrl: '',
-        integration: 'brevia', // possibile values: brevia, bedita
         public: {
+            integration: 'brevia', // possibile values: brevia, bedita
             appName: 'BREVIA',
             appDescription: '',
             appLogo: '/brevia-logo.svg',
@@ -20,14 +20,22 @@ export default defineNuxtConfig({
                 maxNumAnalysis: '5', // max num analysis per day
             },
         },
-        // integration features
+        // brevia integration features & other data
         brevia : {
             features: {
                 signup: false,
                 changePassword: false,
                 deleteAccount: false,
+                privacyDocuments: false,
                 demoVersion: false,
             },
+            session: {
+                name: 'Brevia',
+                secret: 'super-secret-password',
+            },
+            authCredentials: [
+                { username: 'brevia', password: 'brevia' },
+            ],
         },
     },
 

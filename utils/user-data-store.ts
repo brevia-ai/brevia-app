@@ -1,4 +1,4 @@
-import { ItemEditLevel } from '~~/store/states';
+import { ItemEditLevel, type menuItem } from '~~/store/states';
 
 export interface UserDataStore {
     id: string,
@@ -10,30 +10,24 @@ export interface UserDataStore {
 }
 
 export const userEditLevel = (item: any): ItemEditLevel => {
-    const { user } = useBeditaAuth()
-    const relationEditLevel = item?.meta?.relation?.params?.edit_level || null;
-    if (relationEditLevel == 'read_write') {
+    const editLevel = extractField(item, 'edit_level');
+    if (editLevel == 'read_write') {
         return ItemEditLevel.ReadWrite;
     }
-    if (relationEditLevel == 'read_only') {
+    if (editLevel == 'read_only') {
         return ItemEditLevel.ReadOnly;
-    }
-    const createdId = item?.meta?.created_by;
-    if (user.value?.id == createdId) {
-        return ItemEditLevel.ReadWrite;
     }
 
     return ItemEditLevel.None
 };
 
-// TODO: move somewhere?
-const extractBeditafield = (obj: any, field: string) => {
-    return obj?.attributes?.[field] || obj?.meta?.[field] || '';
+const extractField = (obj: any, field: string) => {
+    return obj?.attributes?.[field] || obj?.meta?.[field] || obj?.[field] || '';
 };
 
-export const buildUserMenu = (hasAccess: any) => {
+export const buildUserMenu = (menu: any): Array<menuItem> => {
     const items = [];
-    for (const item of hasAccess) {
+    for (const item of menu) {
         const type = item?.type === 'collections'? 'chatbot' : item?.attributes?.feature_type || '';
         const link = item?.type === 'collections'? `/chatbot/${item?.attributes?.uname}` : `/${item?.attributes?.feature_type}/${item?.attributes?.uname}`;
         let params = null;
@@ -48,8 +42,8 @@ export const buildUserMenu = (hasAccess: any) => {
         items.push({
             link,
             type,
-            title: extractBeditafield(item, 'title'),
-            description: extractBeditafield(item, 'description'),
+            title: extractField(item, 'title'),
+            description: extractField(item, 'description'),
             params,
             edit: userEditLevel(item),
         });

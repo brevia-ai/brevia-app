@@ -10,11 +10,10 @@
 </template>
 
 <script setup>
-import { buildUserMenu } from '~~/utils/user-data-store';
 const config = useRuntimeConfig();
 useHead({ title: config.public.appName });
 
-const { user, isLogged } = useBeditaAuth();
+const { user, isLogged } = useIntegrationAuth();
 const modalStore = useModalStore();
 const statesStore = useStatesStore();
 
@@ -27,8 +26,9 @@ const isAddEnabled = computed(() => {
     return statesStore.menu.filter((x) => x.type === 'chatbot').length < max;
 });
 
-const { data: has_access, status, refresh } = await useFetch('/api/bedita/user_has_access');
-statesStore.menu = buildUserMenu(has_access.value);
+const integration = useIntegration();
+const { data: menu, status, refresh } = await useFetch(`/api/${integration}/user_menu`);
+statesStore.menu = menu.value;
 
 watch(status, (value) => {
     modalStore.isLoadingPage = value === 'pending';

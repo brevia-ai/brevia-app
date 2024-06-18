@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { UserDataStore } from '@atlasconsulting/nuxt-bedita';
+import { type UserDataStore } from '~~/utils/user-data-store'
 
 export enum ItemEditLevel {
     ReadWrite = 'READ_WRITE',
@@ -59,8 +59,15 @@ export const useStatesStore = defineStore('states', {
         },
 
         userHasRole(name: string) {
-            const { user } = useBeditaAuth();
-            return !!(user.value as UserDataStore)?.roles?.find(r => r === name);
+            return !!(this.user as UserDataStore)?.roles?.find(r => r === name);
+        },
+
+        isLogged() {
+            return !!this.user;
+        },
+
+        userLogin(data: any) {
+            this.user = data;
         },
     },
 });

@@ -15,14 +15,14 @@
                         v-model="password" @keydown.enter.stop.prevent="signIn"
                         required />
 
-                    <NuxtLink to="/forgot-password" class="text-xs text-end mt-0 pt-0 text-sky-600">{{ $t('FORGOT_PASS') }}</NuxtLink>
+                    <NuxtLink v-if="features?.changePassword" to="/forgot-password" class="text-xs text-end mt-0 pt-0 text-sky-600">{{ $t('FORGOT_PASS') }}</NuxtLink>
                 </div>
 
                 <button class="p-4 button text-lg"
                     :class="{ 'is-loading': isLoading }"
                     @click="signIn">{{ $t('SIGN_IN') }}</button>
 
-                <div class="text-sm text-center" v-if="enableSignup">
+                <div class="text-sm text-center" v-if="features?.signup">
                     {{ $t('NOT_A_MEMBER') }}
                     <NuxtLink class="text-sky-800" to="/signup">{{ $t('SIGN_UP_HERE') }}</NuxtLink>
                 </div>
@@ -32,7 +32,7 @@
             </div>
 
 
-            <div class="text-xs text-center text-neutral-400" >
+            <div class="text-xs text-center text-neutral-400" v-if="features?.privacyDocuments">
                 <i18n-t keypath="RECAPTCHA" tag="p">
                     <template v-slot:privacyPolicy>
                         <a class="font-semibold" href="https://policies.google.com/privacy">{{ $t('PRIVACY_POLICY') }}</a>
@@ -48,12 +48,12 @@
 </template>
 
 <script setup lang="ts">
-const { login, isLogged } = useBeditaAuth();
+const { login, isLogged } = useIntegrationAuth();
 
 definePageMeta({
     middleware: [
         function () {
-            const { isLogged } = useBeditaAuth();
+            const { isLogged } = useIntegrationAuth();
             if (isLogged.value) {
                 return navigateTo('/');
             }
@@ -61,18 +61,17 @@ definePageMeta({
     ],
 });
 
-const config = useRuntimeConfig();
 const error = ref(false);
 const username = ref('');
 const password = ref('');
 const isLoading = ref(false);
-const enableSignup = useIntegrationFeatures()?.signup || false;
+const features = useIntegrationFeatures();
 
 const signIn = async () => {
     isLoading.value = true;
     error.value = false;
     try {
-        await login(username.value, password.value);
+        const response = await login(username.value, password.value);
         navigateTo('/');
     } catch (e) {
         error.value = true;
