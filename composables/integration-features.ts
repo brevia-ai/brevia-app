@@ -1,7 +1,7 @@
 
 export const useIntegrationFeatures = (): any => {
     const config = useRuntimeConfig();
-    const integration = config.integration || 'brevia';
+    const integration = useIntegration();
 
-    return config?.[integration]?.features || {};
+    return config.public?.[integration]?.features || {};
 };

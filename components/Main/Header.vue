@@ -27,6 +27,7 @@
             </NuxtLink>
         </button>
 
+        <!-- FIXME: Add v-if="isLogged"  -->
         <button class="h-10 px-4 sm:px-8 button text-sm leading-none bg-slate-900 hover:bg-danger hover:border-pink-800"
             @click="onLogout">
             <div class="sm:hidden">
@@ -47,15 +48,16 @@
 const config = useRuntimeConfig();
 const { locale, locales, setLocale } = useI18n();
 const { isLogged, logout } = useIntegrationAuth();
-
-console.log('logged: ', isLogged.value);
+console.log('User logged: ', isLogged.value);
 
 const availableLocales = computed(() => {
     return (locales.value as Array<String>).filter(lang => lang !== locale.value);
 });
 
 async function onLogout() {
-    logout();
+    await logout();
+    const statesStore = useStatesStore();
+    statesStore.$reset();
     navigateTo('/auth');
 }
 </script>

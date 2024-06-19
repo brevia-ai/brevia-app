@@ -1,4 +1,3 @@
-import { buildUserMenu } from '~~/utils/user-data-store';
 import { authorizationHeaders, apiUrl } from '~/server/utils/api-client';
 
 function chatbotItems(response): Array<any> {
@@ -35,5 +34,5 @@ export async function menuItems() {
         headers: authorizationHeaders(),
     });
 
-    return buildUserMenu(featureItems().concat(chatbotItems(response)));
+    return featureItems().concat(chatbotItems(response));
 }

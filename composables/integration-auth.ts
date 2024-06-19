@@ -1,4 +1,3 @@
-// const integration = useIntegration();
 
 export const useIntegrationAuth = () => {
     const integration = useIntegration();
@@ -15,7 +14,7 @@ export const useIntegrationAuth = () => {
 
     const user: Ref<any | null> = ref(userData());
 
-    const isLogged: Ref<boolean> = ref(user.value !== null);
+    const isLogged: ComputedRef<boolean> = computed<boolean>(() => user.value !== null);
 
   const login = async (username: string, password: string) => {
     if (integration === 'brevia') {
@@ -29,25 +28,23 @@ export const useIntegrationAuth = () => {
         const statesStore = useStatesStore();
         statesStore.userLogin(response);
         user.value = response;
-        isLogged.value = true;
 
         return response;
     } else if (integration === 'bedita') {
-        return useBeditaAuth().login(username, password);
+        const data = await useBeditaAuth().login(username, password);
+        user.value = filterUserDataToStore(data);
     }
   };
 
   const logout = async () => {
     if (integration === 'brevia') {
         await $fetch('/api/brevia/auth/logout', {method: 'POST'});
-        const statesStore = useStatesStore();
-        statesStore.$reset();
-        isLogged.value = false;
-
-        return;
     } else if (integration === 'bedita') {
-        return useBeditaAuth().logout();
+        await useBeditaAuth().logout();
     }
+    const statesStore = useStatesStore();
+    statesStore.$reset();
+    user.value = null;
   };
 
 //   const resetPassword = async (contact: string) => {

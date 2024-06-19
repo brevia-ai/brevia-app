@@ -4,25 +4,25 @@ Here we provide a list of tests cases (features to test), whenever big refactors
 
 ## Auth and Signup
 
- - Login
- - Login reset
- - Logout
- - Signup
+- Login
+- Logout
+- Password reset
+- Signup
 
 ## Session
 
- - Change language
- - Logout and open an internal link to a page that requires auth
+- Change language
+- Logout and open an internal link to a page that requires auth
 
 ## Dashboard
 
- - View dashboard with no data (collections / features)
- - View dashboard with data (collections / features)
+- View dashboard with no data (collections / features)
+- View dashboard with data (collections / features)
 
 ## Collections
 
- - Create collection [still not available]
- - Access collection and interact with it (make questions to the AI)
+- Create collection
+- Access collection and interact with it (make questions to the AI)
 
 ## Features
 

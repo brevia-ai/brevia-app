@@ -71,7 +71,7 @@ const signIn = async () => {
     isLoading.value = true;
     error.value = false;
     try {
-        const response = await login(username.value, password.value);
+        await login(username.value, password.value);
         navigateTo('/');
     } catch (e) {
         error.value = true;

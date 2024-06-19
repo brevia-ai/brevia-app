@@ -3,15 +3,15 @@ import {
     addServerHandler,
     addImportsDir,
     createResolver,
-    addServerImports,
-    addRouteMiddleware,
+    // addServerImports,
+    // addRouteMiddleware,
     logger,
-    addTypeTemplate,
-    addImports,
+    // addTypeTemplate,
+    // addImports,
   } from '@nuxt/kit';
   import { type NitroEventHandler } from 'nitropack';
   import { defu } from 'defu';
-  import type { EndpointConf } from './runtime/types';
+//   import type { EndpointConf } from './runtime/types';
 
   // Module options TypeScript interface definition
   export interface ModuleOptions {
@@ -46,7 +46,7 @@ import {
       logger.start('Setting up bedita integration...');
 
       const runtimeConfig = nuxt.options.runtimeConfig
-      runtimeConfig.bedita = defu(runtimeConfig.bedita || {}, {
+      runtimeConfig.public.bedita = defu(runtimeConfig.public.bedita || {}, {
         features: options.features,
       });
 
@@ -65,30 +65,17 @@ import {
        */
       const endpointsEnabled: NitroEventHandler[] = [
         {
-          route: '/api/bedita/auth',
-          handler: resolver.resolve('./runtime/server/api/bedita/auth/login.post'),
+          route: '/api/bedita/user_menu',
+          handler: resolver.resolve('./runtime/server/api/bedita/user_menu.get'),
         },
-        {
-          route: '/api/bedita/auth/user',
-          handler: resolver.resolve('./runtime/server/api/bedita/auth/user.patch'),
-        },
-        {
-          route: '/api/bedita/auth/logout',
-          handler: resolver.resolve('./runtime/server/api/bedita/auth/logout'),
-        },
-        {
-          route: '/api/bedita/auth/reset',
-          handler: resolver.resolve('./runtime/server/api/bedita/auth/reset.post'),
-        },
-        {
-          route: '/api/bedita/auth/change',
-          handler: resolver.resolve('./runtime/server/api/bedita/auth/change.patch'),
-        },
-        {
-          route: '/api/bedita/auth/optout',
-          handler: resolver.resolve('./runtime/server/api/bedita/auth/optout.post'),
-        }
       ];
+
+      endpointsEnabled.forEach((endpoint) => {
+        addServerHandler(endpoint);
+        const methodMatch = endpoint.handler.match(/\.(get|post|patch|delete)/);
+        const method = methodMatch ? `${methodMatch[1].toUpperCase()} ` : '';
+        logger.info(`API endpoint ${method}${endpoint.route} added.`);
+      });
 
       /*
        ***************

@@ -4,7 +4,6 @@ export default defineNuxtConfig({
         apiSecret: '',
         apiBaseUrl: '',
         public: {
-            integration: 'brevia', // possibile values: brevia, bedita
             appName: 'BREVIA',
             appDescription: '',
             appLogo: '/brevia-logo.svg',
@@ -19,19 +18,22 @@ export default defineNuxtConfig({
                 maxFileSize: '5', // max file size in MB
                 maxNumAnalysis: '5', // max num analysis per day
             },
-        },
-        // brevia integration features & other data
-        brevia : {
-            features: {
-                signup: false,
-                changePassword: false,
-                deleteAccount: false,
-                privacyDocuments: false,
-                demoVersion: false,
+            integration: 'brevia', // possibile values: brevia, bedita
+            brevia : {
+                features: {
+                    signup: false,
+                    changePassword: false,
+                    deleteAccount: false,
+                    privacyDocuments: false,
+                    demoVersion: false,
+                },
             },
+        },
+        // brevia integration session & auth credentials
+        brevia : {
             session: {
                 name: 'Brevia',
-                secret: 'super-secret-password',
+                secret: 'change-this-super-secret-secret-secret-password',
             },
             authCredentials: [
                 { username: 'brevia', password: 'brevia' },
