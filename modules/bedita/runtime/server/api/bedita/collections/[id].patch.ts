@@ -1,13 +1,17 @@
 export default defineEventHandler(async (event) => {
     try {
         const body = await readBody(event);
-        const id = getRouterParam(event, 'id');
-        await $fetch(apiUrl(`/collections/${id}`), {
-            method: 'PATCH',
-            headers: apiHeaders(true),
-            body,
+        const client = await beditaApiClient(event);
+        const response = await client.patch(`/collections/${body.id}`, {
+            data: {
+                id: `${body.id}`,
+                type: 'collections',
+                attributes: body.attributes,
+            }
         });
+
+        return response.formattedData;
     } catch (error) {
-        return handleApiError(event, error);
+        return handleBeditaApiError(event, error);
     }
 });
