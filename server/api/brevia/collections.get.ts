@@ -1,15 +1,8 @@
-const config = useRuntimeConfig()
-
 export default defineEventHandler(async (event) => {
-    const url = config.apiBaseUrl + `/collections`
     const query = getQuery(event);
-
     try {
-        const response: any = await $fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + config.apiSecret,
-            },
+        const response: any = await $fetch(apiUrl('/collections'), {
+            headers: authorizationHeaders(),
             query,
         });
 

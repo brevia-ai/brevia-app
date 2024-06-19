@@ -68,6 +68,18 @@ import {
           route: '/api/bedita/user_menu',
           handler: resolver.resolve('./runtime/server/api/bedita/user_menu.get'),
         },
+        {
+          route: '/api/bedita/collections',
+          handler: resolver.resolve('./runtime/server/api/bedita/collections.post'),
+        },
+        {
+          route: '/api/bedita/collections/*',
+          handler: resolver.resolve('./runtime/server/api/bedita/collections/[id].patch'),
+        },
+        {
+          route: '/api/bedita/collections/*',
+          handler: resolver.resolve('./runtime/server/api/bedita/collections/[id].delete'),
+        },
       ];
 
       endpointsEnabled.forEach((endpoint) => {

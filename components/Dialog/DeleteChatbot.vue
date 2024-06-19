@@ -49,8 +49,9 @@ const deleteChatbot = async () => {
         return;
 
     isDeleting.value = true;
+    const integration = useIntegration();
     try {
-        await $fetch(`/api/${integration}/collection/${props.collection.uuid}`, { method: 'DELETE' });
+        await $fetch(`/api/${integration}/collections/${props.collection.uuid}`, { method: 'DELETE' });
     } catch (err) {
         error.value = t('ERROR_DELETING_CHATBOT');
     }

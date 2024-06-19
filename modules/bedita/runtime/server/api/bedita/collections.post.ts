@@ -1,11 +1,11 @@
 export default defineEventHandler(async (event) => {
     try {
-        const attributes = await readBody(event);
+        const body = await readBody(event);
         const client = await beditaApiClient(event);
         const responseCollection = await client.post('/collections', {
             data: {
                 type: 'collections',
-                attributes,
+                attributes: body.cmetadata,
             }
         });
 
@@ -17,11 +17,27 @@ export default defineEventHandler(async (event) => {
                 {
                     type: 'users',
                     id: user.id,
+                    meta: {
+                        relation: {
+                            params: {
+                                edit_level: 'read_write',
+                            }
+                        }
+                    }
                 }
             ],
         });
 
-        return responseCollection.formattedData;
+        const attr = responseCollection.formattedData.data.attributes;
+        const meta = responseCollection.formattedData.data.meta;
+
+        return {
+            name: attr.uname,
+            uuid: meta.collection_uuid,
+            cmetadata: {
+                ...attr,
+            },
+        };
     } catch (error) {
         return handleBeditaApiError(event, error);
     }

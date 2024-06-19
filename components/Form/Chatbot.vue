@@ -43,12 +43,13 @@ const props = defineProps({
 
 const { $closeModal, $html2text } = useNuxtApp();
 const statesStore = useStatesStore();
-const collection = statesStore.collection;
+let collection = statesStore.collection;
 
 const error = ref(false);
 const isLoading = ref(false);
 const title = ref('');
 const description = ref('');
+const integration = useIntegration();
 
 if (collection) {
     title.value = collection.cmetadata?.title || '';
@@ -78,19 +79,24 @@ const save = async () => {
 
 const create = async () => {
     try {
-        const data = await $fetch('/api/bedita/collection', {
+        const data = await $fetch(`/api/${integration}/collections`, {
             method: 'POST',
             body: {
-                title: title.value,
-                description: description.value,
+                cmetadata: {
+                    title: title.value,
+                    description: description.value,
+                }
             },
         });
 
+        collection = data;
+        statesStore.collection = collection;
+
         statesStore.menu.push({
-            link: `/chatbot/${data.data?.attributes?.uname}`,
+            link: `/chatbot/${collection?.name}`,
             type: 'chatbot',
-            title: data.data?.attributes?.title,
-            description: data.data?.attributes?.description,
+            title: title.value,
+            description: description.value,
             params: null,
             edit: ItemEditLevel.ReadWrite,
         });
@@ -101,17 +107,17 @@ const create = async () => {
 
 const update = async () => {
     try {
-        await $fetch('/api/bedita/collection', {
+        collection.cmetadata = {
+            ...collection.cmetadata,
+            ...{title: title.value, description: description.value},
+        };
+
+        await $fetch(`/api/${integration}/collections/${statesStore?.collection?.uuid}`, {
             method: 'PATCH',
-            body: {
-                id: String(collection?.cmetadata?.id),
-                attributes: {
-                    title: title.value,
-                    description: description.value,
-                },
-            },
+            body: collection,
         });
 
+        statesStore.collection = collection;
         // update menu
         const newMenu = statesStore.menu.map((item: any) => {
             if (item.type === 'chatbot' && item.link === `/chatbot/${collection?.name}`) {

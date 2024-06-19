@@ -2,6 +2,7 @@ import { useStatesStore } from '~~/store/states';
 import { useSession } from 'h3';
 import { getSessionConfig } from '~~/server/utils/session';
 import { buildUserMenu } from '~~/utils/user-data-store';
+import { menuItems } from '~~/server/utils/menu-items';
 
 export default defineNuxtRouteMiddleware(async (to) => {
     if (process.server) {
@@ -14,10 +15,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
             console.log('User logged in', session.data.user);
             if (to.path !== '/index' && to.path !== '/') { // In index page menu is loaded client side
                 try {
-                    const integration = useIntegration();
-                    const menuItems = await useFetch(`/api/${integration}/user_menu`);
-                    console.log('Menu items', menuItems);
-                    statesStore.menu = buildUserMenu(menuItems);
+                    const items = await menuItems();
+                    statesStore.menu = buildUserMenu(items);
                 } catch (error) {
                     console.error('Error loading menu', error);
                 }
