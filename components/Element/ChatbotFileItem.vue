@@ -118,7 +118,6 @@ const deleteFile = async () => {
 const download = async () => {
     try {
         const data = await $fetch(`/api/bedita/files/${props.item.id}`, { method: 'GET' });
-        console.log(data);
         const url = data.formattedData?.data?.meta?.media_url;
         if (url)
             window.open(url, '_blank');

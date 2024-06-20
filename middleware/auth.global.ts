@@ -26,11 +26,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
         const event = useRequestEvent();
         const session = await useSession(event, sessionConfig());
         const user = userSession(session);
-        console.log('session user', user);
         if (user) {
             const statesStore = useStatesStore();
             statesStore.userLogin(user);
-            console.log('User logged in', user);
             if (to.path !== '/index' && to.path !== '/') { // In index page menu is loaded client side
                 try {
                     const items = await menuItems();
@@ -56,15 +54,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
         publicPages.push('/privacy/privacy-policy', '/privacy/terms-conditions', '/privacy/cookie-policy');
     }
     if (publicPages.includes(to.path)) {
-        console.log('Public page', to.path);
         return;
     }
 
     const statesStore = useStatesStore();
     if (!statesStore.isLogged()) {
-        console.log('User not logged');
         useStatesStore().$reset();
         return navigateTo('/auth', { redirectCode: 301 });
     }
-    console.log('User is logged');
 });

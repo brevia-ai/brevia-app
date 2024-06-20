@@ -74,7 +74,6 @@ const save = async () => {
         await update();
         emit('close', true);
     } else {
-        console.log('create');
         await create();
         emit('close', true);
     }
