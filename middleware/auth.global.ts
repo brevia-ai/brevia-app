@@ -1,13 +1,13 @@
 import { useStatesStore } from '~~/store/states';
 import { useSession } from 'h3';
-import { getSessionConfig } from '~~/server/utils/session';
+import { breviaSessionConfig } from '~~/server/utils/session';
 import { buildUserMenu } from '~~/utils/user-data-store';
 import { menuItems } from '~~/server/utils/menu-items';
 
 export default defineNuxtRouteMiddleware(async (to) => {
     if (process.server) {
         const event = useRequestEvent();
-        const session = await useSession(event, getSessionConfig());
+        const session = await useSession(event, breviaSessionConfig());
         console.log('session data', session.data);
         if (session.data?.user && session.data?.user?.username !== undefined) {
             const statesStore = useStatesStore();

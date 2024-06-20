@@ -1,6 +1,6 @@
 import { type SessionConfig } from 'h3';
 
-export const getSessionConfig = (): SessionConfig => {
+export const breviaSessionConfig = (): SessionConfig => {
     const config = useRuntimeConfig();
 
     return {

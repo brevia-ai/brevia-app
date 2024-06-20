@@ -1,4 +1,4 @@
-import { getSessionConfig } from '~~/server/utils/session';
+import { breviaSessionConfig } from '~~/server/utils/session';
 
 // Dummy implementation of a user login -> this must be changed for your app/platform/cms of choice
 export default defineEventHandler(async (event) => {
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
         if (!user) {
             return handleApiError(event, {message: 'Invalid credentials', status: 401});
         }
-        const session = await useSession(event, getSessionConfig());
+        const session = await useSession(event, breviaSessionConfig());
         await session.update({user});
 
         return user;

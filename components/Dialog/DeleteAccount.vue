@@ -84,7 +84,7 @@ async function exit() {
     $closeModal();
     await $fetch(`/api/${integration}/logout`, {method: 'POST'});
     statesStore.$reset();
-    navigateTo('/auth');
+    await navigateTo('/auth');
 }
 
 </script>

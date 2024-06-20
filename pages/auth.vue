@@ -72,7 +72,7 @@ const signIn = async () => {
     error.value = false;
     try {
         await login(username.value, password.value);
-        navigateTo('/');
+        await navigateTo('/');
     } catch (e) {
         error.value = true;
     }

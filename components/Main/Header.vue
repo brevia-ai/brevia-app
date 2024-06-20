@@ -29,7 +29,7 @@
 
         <!-- FIXME: Add v-if="isLogged"  -->
         <button class="h-10 px-4 sm:px-8 button text-sm leading-none bg-slate-900 hover:bg-danger hover:border-pink-800"
-            @click="onLogout">
+            @click="onLogout" v-if="isLogged">
             <div class="sm:hidden">
                 <Icon name="ph:sign-out-bold" class="text-lg" />
             </div>
@@ -58,6 +58,6 @@ async function onLogout() {
     await logout();
     const statesStore = useStatesStore();
     statesStore.$reset();
-    navigateTo('/auth');
+    await navigateTo('/auth');
 }
 </script>
