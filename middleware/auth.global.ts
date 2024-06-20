@@ -1,18 +1,36 @@
 import { useStatesStore } from '~~/store/states';
 import { useSession } from 'h3';
-import { breviaSessionConfig } from '~~/server/utils/session';
+import { breviaSessionConfig, beditaSessionConfig } from '~~/server/utils/session';
 import { buildUserMenu } from '~~/utils/user-data-store';
 import { menuItems } from '~~/server/utils/menu-items';
+
+const sessionConfig = () => {
+    const integration = useIntegration();
+    return integration == 'brevia' ? breviaSessionConfig() : beditaSessionConfig();
+}
+
+const userSession = (session) => {
+    const integration = useIntegration();
+    if (integration === 'brevia') {
+        return session.data?.user;
+    } else if (integration === 'bedita') {
+        return session.data?.['bedita.user'];
+    }
+
+    return null;
+}
+
 
 export default defineNuxtRouteMiddleware(async (to) => {
     if (process.server) {
         const event = useRequestEvent();
-        const session = await useSession(event, breviaSessionConfig());
-        console.log('session data', session.data);
-        if (session.data?.user && session.data?.user?.username !== undefined) {
+        const session = await useSession(event, sessionConfig());
+        const user = userSession(session);
+        console.log('session user', user);
+        if (user) {
             const statesStore = useStatesStore();
-            statesStore.userLogin(session.data.user);
-            console.log('User logged in', session.data.user);
+            statesStore.userLogin(user);
+            console.log('User logged in', user);
             if (to.path !== '/index' && to.path !== '/') { // In index page menu is loaded client side
                 try {
                     const items = await menuItems();
@@ -42,7 +60,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
         return;
     }
 
-    if (!useIntegrationAuth().isLogged.value) {
+    const statesStore = useStatesStore();
+    if (!statesStore.isLogged()) {
         console.log('User not logged');
         useStatesStore().$reset();
         return navigateTo('/auth', { redirectCode: 301 });

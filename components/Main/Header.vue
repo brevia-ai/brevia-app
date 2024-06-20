@@ -15,7 +15,7 @@
             v-for="(lang, i) in availableLocales" :key="i"
             @click="setLocale(lang as string)">{{ lang }}
         </button>
-        <button class="h-10 px-4  button border-none text-sm uppercase" v-if="isLogged">
+        <button class="h-10 px-4  button border-none text-sm uppercase" v-if="statesStore.isLogged() && features.signup">
             <NuxtLink to="/profile">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path
@@ -27,9 +27,8 @@
             </NuxtLink>
         </button>
 
-        <!-- FIXME: Add v-if="isLogged"  -->
         <button class="h-10 px-4 sm:px-8 button text-sm leading-none bg-slate-900 hover:bg-danger hover:border-pink-800"
-            @click="onLogout" v-if="isLogged">
+            @click="onLogout" v-if="statesStore.isLogged()">
             <div class="sm:hidden">
                 <Icon name="ph:sign-out-bold" class="text-lg" />
             </div>
@@ -39,7 +38,7 @@
         <NuxtLink class="w-12 h-10 button border-none" to="/" v-if="$route.name === 'about'">
             <Icon name="ph:house-simple-bold" class="text-lg" />
         </NuxtLink>
-        <NuxtLink class="w-12 h-10 button font-bold text-lg" to="/about" v-else-if="!isLogged">?</NuxtLink>
+        <NuxtLink class="w-12 h-10 button font-bold text-lg" to="/about" v-else-if="!statesStore.isLogged()">?</NuxtLink>
     </div>
 </header>
 </template>
@@ -47,8 +46,9 @@
 <script setup lang="ts">
 const config = useRuntimeConfig();
 const { locale, locales, setLocale } = useI18n();
-const { isLogged, logout } = useIntegrationAuth();
-console.log('User logged: ', isLogged.value);
+const { logout } = useIntegrationAuth();
+const statesStore = useStatesStore();
+const features = useIntegrationFeatures();
 
 const availableLocales = computed(() => {
     return (locales.value as Array<String>).filter(lang => lang !== locale.value);

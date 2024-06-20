@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { type JsonApiResourceObject } from '@atlasconsulting/bedita-sdk';
-import { ApiResponseBodyResource, UserAuth } from '@atlasconsulting/nuxt-bedita';
+import { type ApiResponseBodyResource, type UserAuth } from '@atlasconsulting/nuxt-bedita';
 
 const { locale } = useI18n();
 const { user: sessionUser } = useBeditaAuth();

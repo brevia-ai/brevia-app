@@ -5,15 +5,13 @@
             v-if="statesStore.menu.length" />
 
         <DashboardWelcome :user="user" :add-enabled="isAddEnabled"
-            v-else-if="isLogged" />
+            v-else-if="statesStore.isLogged()" />
     </main>
 </template>
 
 <script setup>
 const config = useRuntimeConfig();
 useHead({ title: config.public.appName });
-
-const { user, isLogged } = useIntegrationAuth();
 const modalStore = useModalStore();
 const statesStore = useStatesStore();
 

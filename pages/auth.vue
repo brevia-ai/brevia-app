@@ -1,6 +1,6 @@
 <template>
     <main class="mt-16">
-        <div class="mt-6 max-w-sm mx-auto space-y-8" v-if="!isLogged">
+        <div class="mt-6 max-w-sm mx-auto space-y-8" v-if="!statesStore.isLogged()">
             <form class="flex flex-col space-y-8" @submit.stop.prevent>
                 <UIXInput
                     autocomplete="username" autocorrect="off" autocapitalize="none"
@@ -15,14 +15,14 @@
                         v-model="password" @keydown.enter.stop.prevent="signIn"
                         required />
 
-                    <NuxtLink v-if="features?.changePassword" to="/forgot-password" class="text-xs text-end mt-0 pt-0 text-sky-600">{{ $t('FORGOT_PASS') }}</NuxtLink>
+                    <NuxtLink v-if="features.changePassword" to="/forgot-password" class="text-xs text-end mt-0 pt-0 text-sky-600">{{ $t('FORGOT_PASS') }}</NuxtLink>
                 </div>
 
                 <button class="p-4 button text-lg"
                     :class="{ 'is-loading': isLoading }"
                     @click="signIn">{{ $t('SIGN_IN') }}</button>
 
-                <div class="text-sm text-center" v-if="features?.signup">
+                <div class="text-sm text-center" v-if="features.signup">
                     {{ $t('NOT_A_MEMBER') }}
                     <NuxtLink class="text-sky-800" to="/signup">{{ $t('SIGN_UP_HERE') }}</NuxtLink>
                 </div>
@@ -32,7 +32,7 @@
             </div>
 
 
-            <div class="text-xs text-center text-neutral-400" v-if="features?.privacyDocuments">
+            <div class="text-xs text-center text-neutral-400" v-if="features.privacyDocuments">
                 <i18n-t keypath="RECAPTCHA" tag="p">
                     <template v-slot:privacyPolicy>
                         <a class="font-semibold" href="https://policies.google.com/privacy">{{ $t('PRIVACY_POLICY') }}</a>
@@ -48,13 +48,14 @@
 </template>
 
 <script setup lang="ts">
-const { login, isLogged } = useIntegrationAuth();
+const statesStore = useStatesStore();
+const { login } = useIntegrationAuth();
 
 definePageMeta({
     middleware: [
         function () {
-            const { isLogged } = useIntegrationAuth();
-            if (isLogged.value) {
+            const statesStore = useStatesStore();;
+            if (statesStore.isLogged()) {
                 return navigateTo('/');
             }
         },

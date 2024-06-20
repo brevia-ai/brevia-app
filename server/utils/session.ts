@@ -8,3 +8,12 @@ export const breviaSessionConfig = (): SessionConfig => {
         name: config.brevia.session.name,
     } as SessionConfig;
 }
+
+export const beditaSessionConfig = (): SessionConfig => {
+    const config = useRuntimeConfig();
+
+    return {
+        password: config.bedita.session.secret,
+        name: config.bedita.session.name,
+    } as SessionConfig;
+}
