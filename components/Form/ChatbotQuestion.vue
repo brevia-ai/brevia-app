@@ -1,6 +1,6 @@
 <template>
 <form class="flex flex-col space-y-6" @submit.prevent="save">
-    <UIXInput :label="item.id? '' : $t('NEW_QUESTION')"
+    <UIXInput :label="item.custom_id? '' : $t('NEW_QUESTION')"
         :placeholder="$t('QUESTION_PLACEHOLDER')"
         autocapitalize="on"
         v-model.trim="title"
@@ -17,7 +17,7 @@
 
     <div class="flex justify-end gap-4">
         <button class="mr-auto button button-danger uppercase" :class="{ 'is-loading': isDeleting }"
-            @click.prevent="deleteQuestion" v-if="item.id">
+            @click.prevent="deleteQuestion" v-if="item.custom_id">
             <Icon name="ph:trash-simple-bold" class="text-2xl" />
         </button>
 
@@ -26,7 +26,7 @@
         <button type="submit" class="px-8 button button-primary uppercase"
             :class="{ 'is-loading': isSaving }"
             :disabled="!title">
-                <template v-if="item.id">{{ $t('SAVE') }}</template>
+                <template v-if="item.custom_id">{{ $t('SAVE') }}</template>
                 <template v-else>{{ $t('ADD') }}</template>
         </button>
     </div>
@@ -48,17 +48,19 @@ const isSaving = ref(false);
 const isDeleting = ref(false);
 const title = ref('');
 const answer = ref('');
+// let documentId: string | null = null;
 
-const { $html2text } = useNuxtApp();
-if (props.item.attributes) {
-    title.value = props.item.attributes.title || '';
-    answer.value = $html2text(props.item.attributes.body);
-}
+// const { $html2text } = useNuxtApp();
+
+const lines = props.item?.document?.split('\n') || [];
+title.value = lines?.[0] || '';
+answer.value = lines.slice(1)?.join('\n') || '';
 
 const statesStore = useStatesStore();
-const collectionBeditaId = statesStore.collection?.cmetadata?.id || '';
-const collectionUuid = statesStore.collection?.uuid || '';
+const collectionUuid:string = statesStore.collection?.uuid || '';
 const metadataDefaults = statesStore.collection?.cmetadata?.metadata_defaults?.questions || {};
+const metadata = {...{ type: 'questions' }, ...metadataDefaults};
+const integration = useIntegration();
 
 // methods
 const cancel = () => {
@@ -70,7 +72,7 @@ const save = async () => {
         return;
 
     isSaving.value = true;
-    if (props.item.id) {
+    if (props.item.custom_id) {
         await update();
         emit('close', true);
     } else {
@@ -82,60 +84,47 @@ const save = async () => {
 
 const create = async () => {
     try {
-        const data = await $fetch('/api/bedita/question', {
-            method: 'POST',
-            body: {
-                collectionId: collectionBeditaId,
-                attributes: {
-                    title: title.value,
-                    body: answer.value,
-                    extra: {
-                        brevia: {
-                            metadata: {
-                                type: 'questions'
-                            }
-                        }
-                    }
-                },
-            },
-        });
-        const docId = String(data.data?.id || '');
-        const meta = await readMetadata(docId);
-        await updateMetadata(docId, {...meta, ...metadataDefaults});
-
+        await addQuestion();
     } catch (err) {
         error.value = true;
+        console.error(err);
     }
+}
+
+const addQuestion = async (id: string = '') => {
+    await $fetch(`/api/${integration}/add_document`, {
+        method: 'POST',
+        body: {
+            document_id: id,
+            metadata,
+            content: `${title.value}\n${answer.value}`,
+            collection_id: collectionUuid,
+        },
+    });
 }
 
 const update = async () => {
     try {
         // read current metadata first
-        const meta = await readMetadata(String(props.item?.id));
-        await $fetch('/api/bedita/question', {
-            method: 'PATCH',
-            body: {
-                id: String(props.item?.id),
-                attributes: {
-                    title: title.value,
-                    body: answer.value,
-                },
-            },
-        });
+        const meta = await readMetadata(String(props.item?.custom_id));
+        await $fetch(`/api/${integration}/index/${collectionUuid}/${props.item?.custom_id}`, { method: 'DELETE' });
+        await addQuestion(props.item?.custom_id);
         // restore previous metadata
         await updateMetadata(String(props.item?.id), meta);
 
     } catch (err) {
         error.value = true;
+        console.error(err);
     }
 }
 
 const deleteQuestion = async () => {
     isDeleting.value = true;
     try {
-        await $fetch(`/api/bedita/question/${props.item.id}`, { method: 'DELETE' });
+        await $fetch(`/api/${integration}/index/${collectionUuid}/${props.item.custom_id}`, { method: 'DELETE' });
     } catch (err) {
         error.value = true;
+        console.error(err);
     }
     isDeleting.value = false;
     emit('close', true);
@@ -143,10 +132,12 @@ const deleteQuestion = async () => {
 
 const readMetadata = async (docId: string) => {
     try {
-        const response = await fetch(
-            `/api/brevia/index/${collectionUuid}/${docId}`
+        const response = await $fetch(
+            `/api/brevia/index/${collectionUuid}/${docId}`,
+            {method: 'GET'},
         )
-        const data = await response.json();
+        console.log(response);
+        const data = response || [];
         return data?.[0]?.cmetadata || {};
     } catch (error) {
         console.log(error);

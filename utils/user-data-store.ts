@@ -21,7 +21,7 @@ export const userEditLevel = (item: any): ItemEditLevel => {
     return ItemEditLevel.None
 };
 
-const extractField = (obj: any, field: string) => {
+export const extractField = (obj: any, field: string) => {
     return obj?.attributes?.[field] || obj?.meta?.[field] || obj?.[field] || '';
 };
 

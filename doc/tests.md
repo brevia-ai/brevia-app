@@ -23,6 +23,15 @@ Here we provide a list of tests cases (features to test), whenever big refactors
 
 - Create collection
 - Access collection and interact with it (make questions to the AI)
+- Update collection (title/description)
+- Remove collection
+
+## Q&A
+
+- List questions
+- Create question
+- Update question
+- Remove question
 
 ## Features
 

@@ -24,19 +24,19 @@
                 <Icon name="ph:x-bold" class="text-sky-600 hover:text-sky-400 hover:cursor-pointer absolute text-2xl hover: top-3 right-2" @click="searchInput = '';"/>
             </div>
             <div class="absolute right-4 -bottom-1 text-sm font-bold italic text-sky-600" v-if="searchTerm(searchInput)">
-                {{ questions?.formattedData.data.filter(showThis).length }} {{ $t('ELEMENTS_FOUND') }}
+                {{ questions?.data?.filter(showThis)?.length }} {{ $t('ELEMENTS_FOUND') }}
             </div>
         </div>
     </div>
 
-    <FormChatbotQuestion :collection-id="collection?.cmetadata.id" @close="closeForm" v-else />
+    <FormChatbotQuestion @close="closeForm" v-else />
     <!-- existing -->
     <div class="-my-6 ellipsis-loading text-sky-700"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
-    <div class="questions space-y-6" v-else-if="questions?.formattedData.data.length">
-        <div id="questions" v-for="item in questions.formattedData.data" :key="item.id">
+    <div class="questions space-y-6" v-else-if="questions?.length">
+        <div id="questions" v-for="item in questions" :key="item.id">
             <div class="question" v-if="showThis(item)">
-                <ElementChatbotQuestionItem :item="item" :collection-id="collection?.cmetadata.id" :search-term="searchTerm(searchInput)" @close="closeForm" />
+                <ElementChatbotQuestionItem :item="item" :search-term="searchTerm(searchInput)" @close="closeForm" />
             </div>
         </div>
     </div>
@@ -50,12 +50,13 @@ const addMode = ref(false);
 const isLoading = ref(true);
 const statesStore = useStatesStore();
 const collection = statesStore.collection;
-
-const isDemo = statesStore.userHasRole('demo');
+const features = useIntegrationFeatures();
+const isDemo = features.demoVersion && statesStore.userHasRole('demo');
 const isQuestionAddAllowed = ref(false);
 const searchInput = ref('');
 
-const endpoint = `/api/bedita/collections/${collection?.cmetadata?.id}/has_documents?filter[type]=questions&sort=-created`;
+const integration = useIntegration();
+const endpoint = `/api/${integration}/index/${collection?.uuid}?filter[type]=questions&sort=-created`;
 const { data: questions } = await useApiGetAll(endpoint);
 isLoading.value = false;
 isQuestionAddAllowed.value = checkAddAllowed(questions);
@@ -70,9 +71,13 @@ const showThis = (item: any) => {
     if (searchTerm(term).length <= MIN_SEARCH_LENGTH) {
         return true
     }
-    let title = item?.attributes?.title?.toUpperCase()
-    let description = item?.attributes?.body.toUpperCase()
-    return ( title.includes(searchTerm(term)) ||  description.includes(searchTerm(term)) )
+    const title = extractField(item, 'title').toUpperCase();
+    const body = extractField(item, 'body').toUpperCase();
+    const document = extractField(item, 'document').toUpperCase();
+
+    return title.includes(searchTerm(term)) ||
+        body.includes(searchTerm(term)) ||
+        document.includes(searchTerm(term));
 }
 
 const closeForm = async (e: boolean) => {
@@ -86,16 +91,16 @@ const closeForm = async (e: boolean) => {
 }
 
 
-watch(questions, (newQuestions) => {
-    isQuestionAddAllowed.value = checkAddAllowed(newQuestions);
-});
+// watch(questions, (newQuestions) => {
+//     isQuestionAddAllowed.value = checkAddAllowed(newQuestions);
+// });
 
 function checkAddAllowed(newQuestions: any) {
     if (!isDemo) {
         return true;
     }
 
-    const num = newQuestions?.value?.data?.length || newQuestions?.data?.length || 0;
+    const num = newQuestions?.length || 0;
     return parseInt(useRuntimeConfig().public.demo.maxChatQuestions) > num;
 }
 
