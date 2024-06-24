@@ -1,12 +1,12 @@
 <template>
 <form class="flex flex-col space-y-6" @submit.prevent="save">
-    <UIXInput :label="item.id? '' : $t('NEW_LINK')"
+    <UIXInput :label="item.custom_id? '' : $t('NEW_LINK')"
         :placeholder="$t('LINK_PLACEHOLDER')"
         autocapitalize="on"
         v-model.trim="url"
         @keydown.enter.stop.prevent="save"
         autofocus
-        :readonly="item.id"
+        :readonly="!!item.custom_id"
         required />
 
     <div class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary" v-if="error">
@@ -15,13 +15,13 @@
 
     <div class="flex justify-end gap-4">
         <button class="mr-auto button button-danger uppercase" :class="{ 'is-loading': isDeleting }"
-            @click.prevent="deleteLink" v-if="item.id">
+            @click.prevent="deleteLink" v-if="item.custom_id">
             <Icon name="ph:trash-simple-bold" class="text-2xl" />
         </button>
 
         <button class="button button-secondary uppercase" @click.prevent="cancel">{{ $t('CANCEL') }}</button>
 
-        <button v-if="!item.id" type="submit" class="px-8 button button-primary uppercase"
+        <button v-if="!item.custom_id" type="submit" class="px-8 button button-primary uppercase"
             :class="{ 'is-loading': isSaving }"
             :disabled="!url">{{ $t('ADD') }}
         </button>
@@ -44,15 +44,15 @@ const isSaving = ref(false);
 const isDeleting = ref(false);
 const url = ref('');
 
-if (props.item.attributes) {
-    url.value = props.item.attributes.url || '';
+if (props.item.cmetadata) {
+    url.value = props.item.cmetadata?.url || '';
 }
 
 const statesStore = useStatesStore();
-const collectionBeditaId = statesStore.collection?.cmetadata?.id || '';
 const collectionUuid = statesStore.collection?.uuid || '';
 const metadataDefaults = statesStore.collection?.cmetadata?.metadata_defaults?.links || {};
 const linkLoadOptions = statesStore.collection?.cmetadata?.link_load_options || [];
+const integration = useIntegration();
 
 // methods
 const cancel = () => {
@@ -64,14 +64,8 @@ const save = async () => {
         return;
 
     isSaving.value = true;
-    if (props.item.id) {
-        await update();
-    } else {
-        await create();
-    }
-    if (!error.value) {
-        emit('close', true);
-    }
+    await create();
+    emit('close', true);
     isSaving.value = false;
 }
 
@@ -105,55 +99,20 @@ const create = async () => {
             error.value = true;
             return;
         }
-        const data = await $fetch('/api/bedita/link', {
+
+        const metadata = {
+            type: 'links',
+            url: url.value,
+        };
+        await $fetch(`/api/${integration}/index/link`, {
             method: 'POST',
             body: {
-                collectionId: collectionBeditaId,
-                attributes: {
-                    url: url.value,
-                    title: url.value,
-                    extra: {
-                        brevia: {
-                            metadata: {
-                                type: 'links',
-                                url: url.value,
-                            },
-                            options: linkOptions(url.value),
-                        },
-                    },
-                },
+                link: url.value,
+                collection_id : collectionUuid,
+                metadata: {...metadata, ...metadataDefaults},
+                options: linkOptions(url.value),
             },
         });
-        const docId = String(data.data?.id || '');
-        const meta = await readMetadata(docId);
-        await updateMetadata(docId, {...meta, ...metadataDefaults});
-
-    } catch (err) {
-        console.log(err);
-        error.value = true;
-    }
-}
-
-const update = async () => {
-    try {
-        if (!await checkUrl()) {
-            error.value = true;
-            return;
-        }
-        // read current metadata first
-        const meta = await readMetadata(String(props.item?.id));
-        await $fetch('/api/bedita/link', {
-            method: 'PATCH',
-            body: {
-                id: String(props.item?.id),
-                attributes: {
-                    title: url.value,
-                    url: url.value,
-                },
-            },
-        });
-        // restore previous metadata
-        await updateMetadata(String(props.item?.id), meta);
 
     } catch (err) {
         console.log(err);
@@ -174,42 +133,14 @@ const linkOptions = (url: string) => {
 const deleteLink = async () => {
     isDeleting.value = true;
     try {
-        await $fetch(`/api/bedita/link/${props.item.id}`, { method: 'DELETE' });
+        await $fetch(`/api/${integration}/index/${collectionUuid}/${props.item.custom_id}`, {
+            method: 'DELETE'
+        });
     } catch (err) {
         console.log(err);
         error.value = true;
     }
     isDeleting.value = false;
     emit('close', true);
-}
-
-const readMetadata = async (docId: string) => {
-    try {
-        const response = await fetch(
-            `/api/brevia/index/${collectionUuid}/${docId}`
-        )
-        const data = await response.json();
-        return data?.[0]?.cmetadata || {};
-    } catch (error) {
-        console.log(error);
-        return {};
-    }
-}
-
-const updateMetadata = async (docId: string, meta: any) => {
-    try {
-        await $fetch('/api/brevia/index/metadata', {
-            method: 'POST',
-            body: {
-                collection_id: collectionUuid,
-                document_id: docId,
-                metadata: meta,
-            },
-        });
-
-    } catch (err) {
-        console.log(err);
-        error.value = true;
-    }
 }
 </script>

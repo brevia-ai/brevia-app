@@ -54,12 +54,17 @@ const features = useIntegrationFeatures();
 const isDemo = features.demoVersion && statesStore.userHasRole('demo');
 const isQuestionAddAllowed = ref(false);
 const searchInput = ref('');
-
+const questions = ref([]);
 const integration = useIntegration();
 const endpoint = `/api/${integration}/index/${collection?.uuid}?filter[type]=questions&sort=-created`;
-const items = await useApiGetAll(endpoint);
-const questions = ref(items.data);
-isLoading.value = false;
+
+const loadQuestions = async () => {
+    isLoading.value = true;
+    const items = await useApiGetAll(endpoint);
+    questions.value = items.data;
+    isLoading.value = false;
+}
+await loadQuestions();
 isQuestionAddAllowed.value = checkAddAllowed(questions);
 
 const searchTerm = (input: string) => {
@@ -83,10 +88,7 @@ const showThis = (item: any) => {
 
 const closeForm = async (e: boolean) => {
     if (e) {
-        isLoading.value = true;
-        const items = await useApiGetAll(endpoint);
-        questions.value = items.data;
-        isLoading.value = false;
+        await loadQuestions();
     }
 
     addMode.value = false;

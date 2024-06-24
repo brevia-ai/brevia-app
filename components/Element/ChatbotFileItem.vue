@@ -15,8 +15,8 @@
         </div>
 
         <div class="leading-tight space-y-1">
-            <p class="font-bold">{{ item.attributes.title }}</p>
-            <p class="text-xs text-slate-400" v-if="item.attributes.description">{{ $html2text(item.attributes.description) }}</p>
+            <p class="font-bold">{{ item.cmetadata?.file }}</p>
+            <p class="text-xs text-slate-400" v-if="item.cmetadata?.description">{{ $html2text(item.cmetadata?.description) }}</p>
         </div>
     </div>
 
@@ -32,7 +32,7 @@
         </a>
 
         <button class="mr-auto button button-secondary button-transparent text-pink-500 hover:bg-danger hover:border-danger hover:text-white pt-2.5 pb-2 px-3" :class="{ 'is-loading': isDeleting }"
-            @click.stop.prevent="deleteFile" v-if="item.id">
+            @click.stop.prevent="deleteFile" v-if="item.custom_id">
             <Icon name="ph:trash-simple-bold" class="text-xl" />
         </button>
     </div>
@@ -63,6 +63,7 @@ const isDeleting = ref(false);
 const isPolling = ref(true);
 const isIndexed = ref(props.indexed);
 let intervalId: any = null;
+const integration = useIntegration();
 
 onMounted(() => {
     (props.indexed)
@@ -92,7 +93,7 @@ const startPolling = () => {
 
 const checkFileIndex = async() => {
     try{
-        let data = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?document_id=${props.item?.id}`);
+        let data = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?document_id=${props.item?.custom_id}`);
         if(data.length > 0) {
             isPolling.value = false;
             isIndexed.value = true;
@@ -107,7 +108,8 @@ const checkFileIndex = async() => {
 const deleteFile = async () => {
     isDeleting.value = true;
     try {
-        await $fetch(`/api/bedita/file/${props.item.id}`, { method: 'DELETE' });
+        const statesStore = useStatesStore();
+        await $fetch(`/api/${integration}/index/${statesStore?.collection?.uuid}/${props.item.custom_id}`, { method: 'DELETE' });
         emit('file-deleted', true);
     } catch (err) {
         console.error(err);
@@ -117,8 +119,7 @@ const deleteFile = async () => {
 
 const download = async () => {
     try {
-        const data = await $fetch(`/api/bedita/files/${props.item.id}`, { method: 'GET' });
-        const url = data.formattedData?.data?.meta?.media_url;
+        const url = props.item.cmetadata?.url || null;
         if (url)
             window.open(url, '_blank');
     } catch (err) {

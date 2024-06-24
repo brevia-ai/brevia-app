@@ -13,14 +13,14 @@
         </div>
     </div>
 
-    <FormChatbotLink :collection-id="collection?.cmetadata.id" @close="closeForm" v-else />
+    <FormChatbotLink @close="closeForm" v-else />
     <!-- existing -->
     <div class="-my-6 ellipsis-loading text-sky-700"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
-    <div class="links space-y-6" v-else-if="links?.formattedData.data.length">
-        <div id="links" v-for="item in links.formattedData.data" :key="item.id">
+    <div class="links space-y-6" v-else-if="links.length">
+        <div id="links" v-for="item in links" :key="item.custom_id">
             <div class="link" >
-                <ElementChatbotLinkItem :item="item" :collection-id="collection?.cmetadata.id" :indexed="checkindexed(item.id)" @close="closeForm" />
+                <ElementChatbotLinkItem :item="item" :indexed="checkindexed(item.custom_id)" @close="closeForm" />
             </div>
         </div>
     </div>
@@ -35,20 +35,31 @@ const collection = <any>statesStore.collection;
 
 const isDemo = statesStore.userHasRole('demo');
 const isLinkAddAllowed = ref(false);
+const links = ref([]);
+let indexedItems = [];
+const integration = useIntegration();
 
-const endpoint = `/api/bedita/links?filter[document_of]=${collection?.cmetadata?.id}&sort=-created`;
-const { data: links } = await useApiGetAll(endpoint);
-const metadataEndpoint = `/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=links`;
-let indexedItems = await $fetch(metadataEndpoint);
-isLoading.value = false;
+const loadLinks = async () => {
+    isLoading.value = true;
+    const endpoint = `/api/${integration}/index/${collection?.uuid}/documents_metadata?filter[type]=links&sort=-created`;
+    if (integration === 'brevia') {
+        const items = await $fetch(endpoint);
+        links.value = items;
+        indexedItems = items;
+    } else {
+        const items = await useApiGetAll(endpoint);
+        links.value = items;
+        indexedItems = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=links`);
+    }
+    isLoading.value = false;
+}
+
+await loadLinks();
 isLinkAddAllowed.value = checkAddAllowed(links);
 
 const closeForm = async (e: boolean) => {
     if (e) {
-        isLoading.value = true;
-        await useApiGetAll(endpoint);
-        indexedItems = await $fetch(metadataEndpoint);
-        isLoading.value = false;
+        await loadLinks();
     }
 
     addMode.value = false;
@@ -70,7 +81,7 @@ function checkAddAllowed(newLinks: any) {
         return true;
     }
 
-    const num = newLinks?.value?.data?.length || newLinks?.data?.length || 0;
+    const num = newLinks?.value?.length || newLinks?.length || 0;
     return parseInt(useRuntimeConfig().public.demo.maxChatLinks) > num;
 }
 
