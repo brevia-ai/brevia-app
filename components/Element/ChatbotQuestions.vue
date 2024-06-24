@@ -57,7 +57,8 @@ const searchInput = ref('');
 
 const integration = useIntegration();
 const endpoint = `/api/${integration}/index/${collection?.uuid}?filter[type]=questions&sort=-created`;
-const { data: questions } = await useApiGetAll(endpoint);
+const items = await useApiGetAll(endpoint);
+const questions = ref(items.data);
 isLoading.value = false;
 isQuestionAddAllowed.value = checkAddAllowed(questions);
 
@@ -83,7 +84,8 @@ const showThis = (item: any) => {
 const closeForm = async (e: boolean) => {
     if (e) {
         isLoading.value = true;
-        await useApiGetAll(endpoint);
+        const items = await useApiGetAll(endpoint);
+        questions.value = items.data;
         isLoading.value = false;
     }
 
@@ -91,9 +93,9 @@ const closeForm = async (e: boolean) => {
 }
 
 
-// watch(questions, (newQuestions) => {
-//     isQuestionAddAllowed.value = checkAddAllowed(newQuestions);
-// });
+watch(questions, (newQuestions) => {
+    isQuestionAddAllowed.value = checkAddAllowed(newQuestions);
+});
 
 function checkAddAllowed(newQuestions: any) {
     if (!isDemo) {
