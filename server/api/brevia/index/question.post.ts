@@ -6,6 +6,9 @@ export default defineEventHandler(async (event) => {
         if (!body.document_id) {
             body.document_id = uuidv4();
         }
+        body.content = `${body.title}\n${body.answer}`;
+        delete body.title;
+        delete body.answer;
 
         const response: any = await $fetch(apiUrl('/index'), {
             method: 'POST',

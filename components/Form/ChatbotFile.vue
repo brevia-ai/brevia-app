@@ -37,9 +37,10 @@ const upload = async (newFile: File) => {
         formData.append('options', JSON.stringify(options));
     }
     formData.append('collection_id', collection?.uuid || '');
+    const integration = useIntegration();
 
     try {
-        await $fetch('/api/brevia/index/upload', {
+        await $fetch(`/api/${integration}/index/upload`, {
             method: 'POST',
             body: formData,
         });

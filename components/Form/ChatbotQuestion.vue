@@ -53,13 +53,13 @@ const answer = ref('');
 // const { $html2text } = useNuxtApp();
 
 const lines = props.item?.document?.split('\n') || [];
-title.value = lines?.[0] || '';
-answer.value = lines.slice(1)?.join('\n') || '';
+title.value = lines?.[0] || extractField(props.item, 'title') || '';
+answer.value = lines.slice(1)?.join('\n') || extractField(props.item, 'body') || '';
 
 const statesStore = useStatesStore();
 const collectionUuid:string = statesStore.collection?.uuid || '';
 const metadataDefaults = statesStore.collection?.cmetadata?.metadata_defaults?.questions || {};
-const metadata = {...{ type: 'questions' }, ...metadataDefaults};
+let metadata = {...{ type: 'questions' }, ...metadataDefaults};
 const integration = useIntegration();
 
 // methods
@@ -92,13 +92,14 @@ const create = async () => {
 }
 
 const addQuestion = async (id: string = '') => {
-    await $fetch(`/api/${integration}/add_document`, {
+    await $fetch(`/api/${integration}/index/question`, {
         method: 'POST',
         body: {
+            title: title.value,
+            answer: answer.value,
+            collection_id: collectionUuid,
             document_id: id,
             metadata,
-            content: `${title.value}\n${answer.value}`,
-            collection_id: collectionUuid,
         },
     });
 }
@@ -106,11 +107,8 @@ const addQuestion = async (id: string = '') => {
 const update = async () => {
     try {
         // read current metadata first
-        const meta = await readMetadata(String(props.item?.custom_id));
-        await $fetch(`/api/${integration}/index/${collectionUuid}/${props.item?.custom_id}`, { method: 'DELETE' });
+        metadata = await readMetadata(String(props.item?.custom_id));
         await addQuestion(props.item?.custom_id);
-        // restore previous metadata
-        await updateMetadata(String(props.item?.id), meta);
 
     } catch (err) {
         error.value = true;
@@ -142,23 +140,6 @@ const readMetadata = async (docId: string) => {
     } catch (error) {
         console.log(error);
         return {};
-    }
-}
-
-const updateMetadata = async (docId: string, meta: any) => {
-    try {
-        await $fetch('/api/brevia/index/metadata', {
-            method: 'POST',
-            body: {
-                collection_id: collectionUuid,
-                document_id: docId,
-                metadata: meta,
-            },
-        });
-
-    } catch (err) {
-        console.log(err);
-        error.value = true;
     }
 }
 </script>

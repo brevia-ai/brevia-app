@@ -90,7 +90,7 @@ const error = ref(false);
 onBeforeMount(async () => {
     try {
         const response = await fetch(
-            `/api/brevia/index/${statesStore.collection?.uuid}/${props.document.id}`
+            `/api/brevia/index/${statesStore.collection?.uuid}/${props.document.custom_id}`
         )
         const data = await response.json();
         docsFound.value = (data?.length || 0) > 0;
@@ -123,7 +123,7 @@ const updateMetadata = async () => {
             method: 'POST',
             body: {
                 collection_id: statesStore.collection?.uuid || '',
-                document_id: props.document.id,
+                document_id: props.document.custom_id,
                 metadata: metadata.value,
             },
         });

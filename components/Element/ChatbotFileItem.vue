@@ -16,7 +16,7 @@
 
         <div class="leading-tight space-y-1">
             <p class="font-bold">{{ item.cmetadata?.file }}</p>
-            <p class="text-xs text-slate-400" v-if="item.cmetadata?.description">{{ $html2text(item.cmetadata?.description) }}</p>
+            <p class="text-xs text-slate-400" v-if="description">{{ $html2text(description) }}</p>
         </div>
     </div>
 
@@ -66,9 +66,12 @@ let intervalId: any = null;
 const integration = useIntegration();
 
 onMounted(() => {
-    (props.indexed)
-    ? isPolling.value = false
-    : (new Date(props.item.meta.created) > OLDEST_CREATED) ? startPolling() : isPolling.value = false
+    const created = new Date(extractField(props.item, 'created'));
+    if (!props.indexed && created > OLDEST_CREATED) {
+        startPolling();
+    } else {
+        isPolling.value = false;
+    }
 })
 
 onBeforeUnmount(() => {
@@ -126,4 +129,8 @@ const download = async () => {
         console.error(err);
     }
 };
+
+const description = computed(() => {
+    return extractField(props.item, 'description');
+});
 </script>

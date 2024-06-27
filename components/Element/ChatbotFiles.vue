@@ -49,7 +49,7 @@ const loadFiles = async () => {
         indexedItems = items;
     } else {
         const items = await useApiGetAll(endpoint);
-        files.value = items;
+        files.value = items.data;
         indexedItems = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=files`);
     }
     isLoading.value = false;

@@ -56,10 +56,13 @@ const isQuestionAddAllowed = ref(false);
 const searchInput = ref('');
 const questions = ref([]);
 const integration = useIntegration();
-const endpoint = `/api/${integration}/index/${collection?.uuid}?filter[type]=questions&sort=-created`;
+const endpointBase = `/api/${integration}/index/${collection?.uuid}`;
 
 const loadQuestions = async () => {
     isLoading.value = true;
+    const query = 'filter[type]=questions&sort=-created';
+    const addPath = integration !== 'brevia' ? '/documents_metadata' : '';
+    const endpoint = `${endpointBase}${addPath}?${query}`;
     const items = await useApiGetAll(endpoint);
     questions.value = items.data;
     isLoading.value = false;

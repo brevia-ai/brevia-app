@@ -3,15 +3,11 @@ import {
     addServerHandler,
     addImportsDir,
     createResolver,
-    // addServerImports,
-    // addRouteMiddleware,
+    addServerImportsDir,
     logger,
-    // addTypeTemplate,
-    // addImports,
   } from '@nuxt/kit';
   import { type NitroEventHandler } from 'nitropack';
   import { defu } from 'defu';
-//   import type { EndpointConf } from './runtime/types';
 
   // Module options TypeScript interface definition
   export interface ModuleOptions {
@@ -73,14 +69,38 @@ import {
           handler: resolver.resolve('./runtime/server/api/bedita/collections.post'),
         },
         {
-          route: '/api/bedita/collections/*',
+          route: '/api/bedita/collections/:id',
           handler: resolver.resolve('./runtime/server/api/bedita/collections/[id].patch'),
         },
         {
-          route: '/api/bedita/collections/*',
+          route: '/api/bedita/collections/:id',
           handler: resolver.resolve('./runtime/server/api/bedita/collections/[id].delete'),
         },
-      ];
+        {
+            route: '/api/bedita/index/link',
+            handler: resolver.resolve('./runtime/server/api/bedita/index/link.post'),
+        },
+        {
+            route: '/api/bedita/index/question',
+            handler: resolver.resolve('./runtime/server/api/bedita/index/question.post'),
+        },
+        {
+            route: '/api/bedita/index/upload',
+            handler: resolver.resolve('./runtime/server/api/bedita/index/upload.post'),
+        },
+        {
+            route: '/api/bedita/index/:collection_id/documents_metadata',
+            handler: resolver.resolve('./runtime/server/api/bedita/index/[collection_id]/documents_metadata.get'),
+        },
+        {
+            route: '/api/bedita/index/:collection_id/:document_id',
+            handler: resolver.resolve('./runtime/server/api/bedita/index/[collection_id]/[document_id].get'),
+        },
+        {
+            route: '/api/bedita/index/:collection_id/:document_id',
+            handler: resolver.resolve('./runtime/server/api/bedita/index/[collection_id]/[document_id].delete'),
+        },
+    ];
 
       endpointsEnabled.forEach((endpoint) => {
         addServerHandler(endpoint);
@@ -90,54 +110,13 @@ import {
       });
 
       /*
-       ***************
-       * Middlewares *
-       ***************
-       */
-    //   addRouteMiddleware({
-    //     name: 'beditaAuth',
-    //     path: resolver.resolve('./runtime/middleware/auth'),
-    //     global: options.auth.global,
-    //   });
-    //   addRouteMiddleware({
-    //     name: 'beditaRolesGuard',
-    //     path: resolver.resolve('./runtime/middleware/roles-guard'),
-    //     global: false,
-    //   });
-
-      /*
        ********************************
        * Composables and SSR utils    *
        ********************************
        */
       addImportsDir(resolver.resolve('./runtime/utils'));
       addImportsDir(resolver.resolve('./runtime/composables'));
-      // imports to use for example in route middlewares (server side)
-    //   addImports([
-    //     {
-    //       from: resolver.resolve('./runtime/server/utils/session'),
-    //       name: 'getSessionConfig',
-    //     },
-    //     {
-    //       from: resolver.resolve('./runtime/server/utils/bedita-api-client'),
-    //       name: 'beditaApiClient',
-    //     },
-    //   ]);
-
-      /*
-       *****************
-       * Type template *
-       *****************
-       */
-    //   addTypeTemplate({
-    //     filename: 'types/nuxt-bedita.d.ts',
-    //     getContents: () => [
-    //       `declare module '@atlasconsulting/nuxt-bedita' {`,
-    //       `  import('${resolver.resolve('./runtime/types')}')`,
-    //       `  export type { UserAuth, UserDataStore, ApiResponseBodyResource, ApiResponseBodyList, SignupBeditaBody } from '${resolver.resolve('./runtime/types')}'`,
-    //       `}`,
-    //     ].join('\n'),
-    //   });
+      addServerImportsDir(resolver.resolve('./runtime/server/utils'));
 
       logger.success('bedita integration ready');
     }
