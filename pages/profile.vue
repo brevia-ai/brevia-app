@@ -2,7 +2,7 @@
     <div class="max-w-sm mx-auto flex flex-col space-y-8">
         <ElementLogo class="mt-0.5 h-[128px] w-auto mx-auto" />
         <div class="flex mx-auto ">
-            <p class="py-1 pl-2 text-xl">{{ user?.attributes?.username }}</p>
+            <p class="py-1 pl-2 text-xl">{{ statesStore.user?.username }}</p>
         </div>
         <div>
             <p class="text-xs text-sky-600">{{ $t('FIRST_NAME') }}</p>
@@ -38,30 +38,29 @@
 </template>
 
 <script setup lang="ts">
-import { type JsonApiResourceObject } from '@atlasconsulting/bedita-sdk';
-import { type ApiResponseBodyResource, type UserAuth } from '@atlasconsulting/nuxt-bedita';
-
 const { locale } = useI18n();
-const { user: sessionUser } = useBeditaAuth();
+const statesStore = useStatesStore();
+const { userData, updateUser } = useIntegrationAuth();
 
-const { data } = await useFetch<ApiResponseBodyResource>('/api/bedita/auth/user'); // get complete user data
-const user = ref(data.value?.formattedData?.data as JsonApiResourceObject);
-let name = ref(user.value?.attributes?.name);
-let surname = ref(user.value?.attributes?.surname);
-let nameError = ref(false);
-let surnameError = ref(false);
-let lastLoginErr = ref('');
-let lastPassMod = ref('');
-let saveNameVisible = ref(false);
-let saveSurnameVisible = ref(false);
-let nameChanging = ref(false);
-let surnameChanging = ref(false);
+await userData();
+const name = ref(statesStore.user?.name);
+const surname = ref(statesStore.user?.surname);
+const nameError = ref(false);
+const surnameError = ref(false);
+const lastLoginErr = ref('');
+const lastPassMod = ref('');
+const saveNameVisible = ref(false);
+const saveSurnameVisible = ref(false);
+const nameChanging = ref(false);
+const surnameChanging = ref(false);
 
-if (user.value?.meta?.last_login_err) {
-    lastLoginErr.value = `${new Date(user.value?.meta?.last_login_err).toLocaleDateString(locale.value)} ${new Date(user.value?.meta?.last_login_err).toLocaleTimeString(locale.value)}`;
+const lastErr = statesStore.user?.meta?.last_login_err;
+if (lastErr) {
+    lastLoginErr.value = `${new Date(lastErr).toLocaleDateString(locale.value)} ${new Date(lastErr).toLocaleTimeString(locale.value)}`;
 }
-if (user.value?.meta?.password_modified) {
-    lastPassMod.value = `${new Date(user.value?.meta?.password_modified).toLocaleDateString(locale.value)} ${new Date(user.value?.meta?.password_modified).toLocaleTimeString(locale.value)}`;
+const pwdMod = statesStore.user?.meta?.password_modified;
+if (pwdMod) {
+    lastPassMod.value = `${new Date(pwdMod).toLocaleDateString(locale.value)} ${new Date(pwdMod).toLocaleTimeString(locale.value)}`;
 }
 
 function revertChanges() {
@@ -72,32 +71,25 @@ function revertChanges() {
         saveSurnameVisible.value = false;
     }
     if (!nameChanging.value) {
-        name.value = user.value?.attributes?.name;
+        name.value = statesStore.user?.name;
     }
     if (!surnameChanging.value) {
-        surname.value = user.value?.attributes?.surname;
+        surname.value = statesStore.user?.surname;
     }
 }
 
 async function changeName() {
     let newName = name.value;
     nameChanging.value = true;
-    if (!name.value.length) {
+    if (!newName) {
         nameError.value = true;
         nameChanging.value = false;
         return;
     }
     try {
         nameError.value = false;
-        const response = await $fetch<UserAuth>('/api/bedita/auth/user', {
-            method: 'PATCH',
-            body: {
-                name: newName,
-            },
-        });
-        sessionUser.value = filterUserDataToStore(response);
-        user.value = response.data;
-        name.value = user.value?.attributes?.name;
+        await updateUser({ name: newName });
+        name.value = statesStore.user?.name;
         saveNameVisible.value = false;
         nameChanging.value = false;
     } catch (error) {
@@ -109,22 +101,15 @@ async function changeName() {
 async function changeSurname() {
     let newSurname = surname.value;
     surnameChanging.value = true;
-    if (!surname.value.length) {
+    if (!newSurname) {
         surnameError.value = true;
         surnameChanging.value = false;
         return;
     }
     try {
         surnameError.value = false;
-        const response = await $fetch<UserAuth>('/api/bedita/auth/user', {
-            method: 'PATCH',
-            body: {
-                surname: newSurname,
-            },
-        });
-        sessionUser.value = filterUserDataToStore(response);
-        user.value = response.data;
-        surname.value = user.value?.attributes?.surname;
+        await updateUser({ surname: newSurname });
+        surname.value = statesStore.user?.surname;
         saveSurnameVisible.value = false;
         surnameChanging.value = false;
     } catch (error) {
@@ -132,5 +117,4 @@ async function changeSurname() {
         surnameChanging.value = false;
     }
 }
-
 </script>

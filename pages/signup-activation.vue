@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-const { signupActivation } = useBeditaSignup();
+const { signupActivation } = useIntegrationAuth();
 
 const { pending: loading, error } = await signupActivation();
 </script>

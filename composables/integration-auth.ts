@@ -1,3 +1,4 @@
+import { type UserAuth } from '@atlasconsulting/nuxt-bedita';
 
 export const useIntegrationAuth = () => {
     const integration = useIntegration();
@@ -33,71 +34,118 @@ export const useIntegrationAuth = () => {
     statesStore.$reset();
   };
 
-//   const resetPassword = async (contact: string) => {
-//     const recaptcha_token = await executeRecaptcha(RecaptchaActions.RESET_PASSWORD);
+  const resetPassword = async (contact: string) => {
+    if (integration !== 'bedita') {
+        throw new Error('Unsupported operation in current integration');
+    }
+    const recaptcha_token = await useBeditaRecaptcha().executeRecaptcha(RecaptchaActions.RESET_PASSWORD);
 
-//     return await $fetch('/api/bedita/auth/reset', {
-//       method: 'POST',
-//       body: {
-//         contact,
-//         recaptcha_token
-//       },
-//     });
-//   };
+    return await $fetch('/api/bedita/auth/reset', {
+      method: 'POST',
+      body: {
+        contact,
+        recaptcha_token
+      },
+    });
+  };
 
-//   const changePassword = async (password: string, login = false, uuid?: string) => {
-//     const recaptcha_token = await executeRecaptcha(RecaptchaActions.CHANGE_PASSWORD);
-//     const route = useRoute();
+  const changePassword = async (password: string, login = false, uuid?: string) => {
+    if (integration !== 'bedita') {
+        throw new Error('Unsupported operation in current integration');
+    }
+    const recaptcha_token = await useBeditaRecaptcha().executeRecaptcha(RecaptchaActions.CHANGE_PASSWORD);
+    const route = useRoute();
 
-//     const data = await $fetch<UserAuth>('/api/bedita/auth/change', {
-//       method: 'PATCH',
-//       body: {
-//         uuid: uuid || route.query?.uuid,
-//         password,
-//         login,
-//         recaptcha_token
-//       },
-//     });
+    const data = await $fetch<UserAuth>('/api/bedita/auth/change', {
+      method: 'PATCH',
+      body: {
+        uuid: uuid || route.query?.uuid,
+        password,
+        login,
+        recaptcha_token
+      },
+    });
 
-//     if (login === true) {
-//       user.value = filterUserDataToStore(data);
-//     }
+    if (login === true) {
+        statesStore.userLogin(filterUserDataToStore(data));
+    }
 
-//     return data;
-//   };
+    return data;
+  };
 
-//   const optOut = async (username: string, password: string) => {
-//     const recaptcha_token = await executeRecaptcha(RecaptchaActions.OPTOUT);
+  const optOut = async (username: string, password: string) => {
+    if (integration !== 'bedita') {
+        throw new Error('Unsupported operation in current integration');
+    }
+    const recaptcha_token = await useBeditaRecaptcha().executeRecaptcha(RecaptchaActions.OPTOUT);
 
-//     return await $fetch('/api/bedita/auth/optout', {
-//       method: 'POST',
-//       body: {
-//         username,
-//         password,
-//         recaptcha_token
-//       },
-//     });
-//   };
+    return await $fetch('/api/bedita/auth/optout', {
+      method: 'POST',
+      body: {
+        username,
+        password,
+        recaptcha_token
+      },
+    });
+  };
 
-//   const updateUser = async (body: Omit<UserDataStore, 'id' | 'email' | 'username' | 'roles'>) => {
-//     const data = await $fetch<UserAuth>('/api/bedita/auth/user', {
-//       method: 'PATCH',
-//       body,
-//     });
+  const updateUser = async (body: any) => {
+    if (integration !== 'bedita') {
+        throw new Error('Unsupported operation in current integration');
+    }
+    const data = await $fetch<UserAuth>('/api/bedita/auth/user', {
+      method: 'PATCH',
+      body,
+    });
 
-//     user.value = filterUserDataToStore(data);
+    const userData = filterUserDataToStore(data);
+    statesStore.userLogin(userData);
 
-//     return data;
-//   };
+    return userData;
+  };
+
+  const userData = async () => {
+    if (integration === 'brevia') {
+        return statesStore.user;
+    } else if (integration === 'bedita') {
+        const response = await $fetch('/api/bedita/auth/user');
+        const userData = filterUserDataToStore(response);
+        const meta = {
+            last_login_err: response?.data?.meta?.last_login_err,
+            password_modified: response?.data?.meta?.password_modified,
+        };
+        statesStore.userLogin({...userData, ...{meta}});
+
+        return userData;
+    }
+  };
+
+  const signup = async (data: any) => {
+    if (integration !== 'bedita') {
+        throw new Error('Unsupported operation in current integration');
+    }
+
+    return useBeditaSignup().signup(data);
+  };
+
+  const signupActivation = async () => {
+    if (integration !== 'bedita') {
+        throw new Error('Unsupported operation in current integration');
+    }
+
+    return useBeditaSignup().signupActivation();
+  };
+
 
   return {
-    // user,
-    // isLogged,
     login,
     logout,
-    // resetPassword,
-    // changePassword,
-    // optOut,
-    // updateUser,
+    resetPassword,
+    changePassword,
+    optOut,
+    updateUser,
+    userData,
+    signup,
+    signupActivation,
   };
 }

@@ -107,13 +107,11 @@
 </template>
 
 <script setup lang="ts">
-import { ApiResponseBodyError } from '@atlasconsulting/bedita-sdk';
-
 definePageMeta({
     middleware: [
         function () {
-            const { isLogged } = useBeditaAuth();
-            if (isLogged.value) {
+            const statesStore = useStatesStore();
+            if (statesStore.isLogged()) {
                 return navigateTo('/');
             }
         },
@@ -121,7 +119,7 @@ definePageMeta({
 });
 
 const { t, locale } = useI18n();
-const { signup } = useBeditaSignup();
+const { signup } = useIntegrationAuth();
 
 const firstName = ref('');
 const lastName = ref('');
@@ -147,7 +145,7 @@ const emailIsValid = computed(() => {
     return emailRegex.test(userMail.value);
 });
 
-const errorMessage = (err: ApiResponseBodyError) => {
+const errorMessage = (err: any) => {
     if (err?.error?.code === 'be_user_exists') {
         return t('USER_ALREADY_EXISTS');
     }

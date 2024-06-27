@@ -1,5 +1,5 @@
 {
-  "name": "brevia-app",
+  "name": "brevia-admin",
   "private": true,
   "scripts": {
     "build": "nuxt build",

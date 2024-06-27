@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-const { resetPassword } = useBeditaAuth();
+const { resetPassword } = useIntegrationAuth();
 
 const loading = ref(false);
 const mailSent = ref(false);

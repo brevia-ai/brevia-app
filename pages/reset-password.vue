@@ -42,7 +42,7 @@
                 type="submit"
                 class="p-4 button w-full mt-6 rounded-md px-3.5 py-2.5 text-center text-sm font-semibold"
                 :class="loading ? 'loading' : '' "
-                @click.prevent.stop="resetPassword"
+                @click.prevent.stop="updatePassword"
                 :disabled="!(confirmPass && newPass && (newPass === confirmPass))">
                 {{ $t('SET_NEW_PASSWORD') }}
             </button>
@@ -80,7 +80,7 @@ definePageMeta({
     ],
 });
 
-const { changePassword } = useBeditaAuth();
+const { changePassword } = useIntegrationAuth();
 
 const newPass = ref('');
 const confirmPass = ref('');
@@ -89,7 +89,7 @@ const error = ref(false);
 const passSet = ref(false);
 const showPassword = ref(false);
 
-async function resetPassword() {
+async function updatePassword() {
     loading.value = true;
     error.value = false;
     try {
