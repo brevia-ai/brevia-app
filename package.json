@@ -20,6 +20,7 @@
   "dependencies": {
     "@pinia/nuxt": "^0.4.8",
     "@vuepic/vue-datepicker": "^7.4.1",
+    "@web-std/file": "^3.0.3",
     "axios": "^1.5.0",
     "export-to-csv": "^1.2.2",
     "jspdf": "^2.5.1",
