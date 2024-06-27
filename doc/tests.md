@@ -57,6 +57,10 @@ In the following list (BE) means BEdita integration only.
 - Create link
 - Remove link
 
+## Document metadata
+
+- Edit metadata in files, Q&A, links
+
 ## Features
 
 - Create feature [still not available]
