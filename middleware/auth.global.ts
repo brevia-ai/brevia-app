@@ -45,7 +45,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     let publicPages = ['/auth', '/about'];
     const features = useIntegrationFeatures();
     if (features.signup) {
-        publicPages.push('/signup');
+        publicPages.push('/signup', '/signup-activation');
     }
     if (features.changePassword) {
         publicPages.push('/forgot-password', '/reset-password');
