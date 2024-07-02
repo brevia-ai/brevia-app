@@ -1,3 +1,5 @@
+import pkg from './package.json'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     runtimeConfig: {
@@ -28,6 +30,7 @@ export default defineNuxtConfig({
                     demoVersion: false,
                 },
             },
+            version: pkg?.version,
         },
         // brevia integration session & auth credentials
         brevia : {

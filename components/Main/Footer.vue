@@ -56,9 +56,19 @@
                 {{ $t("COOKIE_OPTIONS") }}
             </button>
         </div>
+
+        <div
+            class="flex gap-3 text-xs tracking-wider text-white"
+        >
+            <span class="col-span-3 justify-self-end whitespace-nowrap">
+                v{{ version }}
+            </span>
+        </div>
     </footer>
 </template>
 <script setup lang="ts">
 const cookiesPrivacyTerms =
     useRuntimeConfig().public.cookiesPrivacyTerms !== "";
+
+const version = useRuntimeConfig().public.version;
 </script>
