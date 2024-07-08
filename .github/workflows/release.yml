@@ -40,7 +40,7 @@ jobs:
         run: |
           echo Skip version file update and docker image creation
 
-      - name: Update package.json version
+      - name: Update package.json version key
         if: ${{ !contains(needs.release_job.outputs.version, 'undefined') }}
         uses: jossef/action-set-json-field@v2.1
         with:
