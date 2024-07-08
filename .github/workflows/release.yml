@@ -14,7 +14,7 @@ jobs:
     with:
       main_branch: 'main'
       dist_branches: '["main"]'
-      package_json_version: true
+      package_json_version: 'true'
 
   docker_push:
     runs-on: 'ubuntu-latest'
