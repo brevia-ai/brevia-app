@@ -40,10 +40,13 @@ jobs:
         run: |
           echo Skip version file update and docker image creation
 
-      - name: Update version key in package.json
+      - name: Update package.json version
         if: ${{ !contains(needs.release_job.outputs.version, 'undefined') }}
-        run: |
-          sed -i 's/"version": ".*/"version": "${{ needs.release_job.outputs.version }}",/' package.json
+        uses: jossef/action-set-json-field@v2.1
+        with:
+          file: package.json
+          field: version
+          value: ${{ needs.release_job.outputs.version }}
 
       - name: Log in to the Container registry
         if: ${{ !contains(needs.release_job.outputs.version, 'undefined') }}
