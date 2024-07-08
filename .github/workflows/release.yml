@@ -10,7 +10,7 @@ env:
 
 jobs:
   release_job:
-    uses: bedita/github-workflows/.github/workflows/release.yml@v1
+    uses: stefanorosanelli/github-workflows/.github/workflows/release.yml@fix/package-json
     with:
       main_branch: 'main'
       dist_branches: '["main"]'
@@ -40,7 +40,7 @@ jobs:
         run: |
           echo Skip version file update and docker image creation
 
-      - name: Update version file
+      - name: Update version in package.json
         if: ${{ !contains(needs.release_job.outputs.version, 'undefined') }}
         run: |
           sed -i 's/"version": ".*/"version": "${{ needs.release_job.outputs.version }}",/' package.json
@@ -54,9 +54,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
+        if: ${{ !contains(needs.release_job.outputs.version, 'undefined') }}
         id: push
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ needs.release_job.outputs.version }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ needs.release_job.outputs.version }}
