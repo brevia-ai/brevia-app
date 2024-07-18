@@ -36,7 +36,7 @@
                             <p class="whitespace-break-spaces" v-html="formatResponse(item.message)"></p>
                             <!--MENU CONTESTUALE-->
                             <div class="px-2 py-0.5 absolute -bottom-5 right-4 z-50 bg-neutral-700 rounded-full flex flex-row"
-                                    v-if="!isBusy && showResponseMenu && hovered === i && (i % 2) == 1 && (i === dialog.length - 1)">
+                                    v-if="canSeeDocs && (i === dialog.length - 1) && showResponseMenu && hovered === i">
                                 <div class="px-1.5 pb-1 hover:bg-neutral-600 hover:rounded-full hover:cursor-pointer"
                                     @click="$openModal('ChatDocuments', { session_id: sessionId, documents: docs })"
                                     :title="$t('SHOW_DOCUMENTS_FOUND')">
@@ -98,9 +98,13 @@ const isBusy = ref(false);
 const prompt = ref('');
 const input = ref<HTMLElement|null>(null);
 const dialog = ref<DialogItem[]>([]);
-const showDocs = ref(true);
 const docs = ref<any>([]);
 const historyId = ref('');
+const canSeeDocs = ref(false);
+let docsJsonString = '';
+let responseEnded = false;
+let currIdx = 0;
+
 const isDemo = ref(store.userHasRole('demo'));
 const messagesLeft = ref('');
 const hovered = ref(-1);
@@ -163,10 +167,10 @@ const submit = async () => {
     dialog.value.push(formatDialogItem('YOU', prompt.value));
     dialog.value.push(formatDialogItem('BREVIA', ''));
 
-    const currIdx = dialog.value.length - 1;
+    currIdx = dialog.value.length - 1;
 
     try {
-        await streamingFetchRequest(currIdx);
+        await streamingFetchRequest();
         isBusy.value = false;
     } catch (error) {
         isBusy.value = false;
@@ -175,7 +179,7 @@ const submit = async () => {
     }
 };
 
-const streamingFetchRequest = async (currIdx: number) => {
+const streamingFetchRequest = async () => {
     const question = prompt.value;
     prompt.value = '';
     docs.value = [];
@@ -190,17 +194,20 @@ const streamingFetchRequest = async (currIdx: number) => {
         body: JSON.stringify({
             question,
             collection: collectionName,
-            source_docs: showDocs.value,
+            source_docs: true,
             streaming: true,
         }),
     });
 
     const reader = response?.body?.getReader();
     if (reader) {
+        docsJsonString = '';
+        responseEnded = false;
         for await (const chunk of readChunks(reader)) {
             const text = new TextDecoder().decode(chunk);
-            handleStreamText(text, currIdx);
+            handleStreamText(text);
         }
+        parseDocsJson();
         await updateLeftMessages();
     }
 };
@@ -217,23 +224,16 @@ const readChunks = (reader: ReadableStreamDefaultReader) => {
     };
 };
 
-const handleStreamText = (text: string, currIdx: number) => {
+const handleStreamText = (text: string) => {
     if (text.includes('[{"chat_history_id":') || text.includes('[{"page_content":')) {
         const idx1 = text.indexOf('[{"chat_history_id":')
         const idx2 = text.indexOf('[{"page_content":')
         const idx = Math.max(idx1, idx2)
         dialog.value[currIdx].message += text.slice(0, idx);
-        try {
-            let parsed = JSON.parse(text.slice(idx));
-            if (idx1 !== -1) {
-                const item = parsed?.shift() || {};
-                historyId.value = item?.chat_history_id || '';
-            }
-            docs.value = parsed;
-
-        } catch (e) {
-            return console.error(e);
-        }
+        responseEnded = true;
+        docsJsonString += text.slice(idx);
+    } else if (responseEnded) {
+        docsJsonString += text;
     } else if (text.startsWith('{"error":')) {
         try {
             const err = JSON.parse(text);
@@ -244,6 +244,20 @@ const handleStreamText = (text: string, currIdx: number) => {
         }
     } else {
         dialog.value[currIdx].message += text;
+    }
+};
+
+const parseDocsJson = () => {
+    try {
+        let parsed = JSON.parse(docsJsonString);
+        if (parsed?.[0]?.chat_history_id) {
+            const item = parsed?.shift() || {};
+            historyId.value = item?.chat_history_id || '';
+        }
+        docs.value = parsed;
+        canSeeDocs.value = true;
+    } catch (e) {
+        return console.error(e);
     }
 };
 
