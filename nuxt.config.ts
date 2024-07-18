@@ -54,6 +54,7 @@ export default defineNuxtConfig({
         'nuxt-icon',
         'nuxt-gtag',
         '@atlasconsulting/nuxt-bedita',
+        "@nuxt/eslint"
     ],
     build: {
         transpile: ['@vuepic/vue-datepicker']
