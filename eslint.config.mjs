@@ -1,6 +1,17 @@
 // @ts-check
-import withNuxt from './.nuxt/eslint.config.mjs'
+import withNuxt from './.nuxt/eslint.config.mjs';
 
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
-export default withNuxt(eslintPluginPrettierRecommended);
+const customeRules = {
+  'vue/no-v-html': ['off'],
+  '@typescript-eslint/no-explicit-any': ['off'],
+  'vue/no-multiple-template-root': ['off'],
+};
+
+const config = {
+  ...eslintPluginPrettierRecommended,
+  rules: { ...eslintPluginPrettierRecommended.rules, ...customeRules },
+};
+
+export default withNuxt(config);
