@@ -18,7 +18,6 @@
             :to="`edit-${collectionName}`"
             :title="$t('EDIT_CHATBOT')"
           >
-            >
             <Icon name="ph:gear-fine-bold" class="text-4xl" />
           </NuxtLink>
         </div>
