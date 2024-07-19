@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap');
 
-@import "tailwindcss/base";
-@import "_base.css";
-@import "tailwindcss/components";
-@import "components/_components.css";
-@import "components/buttons.css";
-@import "components/chat.css";
-@import "components/tabs.css";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/base';
+@import '_base.css';
+@import 'tailwindcss/components';
+@import 'components/_components.css';
+@import 'components/buttons.css';
+@import 'components/chat.css';
+@import 'components/tabs.css';
+@import 'tailwindcss/utilities';

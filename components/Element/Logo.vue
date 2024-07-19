@@ -1,5 +1,5 @@
 <template>
-    <img :src="config.public.appLogo" alt="Logo">
+  <img :src="config.public.appLogo" alt="Logo" />
 </template>
 
 <script setup lang="ts">

@@ -1,90 +1,90 @@
 @layer components {
-    .button {
-        @apply px-4 py-3 inline-flex items-center justify-center gap-x-2
+  .button {
+    @apply px-4 py-3 inline-flex items-center justify-center gap-x-2
             bg-primary hover:bg-sky-600
             border border-primary hover:border-sky-600
             text-white rounded
             cursor-pointer select-none
             disabled:bg-slate-400 disabled:border-slate-400 disabled:text-opacity-80 disabled:cursor-not-allowed;
 
-        &.disabled {
-            @apply bg-slate-400 border-slate-400 text-opacity-80 cursor-not-allowed;
-        }
+    &.disabled {
+      @apply bg-slate-400 border-slate-400 text-opacity-80 cursor-not-allowed;
     }
+  }
 
-    .button-secondary {
-        @apply border-primary bg-white hover:bg-sky-100 text-primary
+  .button-secondary {
+    @apply border-primary bg-white hover:bg-sky-100 text-primary
             disabled:text-slate-400 disabled:text-opacity-70 disabled:bg-slate-200 disabled:border-slate-300;
-        &.disabled {
-            @apply text-slate-400 text-opacity-70 bg-slate-200 border-slate-300;
-        }
+    &.disabled {
+      @apply text-slate-400 text-opacity-70 bg-slate-200 border-slate-300;
     }
+  }
 
-    .button-danger {
-        @apply px-4 py-3 inline-flex items-center justify-center gap-x-2
+  .button-danger {
+    @apply px-4 py-3 inline-flex items-center justify-center gap-x-2
             border-danger hover:border-pink-600
             bg-danger hover:bg-pink-600 text-white rounded
             disabled:bg-slate-400 disabled:text-opacity-80 disabled:cursor-not-allowed;
 
-        &.disabled {
-            @apply bg-pink-400 border-pink-400 text-opacity-80 cursor-not-allowed;
-        }
+    &.disabled {
+      @apply bg-pink-400 border-pink-400 text-opacity-80 cursor-not-allowed;
+    }
+  }
+
+  .button-mock {
+    @apply px-4 py-3 inline-flex items-center justify-center gap-x-2 border select-none;
+  }
+
+  .button-transparent {
+    @apply bg-transparent border-transparent;
+  }
+
+  /* TODO: ELIMINARE */
+  .button.loading {
+    @apply relative text-transparent;
+  }
+  .button.loading:after {
+    position: absolute;
+    left: calc(50% - (1em * 0.5));
+    top: calc(50% - (1em * 0.5));
+    color: white;
+  }
+
+  .button.is-loading:not(.disabled) {
+    @apply relative !text-transparent pointer-events-none;
+    &:after {
+      content: '';
+      @apply absolute left-1/2 top-1/2 -ml-2 -mt-2 w-4 h-4 border-2 rounded-full;
+      animation: buttonSpinAround 0.5s linear infinite;
+      border-color: transparent transparent #fff #fff;
     }
 
-    .button-mock {
-        @apply px-4 py-3 inline-flex items-center justify-center gap-x-2 border select-none;
+    &.button-secondary {
+      &:after {
+        border-color: transparent transparent #0284c7 #0284c7;
+      }
     }
+  }
 
-    .button-transparent {
-        @apply bg-transparent border-transparent;
+  @keyframes buttonSpinAround {
+    0% {
+      transform: rotate(0deg);
     }
-
-    /* TODO: ELIMINARE */
-    .button.loading {
-        @apply relative text-transparent;
+    to {
+      transform: rotate(359deg);
     }
-    .button.loading:after {
-        position: absolute;
-        left: calc(50% - (1em * .5));
-        top: calc(50% - (1em * .5));
-        color: white;
-    }
+  }
 
-    .button.is-loading:not(.disabled) {
-        @apply relative !text-transparent pointer-events-none;
-        &:after {
-            content: "";
-            @apply absolute left-1/2 top-1/2 -ml-2 -mt-2 w-4 h-4 border-2 rounded-full;
-            animation: buttonSpinAround .5s linear infinite;
-            border-color: transparent transparent #fff #fff;
-        }
-
-        &.button-secondary {
-            &:after {
-                border-color: transparent transparent #0284c7 #0284c7;
-            }
-        }
-    }
-
-    @keyframes buttonSpinAround {
-        0% {
-            transform:rotate(0deg)
-        }
-        to {
-            transform:rotate(359deg)
-        }
-    }
-
-    .big-button {
-        @apply pt-4 pb-6 px-6 sm:px-4 flex items-center justify-center flex-col space-y-2 sm:aspect-square
+  .big-button {
+    @apply pt-4 pb-6 px-6 sm:px-4 flex items-center justify-center flex-col space-y-2 sm:aspect-square
             bg-gradient-to-br from-slate-700 to-slate-900 hover:from-sky-600 hover:to-sky-700
             text-white
             focus:outline outline-offset-4 outline-4 outline-primary
             shadow-xl hover:shadow-2xl hover:shadow-sky-800
             rounded-lg;
-    }
+  }
 
-    .close-button {
-        @apply inline-flex items-center text-slate-500 hover:text-pink-600 rounded text-2xl;
-    }
+  .close-button {
+    @apply inline-flex items-center text-slate-500 hover:text-pink-600 rounded text-2xl;
+  }
 }

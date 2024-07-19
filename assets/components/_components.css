@@ -1,44 +1,54 @@
 @layer components {
-    .rich-text {
-        @apply leading-normal;
+  .rich-text {
+    @apply leading-normal;
 
-        a[href] {
-            @apply text-sky-700 hover:text-sky-600 underline underline-offset-2 hover:underline-offset-4 tracking-wide;
-        }
-
-        ul {
-            @apply list-square list-outside;
-        }
-
-        ol {
-            @apply list-outside;
-        }
-
-        li {
-            @apply list-item ml-4;
-        }
+    a[href] {
+      @apply text-sky-700 hover:text-sky-600 underline underline-offset-2 hover:underline-offset-4 tracking-wide;
     }
 
-    .grid-dashboard {
-        @apply sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-6 lg:gap-8 xl:gap-10 2xl:gap-12;
+    ul {
+      @apply list-square list-outside;
     }
 
-    .grid-dashboard-autofill {
-        @apply gap-6;
-        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    ol {
+      @apply list-outside;
     }
 
-    /* UNUSED */
-    .ellipsis-loading:after {
-        @apply inline-block text-2xl font-bold leading-none;
-        content: '\00a0 ';
-        animation: ellipsis steps(1, end) 1s infinite;
+    li {
+      @apply list-item ml-4;
     }
-    @keyframes ellipsis {
-        0%   { content: '\00a0 '; }
-        25%  { content: '.'; }
-        50%  { content: '..'; }
-        75%  { content: '...'; }
-        100% { content: '\00a0 '; }
+  }
+
+  .grid-dashboard {
+    @apply sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-6 lg:gap-8 xl:gap-10 2xl:gap-12;
+  }
+
+  .grid-dashboard-autofill {
+    @apply gap-6;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+
+  /* UNUSED */
+  .ellipsis-loading:after {
+    @apply inline-block text-2xl font-bold leading-none;
+    content: '\00a0 ';
+    animation: ellipsis steps(1, end) 1s infinite;
+  }
+  @keyframes ellipsis {
+    0% {
+      content: '\00a0 ';
     }
+    25% {
+      content: '.';
+    }
+    50% {
+      content: '..';
+    }
+    75% {
+      content: '...';
+    }
+    100% {
+      content: '\00a0 ';
+    }
+  }
 }
