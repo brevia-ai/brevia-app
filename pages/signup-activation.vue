@@ -8,7 +8,7 @@
             </div>
             <p v-if="loading"> {{ $t('CHECKING') }}...</p>
             <p v-else-if="error" class="text-center">{{ $t('AN_ERROR_OCCURRED') }}</p>
-            <p class="text-center" v-else>
+            <div v-else>
                 <h1 class="text-center text-2xl font-bold">{{ $t('SUCCESS') }}!</h1><br>
                 <img class="mx-auto" src="/check.png"><br>
                 {{ $t('ACCOUNT_ACTIVATED') }}!<br>
@@ -17,7 +17,7 @@
                     <NuxtLink class="p-4 button text-sm rounded-md"
                         to="/auth">{{ $t('GO_TO_LOGIN_PAGE') }}</NuxtLink>
                 </div>
-            </p>
+            </div>
         </div>
     </main>
 </template>
