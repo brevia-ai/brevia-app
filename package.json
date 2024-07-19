@@ -10,8 +10,8 @@
     "preview": "nuxt preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"{components,pages,plugins,middleware,layouts,composables,assets}/**/*.{js,jsx,ts,tsx,vue,html,css,scss,json,md}\"",
-    "format:check": "prettier --check \"{components,pages,plugins,middleware,layouts,composables,assets}/**/*.{js,jsx,ts,tsx,vue,html,css,scss,json,md}\"",
+    "format": "prettier --write \"{components,pages,plugins,middleware,layouts,composables,assets}/**/*.{js,ts,vue,css,scss,json,md}\"",
+    "format:check": "prettier --check \"{components,pages,plugins,middleware,layouts,composables,assets}/**/*.{js,ts,vue,css,scss,json,md}\"",
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
