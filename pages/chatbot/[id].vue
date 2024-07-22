@@ -184,6 +184,9 @@ const streamingFetchRequest = async () => {
     prompt.value = '';
     docs.value = [];
     historyId.value = '';
+    docsJsonString = '';
+    responseEnded = false;
+    canSeeDocs.value = false;
 
     const response = await fetch('/api/brevia/chat', {
         method: 'POST',
@@ -201,8 +204,6 @@ const streamingFetchRequest = async () => {
 
     const reader = response?.body?.getReader();
     if (reader) {
-        docsJsonString = '';
-        responseEnded = false;
         for await (const chunk of readChunks(reader)) {
             const text = new TextDecoder().decode(chunk);
             handleStreamText(text);
