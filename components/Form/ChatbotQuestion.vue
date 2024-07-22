@@ -8,7 +8,7 @@
         autofocus
         required />
 
-    <textarea :placeholder="$t('ANSWER_PLACEHOLDER')"
+    <textarea class="textarea" :placeholder="$t('ANSWER_PLACEHOLDER')"
         v-model="answer" rows="7"></textarea>
 
     <div class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary" v-if="error">
