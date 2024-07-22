@@ -52,6 +52,9 @@ jobs:
         if: steps.cache-node_modules.outputs.cache-hit != 'true'
         run: npm ci --no-audit
 
+      - name: Build app to generate build folder (.nuxt)
+        run: npm run build
+
       - name: Prettier
         run: npm run format:check
 
