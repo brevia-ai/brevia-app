@@ -1,10 +1,81 @@
 <template>
-  <main>
-    <div v-if="collection.uuid" class="space-y-12">
-      <div class="flex justify-between items-start space-x-4">
-        <div class="space-y-4">
-          <h2 class="text-2xl md:text-3xl leading-tight font-bold">{{ collection.cmetadata?.title }}</h2>
-          <div v-if="collection.cmetadata?.description" class="text-neutral-600" v-html="collection.cmetadata?.description"></div>
+    <main>
+        <div class="space-y-12" v-if="collection.uuid">
+            <div class="flex justify-between items-start space-x-4">
+                <div class="space-y-4">
+                    <h2 class="text-2xl md:text-3xl leading-tight font-bold">{{ collection.cmetadata?.title }}</h2>
+                    <div class="text-neutral-600"
+                        v-html="collection.cmetadata?.description" v-if="collection.cmetadata?.description"></div>
+                </div>
+
+                <div class="flex justify-between space-x-4">
+                    <NuxtLink class="mt-0.5 text-sky-700 hover:text-sky-500" :to="`history-${collectionName}`"
+                        :title="$t('CHATBOT_HISTORY')">
+                        <Icon name="ph:clock-counter-clockwise-bold" class="text-4xl" />
+                    </NuxtLink>
+
+                    <NuxtLink class="mt-0.5 text-sky-700 hover:text-sky-500" :to="`edit-${collectionName}`"
+                        v-if="editLevel != ItemEditLevel.None" :title="$t('EDIT_CHATBOT')">
+                        <Icon name="ph:gear-fine-bold" class="text-4xl" />
+                    </NuxtLink>
+                </div>
+            </div>
+
+            <div v-if="dialog.length">
+                <!-- <hr class="my-6 border-neutral-300"> -->
+                <div class="px-4 pt-6 pb-4 bg-white shadow-md rounded space-y-3">
+                    <div class="flex flex-col space-y-6 pb-4">
+
+                        <div class="chat-balloon space-y-2" v-for="(item, i) in dialog" :key="i" :class="{ 'bg-pink-800': item.error}"
+                            @mouseover="showResponseMenu = true; hovered = i"
+                            @mouseleave="showResponseMenu = false">
+                            <div class="flex space-x-3 justify-between">
+                                <p class="text-xs">{{ item.who }}</p>
+                                <div class="chat-balloon-status" :class="{'busy': isBusy && i === dialog.length - 1}"></div>
+                            </div>
+                            <p class="whitespace-break-spaces" v-html="formatResponse(item.message)"></p>
+                            <!--MENU CONTESTUALE-->
+                            <div class="px-2 py-0.5 absolute -bottom-5 right-4 z-50 bg-neutral-700 rounded-full flex flex-row"
+                                    v-if="canSeeDocs && (i === dialog.length - 1) && showResponseMenu && hovered === i">
+                                <div class="px-1.5 pb-1 hover:bg-neutral-600 hover:rounded-full hover:cursor-pointer"
+                                    @click="$openModal('ChatDocuments', { session_id: sessionId, documents: docs })"
+                                    :title="$t('SHOW_DOCUMENTS_FOUND')">
+                                    <Icon name="fluent:document-question-mark-16-regular"></Icon>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="flex space-x-4">
+                    <input type="text"
+                        class="grow text-lg p-2 rounded border border-sky-500 disabled:bg-neutral-100 disabled:border-neutral-300 shadow-md disabled:shadow-none"
+                        ref="input"
+                        v-model.trim="prompt"
+                        :disabled="isBusy || messagesLeft == '0'"
+                        @keydown.enter="submit">
+
+                    <button class="px-6 button shadow-md disabled:shadow-none"
+                        :disabled="isBusy || messagesLeft == '0'"
+                        @click="submit">
+                        <span class="sm:hidden">›</span>
+                        <span class="hidden sm:inline">{{ $t('SEND') }}</span>
+                    </button>
+                </div>
+
+                <div class="flex space-x-4" v-if="isDemo">
+                    <span class="grow text-lg">{{ $t('MESSAGES_LEFT') }}: {{ messagesLeft }}</span>
+                </div>
+
+                <div class="space-x-4" v-if="isDemo && messagesLeft == '0'">
+                    <div class="w-full bg-red-100 border border-red-400 rounded text-center">
+                        {{ $t('NO_MORE_CHAT_MESSAGES') }}
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="flex justify-between space-x-4">
@@ -111,9 +182,13 @@ const isBusy = ref(false);
 const prompt = ref('');
 const input = ref<HTMLElement | null>(null);
 const dialog = ref<DialogItem[]>([]);
-const showDocs = ref(true);
 const docs = ref<any>([]);
 const historyId = ref('');
+const canSeeDocs = ref(false);
+let docsJsonString = '';
+let responseEnded = false;
+let currIdx = 0;
+
 const isDemo = ref(store.userHasRole('demo'));
 const messagesLeft = ref('');
 const hovered = ref(-1);
@@ -175,43 +250,49 @@ const submit = async () => {
   dialog.value.push(formatDialogItem('YOU', prompt.value));
   dialog.value.push(formatDialogItem('BREVIA', ''));
 
-  const currIdx = dialog.value.length - 1;
+    currIdx = dialog.value.length - 1;
 
-  try {
-    await streamingFetchRequest(currIdx);
-    isBusy.value = false;
-  } catch (error) {
-    isBusy.value = false;
-    showErrorInDialog(currIdx);
-    console.log(error);
-  }
+    try {
+        await streamingFetchRequest();
+        isBusy.value = false;
+    } catch (error) {
+        isBusy.value = false;
+        showErrorInDialog(currIdx);
+        console.log(error);
+    }
 };
 
-const streamingFetchRequest = async (currIdx: number) => {
-  const question = prompt.value;
-  prompt.value = '';
-  docs.value = [];
-  historyId.value = '';
+const streamingFetchRequest = async () => {
+    const question = prompt.value;
+    prompt.value = '';
+    docs.value = [];
+    historyId.value = '';
+    docsJsonString = '';
+    responseEnded = false;
+    canSeeDocs.value = false;
 
-  const response = await fetch('/api/brevia/chat', {
-    method: 'POST',
-    headers: {
-      'Content-type': 'application/json',
-      'X-Chat-Session': sessionId,
-    },
-    body: JSON.stringify({
-      question,
-      collection: collectionName,
-      source_docs: showDocs.value,
-      streaming: true,
-    }),
-  });
+    const response = await fetch('/api/brevia/chat', {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+            'X-Chat-Session': sessionId,
+        },
+        body: JSON.stringify({
+            question,
+            collection: collectionName,
+            source_docs: true,
+            streaming: true,
+        }),
+    });
 
-  const reader = response?.body?.getReader();
-  if (reader) {
-    for await (const chunk of readChunks(reader)) {
-      const text = new TextDecoder().decode(chunk);
-      handleStreamText(text, currIdx);
+    const reader = response?.body?.getReader();
+    if (reader) {
+        for await (const chunk of readChunks(reader)) {
+            const text = new TextDecoder().decode(chunk);
+            handleStreamText(text);
+        }
+        parseDocsJson();
+        await updateLeftMessages();
     }
     await updateLeftMessages();
   }
@@ -229,21 +310,26 @@ const readChunks = (reader: ReadableStreamDefaultReader) => {
   };
 };
 
-const handleStreamText = (text: string, currIdx: number) => {
-  if (text.includes('[{"chat_history_id":') || text.includes('[{"page_content":')) {
-    const idx1 = text.indexOf('[{"chat_history_id":');
-    const idx2 = text.indexOf('[{"page_content":');
-    const idx = Math.max(idx1, idx2);
-    dialog.value[currIdx].message += text.slice(0, idx);
-    try {
-      const parsed = JSON.parse(text.slice(idx));
-      if (idx1 !== -1) {
-        const item = parsed?.shift() || {};
-        historyId.value = item?.chat_history_id || '';
-      }
-      docs.value = parsed;
-    } catch (e) {
-      return console.error(e);
+const handleStreamText = (text: string) => {
+    if (text.includes('[{"chat_history_id":') || text.includes('[{"page_content":')) {
+        const idx1 = text.indexOf('[{"chat_history_id":')
+        const idx2 = text.indexOf('[{"page_content":')
+        const idx = Math.max(idx1, idx2)
+        dialog.value[currIdx].message += text.slice(0, idx);
+        responseEnded = true;
+        docsJsonString += text.slice(idx);
+    } else if (responseEnded) {
+        docsJsonString += text;
+    } else if (text.startsWith('{"error":')) {
+        try {
+            const err = JSON.parse(text);
+            console.error(`Error response from API "${err?.error}"`);
+            showErrorInDialog(currIdx);
+        } catch (e) {
+            return console.error(e);
+        }
+    } else {
+        dialog.value[currIdx].message += text;
     }
   } else if (text.startsWith('{"error":')) {
     try {
@@ -256,6 +342,20 @@ const handleStreamText = (text: string, currIdx: number) => {
   } else {
     dialog.value[currIdx].message += text;
   }
+};
+
+const parseDocsJson = () => {
+    try {
+        let parsed = JSON.parse(docsJsonString);
+        if (parsed?.[0]?.chat_history_id) {
+            const item = parsed?.shift() || {};
+            historyId.value = item?.chat_history_id || '';
+        }
+        docs.value = parsed;
+        canSeeDocs.value = true;
+    } catch (e) {
+        return console.error(e);
+    }
 };
 
 const showErrorInDialog = (index: number) => {
