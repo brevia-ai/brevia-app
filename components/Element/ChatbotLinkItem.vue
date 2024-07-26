@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps({
+defineProps({
     item: {
         type: Object,
         required: true,
@@ -48,8 +48,6 @@ const props = defineProps({
     collectionid: String,
     httperror: String,
 });
-//console.log(props.item)
-const integration = useIntegration();
 const editMode = ref(false);
 const indexing = ref(false)
 
