@@ -70,6 +70,7 @@
     "FILE_TYPE_MUST_BE": "Accepted file type:",
     "FILE_TYPE_NOT_ACCEPTED": "File type not supported",
     "FILES": "Files",
+    "FILTERS": "Filters",
     "FIRST_NAME": "First name",
     "FIRST_NAME_PLACEHOLDER": "Your first name",
     "FIRST_NAME_ERROR": "The user name cannot be empty!",

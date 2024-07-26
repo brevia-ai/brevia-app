@@ -16,7 +16,7 @@
 
         <FormChatbotLink @close="closeForm" v-else />
         <div class="flex flex-row gap-4 items-center">
-            <span class="self-center">FILTRA</span>
+            <span class="self-center">{{ $t('FILTERS') }}</span>
             <div class="w-52 h-full px-1 border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary  hover:cursor-default" >
                 <div class="flex flex-row justify-between self-center my-2 p-1" @click="openSelect = !openSelect">
                             <span>{{ filterType }}</span>
