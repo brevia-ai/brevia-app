@@ -58,7 +58,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'index_link']);
 
 const error = ref(false);
 const isSaving = ref(false);
@@ -191,6 +191,7 @@ const reindexLink = async(item: Record<string, any>, collection: string | undefi
         }
         else {
             indexingResult.value = "Indexed";
+            emit('index_link');
         }
         setTimeout(() => {indexingResult.value = "None"}, 1200);
     } catch (err) {
