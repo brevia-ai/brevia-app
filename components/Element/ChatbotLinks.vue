@@ -17,10 +17,10 @@
         <FormChatbotLink @close="closeForm" v-else />
 
         <div class="flex flex-row gap-4 items-center">
-            <span class="self-center">{{ $t('SHOW') }}</span>
+            <span class="self-center">{{ $t('SHOW_FILTERED') }}</span>
             <div class="w-52 h-full px-1 border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary  hover:cursor-default" >
                 <div class="flex flex-row justify-between self-center p-1" @click="openSelect = !openSelect">
-                            <span>{{ filterType }}</span>
+                            <span>{{ $t('LINK_FILTERS.'+ filterType) }}</span>
                             <Icon class="text-xs self-center" name="ph:caret-down-bold"/>
                         </div>
                 <div v-if="openSelect" class="w-52 -mx-1 max-h-96 absolute z-50 bg-white border border-primary rounded shadow-md overflow-y-scroll">
@@ -29,7 +29,7 @@
                         class="p-1"
                         :class="(FILTERS[index] == filterType )?'bg-primary text-white hover:bg-opacity-80':'hover:bg-primary hover:text-white'"
                         @click="filterType = FILTERS[index]; openSelect = !openSelect">
-                        {{ f }}
+                        {{ $t('LINK_FILTERS.'+ f ) }}
                     </div>
                 </div>
             </div>
@@ -37,13 +37,14 @@
     <!-- existing -->
     <div class="-my-6 ellipsis-loading text-sky-700"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
-    <div class="links space-y-6" v-else-if="links.length">
+    <div class="links space-y-6" v-else-if="filteredLinks().length">
         <div id="links" v-for="item in filteredLinks()" :key="item.custom_id">
             <div class="link" >
                 <ElementChatbotLinkItem :item="item" :indexed="checkindexed(item.custom_id)" :httperror="checkHttpError(item.custom_id)" @close="closeForm" />
             </div>
         </div>
     </div>
+    <p v-else class="mx-auto font-bold">{{ $t('NO_RESULTS_WITH_FILTER') }}</p>
 </div>
 </template>
 
@@ -52,7 +53,7 @@ const addMode = ref(false);
 const isLoading = ref(true);
 const statesStore = useStatesStore();
 const collection = <any>statesStore.collection;
-const FILTERS = ref(['All links', 'Indexed Links', 'Non Indexed Links', 'Error Links'])
+const FILTERS = ref(['ALL_LINKS', 'INDEXED_LINKS', 'NON_INDEXED_LINKS', 'ERROR_LINKS'])
 
 
 const isDemo = statesStore.userHasRole('demo');
@@ -60,7 +61,7 @@ const isLinkAddAllowed = ref(false);
 const links = ref<any>([]);
 let indexedItems = <any>[];
 const integration = useIntegration();
-const filterType = ref('All links');
+const filterType = ref('ALL_LINKS');
 const openSelect = ref(false);
 
 const loadLinks = async () => {
@@ -107,11 +108,11 @@ const checkHttpError = (id: string | undefined) => {
 const filteredLinks = () => {
     const referenceIds = indexedItems.map((item:any) => item.custom_id);
     switch(filterType.value) {
-        case 'Indexed Links':
+        case 'INDEXED_LINKS':
         return links.value.filter((el:any) => referenceIds.includes(el.custom_id))
-        case 'Non Indexed Links':
+        case 'NON_INDEXED_LINKS':
             return links.value.filter((el:any) => !referenceIds.includes(el.custom_id))
-        case 'Error Links':
+        case 'ERROR_LINKS':
             const errorLinks = new Map(indexedItems.map((item: any) => [item.custom_id, item.cmetadata.http_error]));
             return links.value.filter((el:any) => errorLinks.get(el.custom_id))
         default:
