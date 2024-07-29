@@ -168,7 +168,7 @@ const deleteLink = async () => {
 }
 
 const reindexLink = async(item: Record<string, any>, collection: string | undefined) => {
-    let url = item.url;
+    let url = item.cmetadata.url;
     let metadata = item.cmetadata;
     let document_id = item.custom_id;
     isIndexing.value = true;
@@ -179,7 +179,8 @@ const reindexLink = async(item: Record<string, any>, collection: string | undefi
                 link: url,
                 collection_id : collection,
                 metadata: metadata,
-                options: {},
+                options: linkOptions(url),
+                document_id: document_id
             },
         });
         //indexing
