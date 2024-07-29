@@ -1,7 +1,7 @@
 <template>
 <div class="flex flex-col space-y-10">
     <!-- new -->
-    <div class="flex md:flex-row flex-col md:justify-between gap-3">
+
         <div v-if="!addMode" class="flex flex-row justify-between ">
             <div>
                 <button class="button button-secondary uppercase justify-between items-start px-3.5 text-left" @click="addMode = true" v-if="isLinkAddAllowed">
@@ -15,23 +15,25 @@
         </div>
 
         <FormChatbotLink @close="closeForm" v-else />
+
         <div class="flex flex-row gap-4 items-center">
-            <span class="self-center">{{ $t('FILTERS') }}</span>
+            <span class="self-center">{{ $t('SHOW') }}</span>
             <div class="w-52 h-full px-1 border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary  hover:cursor-default" >
-                <div class="flex flex-row justify-between self-center my-2 p-1" @click="openSelect = !openSelect">
+                <div class="flex flex-row justify-between self-center p-1" @click="openSelect = !openSelect">
                             <span>{{ filterType }}</span>
                             <Icon class="text-xs self-center" name="ph:caret-down-bold"/>
                         </div>
                 <div v-if="openSelect" class="w-52 -mx-1 max-h-96 absolute z-50 bg-white border border-primary rounded shadow-md overflow-y-scroll">
                     <div
-                        v-for="f,index in FILTERS" :class="(FILTERS[index] == filterType )?'bg-primary text-white':'hover:bg-primary hover:text-white'"
+                        v-for="f,index in FILTERS"
+                        class="p-1"
+                        :class="(FILTERS[index] == filterType )?'bg-primary text-white hover:bg-opacity-80':'hover:bg-primary hover:text-white'"
                         @click="filterType = FILTERS[index]; openSelect = !openSelect">
                         {{ f }}
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     <!-- existing -->
     <div class="-my-6 ellipsis-loading text-sky-700"
         v-if="isLoading"><span class="sr-only">loading...</span></div>
