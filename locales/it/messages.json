@@ -82,6 +82,8 @@
     "LAST_NAME_ERROR": "Il cognome utente non può essere vuoto!",
     "LAST_PASSWORD_CHANGE": "Ultimo cambio password: ",
     "HELLO": "Ciao {name}",
+    "INDEXING_SUCCESS": "Contenuto indicizzato correttamente!",
+    "INDEXING_FAILURE": "Si è verificato un errore durante l'indicizzazione. Riprova più tardi.",
     "ITALIAN": "Italiano",
     "JOBS_LEFT": "Analisi rimanenti",
     "LINK_PLACEHOLDER": "Scrivi qui un link valido a una pagina web",

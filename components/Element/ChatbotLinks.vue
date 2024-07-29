@@ -40,7 +40,7 @@
     <div class="links space-y-6" v-else-if="links.length">
         <div id="links" v-for="item in filteredLinks()" :key="item.custom_id">
             <div class="link" >
-                <ElementChatbotLinkItem :item="item" :indexed="checkindexed(item.custom_id)" :httperror="checkHttpError(item.custom_id)" :collectionid="collection.uuid" @close="closeForm" />
+                <ElementChatbotLinkItem :item="item" :indexed="checkindexed(item.custom_id)" :httperror="checkHttpError(item.custom_id)" @close="closeForm" />
             </div>
         </div>
     </div>

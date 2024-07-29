@@ -77,6 +77,8 @@
     "GIVE_THE_NEW_CHATBOT_A_TITLE_AND_INCLUDE_A_BRIEF_DESCRIPTION": "Give the new chatbot a title and include a brief description",
     "GO_TO_LOGIN_PAGE": "Go to login page",
     "HELLO": "Hello {name}",
+    "INDEXING_SUCCESS": "Content indexed successfully!",
+    "INDEXING_FAILURE": "An error occurred during indexing. Please try again later",
     "ITALIAN": "Italian",
     "JOBS_LEFT": "Analysis left",
     "LAST_LOGIN_ERROR": "Last login error: ",
