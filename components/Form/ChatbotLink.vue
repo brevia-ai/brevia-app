@@ -185,7 +185,6 @@ const reindexLink = async(item: Record<string, any>, collection: string | undefi
         //indexing
         let data = await $fetch(`/api/brevia/index/${collection}/${document_id}`);
         isIndexing.value = false;
-        console.log(data)
         if(!data.length || data[0].cmetadata.http_error){
             indexingResult.value = "Not Indexed";
         }
