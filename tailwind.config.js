@@ -1,4 +1,4 @@
-const colors = require('tailwindcss/colors')
+const colors = require('tailwindcss/colors');
 
 module.exports = {
   theme: {
@@ -13,10 +13,10 @@ module.exports = {
         '4xl': '1920px',
       },
       height: {
-        'viewport': '100svh',
+        viewport: '100svh',
       },
       lineHeight: {
-        '12': '3rem',
+        12: '3rem',
       },
       listStyleType: {
         square: 'square',
@@ -34,6 +34,6 @@ module.exports = {
       transformOrigin: {
         'left-center': 'left center',
       },
-    }
-  }
-}
+    },
+  },
+};

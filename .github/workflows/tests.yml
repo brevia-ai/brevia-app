@@ -1,0 +1,64 @@
+name: Run tests
+
+on:
+  pull_request:
+    paths:
+      - '**/*.vue'
+      - '**/*.ts'
+      - '**/*.js'
+      - '**/*.css'
+      - '**/*.json'
+      - '**/*.yml'
+  push:
+    paths:
+      - '**/*.vue'
+      - '**/*.ts'
+      - '**/*.js'
+      - '**/*.css'
+      - '**/*.json'
+      - '**/*.yml'
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: 'Check code using Prettier and ESLint'
+    # if: "${{ !contains(github.event.commits[0].message, '[skip ci]') && !contains(github.event.commits[0].message, '[ci skip]') }}"
+    runs-on: 'ubuntu-latest'
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [20]
+
+    steps:
+      - name: 'Checkout current revision'
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache node_modules
+        id: cache-node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node_modules-${{ matrix.os }}-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
+
+      - name: npm ci
+        if: steps.cache-node_modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit
+
+      - name: Build app to generate build folder (.nuxt)
+        run: npm run build
+
+      - name: Prettier
+        run: npm run format:check
+
+      - name: ESLint
+        run: npm run lint
+
+

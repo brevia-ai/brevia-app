@@ -8,15 +8,23 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"{components,pages,plugins,middleware,layouts,composables,assets}/**/*.{js,ts,vue,css,scss,json,md}\"",
+    "format:check": "prettier --check \"{components,pages,plugins,middleware,layouts,composables,assets}/**/*.{js,ts,vue,css,scss,json,md}\"",
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
     "@atlasconsulting/nuxt-bedita": "^0.2.2",
+    "@nuxt/eslint": "^0.3.13",
     "@nuxtjs/i18n": "^8.0.0",
     "@nuxtjs/tailwindcss": "^6.6.5",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "nuxt": "^3.12.2",
     "nuxt-gtag": "^1.1.1",
-    "nuxt-icon": "^0.5.0"
+    "nuxt-icon": "^0.5.0",
+    "prettier": "^3.3.3"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.8",

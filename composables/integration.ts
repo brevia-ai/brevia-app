@@ -1,6 +1,5 @@
-
 export const useIntegration = (): string => {
-    const config = useRuntimeConfig();
+  const config = useRuntimeConfig();
 
-    return config.public.integration || 'brevia';
+  return config.public.integration || 'brevia';
 };
