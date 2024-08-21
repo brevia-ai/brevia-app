@@ -59,11 +59,11 @@ const loadFiles = async () => {
     files.value = items.res;
     indexedItems = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=files`);
   }
-  //isLoading.value = false;
+  isLoading.value = false;
 };
 
 await loadFiles();
-//isLoading.value = false;
+isLoading.value = false;
 isUploadAllowed.value = checkUploadAllowed(files);
 
 const checkIndexed = (id: string | undefined) => {
