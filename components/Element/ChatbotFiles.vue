@@ -19,6 +19,13 @@
 </template>
 
 <script lang="ts" setup>
+interface singleFile {
+    attributes: Object;
+    cmetadata: Object;
+    custom_id: string;
+    created: string;
+}
+
 const isLoading = ref(true);
 const statesStore = useStatesStore();
 const collection = statesStore.collection as any;
@@ -35,7 +42,7 @@ const checkUploadAllowed = (newFiles: any) => {
   return parseInt(useRuntimeConfig().public.demo.maxChatFiles) > num;
 };
 
-const files = ref([]);
+const files = ref<singleFile[]>([]);
 let indexedItems: any = [];
 const integration = useIntegration();
 
@@ -43,19 +50,20 @@ const loadFiles = async () => {
   isLoading.value = true;
   const endpoint = `/api/${integration}/index/${collection?.uuid}/documents_metadata?filter[type]=files&sort=-created`;
   if (integration === 'brevia') {
-    const items = await $fetch(endpoint);
+    console.log("Brevia integration");
+    const items = await $fetch<singleFile[]>(endpoint);
     files.value = items;
     indexedItems = items;
   } else {
     const items = await useApiGetAll(endpoint);
-    files.value = items.data;
+    files.value = items.res;
     indexedItems = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=files`);
   }
-  isLoading.value = false;
+  //isLoading.value = false;
 };
 
 await loadFiles();
-isLoading.value = false;
+//isLoading.value = false;
 isUploadAllowed.value = checkUploadAllowed(files);
 
 const checkIndexed = (id: string | undefined) => {

@@ -76,7 +76,7 @@ const loadLinks = async () => {
     indexedItems = items;
   } else {
     const items = await useApiGetAll(endpoint);
-    links.value = items.data;
+    links.value = items.res;
     indexedItems = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=links`);
   }
   isLoading.value = false;

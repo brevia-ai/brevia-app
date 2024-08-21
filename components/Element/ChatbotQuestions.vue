@@ -28,7 +28,7 @@
           />
         </div>
         <div v-if="searchTerm(searchInput)" class="absolute right-4 -bottom-1 text-sm font-bold italic text-sky-600">
-          {{ questions?.data?.filter(showThis)?.length }} {{ $t('ELEMENTS_FOUND') }}
+          {{ questions?.filter(showThis)?.length }} {{ $t('ELEMENTS_FOUND')}}
         </div>
       </div>
     </div>
@@ -52,12 +52,12 @@ const MIN_SEARCH_LENGTH = 3;
 const addMode = ref(false);
 const isLoading = ref(true);
 const statesStore = useStatesStore();
-const collection = statesStore.collection;
+const collection = <{uuid: string; name: string; cmetadata: Object}>statesStore.collection;
 const features = useIntegrationFeatures();
 const isDemo = features.demoVersion && statesStore.userHasRole('demo');
 const isQuestionAddAllowed = ref(false);
 const searchInput = ref('');
-const questions = ref([]);
+const questions = ref<{id: number}[]>([]);
 const integration = useIntegration();
 const endpointBase = `/api/${integration}/index/${collection?.uuid}`;
 
@@ -67,11 +67,12 @@ const loadQuestions = async () => {
   const addPath = integration !== 'brevia' ? '/documents_metadata' : '';
   const endpoint = `${endpointBase}${addPath}?${query}`;
   const items = await useApiGetAll(endpoint);
-  questions.value = items.data;
+  questions.value = items.res;
   isLoading.value = false;
 };
 await loadQuestions();
 isQuestionAddAllowed.value = checkAddAllowed(questions);
+
 
 const searchTerm = (input: string) => {
   if (input.trim().length > MIN_SEARCH_LENGTH) return input;
