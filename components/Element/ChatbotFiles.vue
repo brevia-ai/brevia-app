@@ -20,10 +20,10 @@
 
 <script lang="ts" setup>
 interface singleFile {
-    attributes: Object;
-    cmetadata: Object;
-    custom_id: string;
-    created: string;
+  attributes: Object;
+  cmetadata: Object;
+  custom_id: string;
+  created: string;
 }
 
 const isLoading = ref(true);
@@ -50,7 +50,6 @@ const loadFiles = async () => {
   isLoading.value = true;
   const endpoint = `/api/${integration}/index/${collection?.uuid}/documents_metadata?filter[type]=files&sort=-created`;
   if (integration === 'brevia') {
-    console.log("Brevia integration");
     const items = await $fetch<singleFile[]>(endpoint);
     files.value = items;
     indexedItems = items;
