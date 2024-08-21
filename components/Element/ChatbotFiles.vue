@@ -20,8 +20,8 @@
 
 <script lang="ts" setup>
 interface singleFile {
-  attributes: Object;
-  cmetadata: Object;
+  attributes: object;
+  cmetadata: object;
   custom_id: string;
   created: string;
 }
