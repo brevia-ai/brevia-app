@@ -14,5 +14,5 @@ export const useApiGetAll = async (endpoint: string, page = 1, pageSize = 100) =
     res = [...currPageData, ...nextPageData];
   }
 
-  return { res };
+  return { data: res };
 };

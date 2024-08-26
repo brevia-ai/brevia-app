@@ -19,6 +19,13 @@
 </template>
 
 <script lang="ts" setup>
+interface singleFile {
+  attributes: object;
+  cmetadata: object;
+  custom_id: string;
+  created: string;
+}
+
 const isLoading = ref(true);
 const statesStore = useStatesStore();
 const collection = statesStore.collection as any;
@@ -35,7 +42,7 @@ const checkUploadAllowed = (newFiles: any) => {
   return parseInt(useRuntimeConfig().public.demo.maxChatFiles) > num;
 };
 
-const files = ref([]);
+const files = ref<singleFile[]>([]);
 let indexedItems: any = [];
 const integration = useIntegration();
 
@@ -43,7 +50,7 @@ const loadFiles = async () => {
   isLoading.value = true;
   const endpoint = `/api/${integration}/index/${collection?.uuid}/documents_metadata?filter[type]=files&sort=-created`;
   if (integration === 'brevia') {
-    const items = await $fetch(endpoint);
+    const items = await $fetch<singleFile[]>(endpoint);
     files.value = items;
     indexedItems = items;
   } else {
