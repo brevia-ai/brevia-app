@@ -67,7 +67,7 @@ const loadQuestions = async () => {
   const addPath = integration !== 'brevia' ? '/documents_metadata' : '';
   const endpoint = `${endpointBase}${addPath}?${query}`;
   const items = await useApiGetAll(endpoint);
-  questions.value = items.res;
+  questions.value = items.data;
   isLoading.value = false;
 };
 await loadQuestions();
