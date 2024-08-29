@@ -1,5 +1,5 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" :width="loader_dim" :height="loader_dim" viewBox="0 0 24 24" class="animate-spin">
+  <svg xmlns="http://www.w3.org/2000/svg" :width="loaderDim" :height="loaderDim" viewBox="0 0 24 24" class="animate-spin">
     <g fill="#0284c7">
       <path
         fill-rule="evenodd"
@@ -13,5 +13,5 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps(['loader_dim']);
+defineProps({ loaderDim: { type: Number, default: 24 } });
 </script>

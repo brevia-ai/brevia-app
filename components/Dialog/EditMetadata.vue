@@ -59,7 +59,7 @@
     </template>
     <template v-else>
       <div class="h-28 flex">
-        <ElementLoader :loader_dim="64" class="mx-auto" />
+        <ElementLoader :loader-dim="64" class="mx-auto" />
       </div>
     </template>
   </div>

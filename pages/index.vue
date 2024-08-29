@@ -1,7 +1,7 @@
 <template>
   <main class="flex flex-col justify-stretch">
     <div v-if="isLoading" class="mx-auto mt-16">
-      <ElementLoader :loader_dim="82" />
+      <ElementLoader :loader-dim="82" />
     </div>
     <div v-else>
       <DashboardMenu

@@ -94,7 +94,7 @@
         </div>
         <div>
           <div v-if="loadingChats" class="flex flex-row justify-center">
-            <ElementLoader :loader_dim="64" class="mt-16" />
+            <ElementLoader :loader-dim="64" class="mt-16" />
             <span class="sr-only">Loading...</span>
           </div>
           <div v-else-if="dialog.length">

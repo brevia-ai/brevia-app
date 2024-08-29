@@ -1,6 +1,6 @@
 <template>
   <div v-if="isLoading" class="mt-16 flex flex-row justify-center">
-    <ElementLoader :loader_dim="48" />
+    <ElementLoader :loader-dim="48" />
     <span class="sr-only">loading...</span>
   </div>
   <div v-else class="flex flex-col space-y-8">
@@ -29,7 +29,6 @@ interface singleFile {
 }
 
 const isLoading = ref(true);
-const uxLoading = ref(true);
 const statesStore = useStatesStore();
 const collection = statesStore.collection as any;
 

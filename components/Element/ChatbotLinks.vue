@@ -1,6 +1,6 @@
 <template>
   <div v-if="isLoading" class="flex flex-row mt-16 justify-center">
-    <ElementLoader :loader_dim="48" />
+    <ElementLoader :loader-dim="48" />
     <span class="sr-only">loading...</span>
   </div>
   <div v-else class="flex flex-col space-y-10">
