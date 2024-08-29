@@ -1,5 +1,9 @@
 <template>
-  <div class="flex flex-col space-y-8">
+  <div v-if="isLoading" class="mt-16 flex flex-row justify-center">
+    <ElementLoader :loader_dim="48" />
+    <span class="sr-only">loading...</span>
+  </div>
+  <div v-else class="flex flex-col space-y-8">
     <!-- new -->
     <div>
       <FormChatbotFile v-if="isUploadAllowed" @file-uploaded="loadFiles" />
@@ -10,9 +14,7 @@
     </div>
 
     <!-- existing -->
-    <div v-if="isLoading" class="-my-6 ellipsis-loading text-sky-800"><span class="sr-only">loading...</span></div>
-
-    <div v-else-if="files.length" class="flex flex-col space-y-2.5">
+    <div v-if="files.length" class="flex flex-col space-y-2.5">
       <ElementChatbotFileItem v-for="item in files" :key="item.custom_id" :item="item" :indexed="checkIndexed(item.custom_id)" @file-deleted="loadFiles" />
     </div>
   </div>
@@ -27,6 +29,7 @@ interface singleFile {
 }
 
 const isLoading = ref(true);
+const uxLoading = ref(true);
 const statesStore = useStatesStore();
 const collection = statesStore.collection as any;
 
@@ -58,12 +61,11 @@ const loadFiles = async () => {
     files.value = items.data;
     indexedItems = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=files`);
   }
-  isLoading.value = false;
 };
 
 await loadFiles();
-isLoading.value = false;
 isUploadAllowed.value = checkUploadAllowed(files);
+setTimeout(() => (isLoading.value = false), 750);
 
 const checkIndexed = (id: string | undefined) => {
   if (indexedItems.filter((element: any) => element.custom_id == id).length == 0) {
