@@ -272,10 +272,10 @@ const loadChat = async (id: any) => {
       loadedDialog.push(formatDialogItem('ASSISTANT', data.data[i].answer, data.data[i].user_evaluation, data.data[i].user_feedback, data.data[i].uuid));
     }
     dialog.value = loadedDialog;
-    setTimeout(() => loadingChats.value = false, 250);
+    setTimeout(() => (loadingChats.value = false), 250);
   } catch (error) {
     console.error(error);
-    setTimeout(() => loadingChats.value = false, 250);
+    setTimeout(() => (loadingChats.value = false), 250);
   }
 };
 

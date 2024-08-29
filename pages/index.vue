@@ -35,7 +35,7 @@ const isAddEnabled = computed(() => {
 const integration = useIntegration();
 const { data: menu, status } = await useFetch(`/api/${integration}/user_menu`);
 statesStore.menu = buildUserMenu(menu.value);
-setTimeout(() => isLoading.value = false, 250);
+setTimeout(() => (isLoading.value = false), 250);
 
 watch(status, (value) => {
   modalStore.isLoadingPage = value === 'pending';

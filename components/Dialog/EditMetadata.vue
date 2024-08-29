@@ -92,10 +92,10 @@ onBeforeMount(async () => {
     const data = await response.json();
     docsFound.value = (data?.length || 0) > 0;
     metadata.value = data?.[0]?.cmetadata || {};
-    setTimeout(() => loaded.value = true, 250);
+    setTimeout(() => (loaded.value = true), 250);
   } catch (err) {
     console.log(err);
-    setTimeout(() => loaded.value = true, 250);
+    setTimeout(() => (loaded.value = true), 250);
   }
 });
 
