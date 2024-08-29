@@ -1,5 +1,9 @@
 <template>
-  <div class="flex flex-col space-y-10">
+  <div v-if="isLoading" class="flex flex-row mt-16 justify-center">
+    <ElementLoader :loader-dim="48" />
+    <span class="sr-only">loading...</span>
+  </div>
+  <div v-else class="flex flex-col space-y-10">
     <!-- new -->
     <div v-if="!addMode" class="flex flex-row justify-between">
       <div>
@@ -35,8 +39,7 @@
 
     <FormChatbotQuestion v-else @close="closeForm" />
     <!-- existing -->
-    <div v-if="isLoading" class="-my-6 ellipsis-loading text-sky-700"><span class="sr-only">loading...</span></div>
-    <div v-else-if="questions?.length" class="questions space-y-6">
+    <div v-if="questions?.length" class="questions space-y-6">
       <div v-for="item in questions" id="questions" :key="item.id">
         <div v-if="showThis(item)" class="question">
           <ElementChatbotQuestionItem :item="item" :search-term="searchTerm(searchInput)" @close="closeForm" />
@@ -68,10 +71,10 @@ const loadQuestions = async () => {
   const endpoint = `${endpointBase}${addPath}?${query}`;
   const items = await useApiGetAll(endpoint);
   questions.value = items.data;
-  isLoading.value = false;
 };
 await loadQuestions();
 isQuestionAddAllowed.value = checkAddAllowed(questions);
+setTimeout(() => (isLoading.value = false), 750);
 
 const searchTerm = (input: string) => {
   if (input.trim().length > MIN_SEARCH_LENGTH) return input;

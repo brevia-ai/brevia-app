@@ -1,5 +1,9 @@
 <template>
-  <div class="flex flex-col space-y-10">
+  <div v-if="isLoading" class="flex flex-row mt-16 justify-center">
+    <ElementLoader :loader-dim="48" />
+    <span class="sr-only">loading...</span>
+  </div>
+  <div v-else class="flex flex-col space-y-10">
     <!-- new -->
 
     <div v-if="!addMode" class="flex flex-row justify-between">
@@ -40,8 +44,7 @@
       </div>
     </div>
     <!-- existing -->
-    <div v-if="isLoading" class="-my-6 ellipsis-loading text-sky-700"><span class="sr-only">loading...</span></div>
-    <div v-else-if="filteredLinks().length" class="links space-y-6">
+    <div v-if="filteredLinks().length" class="links space-y-6">
       <div v-for="item in filteredLinks()" id="links" :key="item.custom_id">
         <div class="link">
           <ElementChatbotLinkItem :item="item" :indexed="checkindexed(item.custom_id)" :httperror="checkHttpError(item.custom_id)" @close="closeForm" />
@@ -79,11 +82,11 @@ const loadLinks = async () => {
     links.value = items.data;
     indexedItems = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=links`);
   }
-  isLoading.value = false;
 };
 
 await loadLinks();
 isLinkAddAllowed.value = checkAddAllowed(links);
+setTimeout(() => (isLoading.value = false), 750);
 
 const closeForm = async (e: boolean) => {
   if (e) {
