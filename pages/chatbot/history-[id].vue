@@ -71,7 +71,7 @@
             class="w-96 px-1 border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary hover:cursor-default"
           >
             <div class="flex flex-row justify-between" @click="openSelect = !openSelect">
-              <span>{{ selectedChat.title }}</span>
+              <span v-html='converter.makeHtml(selectedChat.title)'></span>
               <Icon class="text-xs self-center" name="ph:caret-down-bold" />
             </div>
             <div v-if="openSelect" class="w-96 -mx-1 max-h-96 absolute z-50 bg-white border border-primary rounded shadow-md overflow-y-scroll">
@@ -86,7 +86,7 @@
                   openSelect = !openSelect;
                 "
               >
-                {{ item.sessionTitle }}
+                <span v-html="converter.makeHtml(item.sessionTitle)"></span>
                 <span class="self-center text-xs italic">{{ getLocalCreationDate(item.sessionStart) }}</span>
               </div>
             </div>
@@ -104,7 +104,7 @@
                   <div class="flex space-x-3 justify-between">
                     <p class="text-xs">{{ item.who }}</p>
                   </div>
-                  <p class="whitespace-break-spaces">{{ item.message }} &nbsp;</p>
+                  <p class="whitespace-break-spaces" v-html='converter.makeHtml(item.message)'></p>
                   <div
                     v-if="item.who === 'ASSISTANT' && item.evaluation !== null"
                     class="p-2 absolute -bottom-4 right-4 z-20 bg-neutral-700 rounded-full flex flex-row"
@@ -133,8 +133,10 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
 import { utils, writeFile } from 'xlsx';
 import moment from 'moment';
+import showdown from 'showdown';
 
 const config = useRuntimeConfig();
+const converter = new showdown.Converter();
 useHead({ title: `Chat history | ${config.public.appName}` });
 
 interface DialogItem {

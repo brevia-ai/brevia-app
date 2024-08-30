@@ -42,7 +42,7 @@
                 <p class="text-xs">{{ item.who }}</p>
                 <div class="chat-balloon-status" :class="{ busy: isBusy && i === dialog.length - 1 }"></div>
               </div>
-              <p class="whitespace-break-spaces" v-html="formatResponse(item.message)"></p>
+              <p class="whitespace-break-spaces" v-html="converter.makeHtml(item.message)"></p>
               <!--MENU CONTESTUALE-->
               <div
                 v-if="canSeeDocs && i === dialog.length - 1 && showResponseMenu && hovered === i"
@@ -93,8 +93,11 @@
 </template>
 
 <script lang="ts" setup>
+import showdown from 'showdown';
+
 const config = useRuntimeConfig();
 const store = useStatesStore();
+const converter = new showdown.Converter();
 useHead({ title: `Chatbot | ${config.public.appName}` });
 
 interface DialogItem {
@@ -303,7 +306,4 @@ const updateLeftMessages = async () => {
   }
 };
 
-const formatResponse = (response: string) => {
-  return response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-};
 </script>
