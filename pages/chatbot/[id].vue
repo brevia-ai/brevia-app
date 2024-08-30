@@ -305,5 +305,4 @@ const updateLeftMessages = async () => {
     console.log(error);
   }
 };
-
 </script>
