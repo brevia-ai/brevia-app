@@ -60,6 +60,7 @@ const loadFiles = async () => {
     files.value = items.data;
     indexedItems = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=files`);
   }
+  setTimeout(() => (isLoading.value = false), 750);
 };
 
 await loadFiles();
