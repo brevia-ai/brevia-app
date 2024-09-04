@@ -82,6 +82,7 @@ const loadLinks = async () => {
     links.value = items.data;
     indexedItems = await $fetch(`/api/brevia/index/${collection?.uuid}/documents_metadata?filter[type]=links`);
   }
+  setTimeout(() => (isLoading.value = false), 750);
 };
 
 await loadLinks();

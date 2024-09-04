@@ -71,6 +71,7 @@ const loadQuestions = async () => {
   const endpoint = `${endpointBase}${addPath}?${query}`;
   const items = await useApiGetAll(endpoint);
   questions.value = items.data;
+  setTimeout(() => (isLoading.value = false), 750);
 };
 await loadQuestions();
 isQuestionAddAllowed.value = checkAddAllowed(questions);
