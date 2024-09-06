@@ -29,11 +29,11 @@ modalStore.$onAction(
     // onError, // hook if the action throws or rejects
   }) => {
     after(() => {
-      if(store.activeModal) {
-            document.body.classList.add('overflow-hidden');
-        } else {
-            document.body.classList.remove('overflow-hidden');
-        }
+      if (store.activeModal) {
+        document.body.classList.add('overflow-hidden');
+      } else {
+        document.body.classList.remove('overflow-hidden');
+      }
     });
   },
 );
