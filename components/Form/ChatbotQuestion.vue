@@ -10,7 +10,7 @@
       @keydown.enter.stop.prevent="save"
     />
 
-    <textarea v-model="answer" :placeholder="$t('ANSWER_PLACEHOLDER')" rows="7"></textarea>
+    <textarea class="textarea" v-model="answer" :placeholder="$t('ANSWER_PLACEHOLDER')" rows="7"></textarea>
 
     <div v-if="error" class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary">
       {{ $t('AN_ERROR_OCCURRED_PLEASE_RETRY') }}
