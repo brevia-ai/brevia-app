@@ -17,9 +17,9 @@ export interface menuItem {
 }
 
 export interface collectionItem {
-  name: string,
-  uuid: string,
-  cmetadata: any,
+  name: string;
+  uuid: string;
+  cmetadata: any;
 }
 
 export const useStatesStore = defineStore('states', {

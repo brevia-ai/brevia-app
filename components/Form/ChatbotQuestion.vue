@@ -10,7 +10,7 @@
       @keydown.enter.stop.prevent="save"
     />
 
-    <textarea class="textarea" v-model="answer" :placeholder="$t('ANSWER_PLACEHOLDER')" rows="7"></textarea>
+    <textarea v-model="answer" :placeholder="$t('ANSWER_PLACEHOLDER')" class="textarea" rows="7"></textarea>
 
     <div v-if="error" class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary">
       {{ $t('AN_ERROR_OCCURRED_PLEASE_RETRY') }}
@@ -115,7 +115,6 @@ const update = async () => {
 const deleteQuestion = async () => {
   isDeleting.value = true;
   try {
-    // @ts-ignore
     await $fetch(`/api/${integration}/index/${collectionUuid}/${props.item.custom_id}`, { method: 'DELETE' });
   } catch (err) {
     error.value = true;
