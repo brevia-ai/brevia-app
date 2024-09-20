@@ -37,6 +37,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { collectionItem } from '~/store/states';
+
 const props = defineProps({
   isModal: {
     type: Boolean,
@@ -90,7 +92,7 @@ const create = async () => {
       },
     });
 
-    collection = data;
+    collection = data as collectionItem;
     statesStore.collection = collection;
 
     statesStore.menu.push({
@@ -108,8 +110,8 @@ const create = async () => {
 
 const update = async () => {
   try {
-    collection.cmetadata = {
-      ...collection.cmetadata,
+    collection!.cmetadata = {
+      ...collection!.cmetadata,
       ...{ title: title.value, description: description.value },
     };
 

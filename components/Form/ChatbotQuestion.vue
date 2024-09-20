@@ -115,6 +115,7 @@ const update = async () => {
 const deleteQuestion = async () => {
   isDeleting.value = true;
   try {
+    // @ts-ignore
     await $fetch(`/api/${integration}/index/${collectionUuid}/${props.item.custom_id}`, { method: 'DELETE' });
   } catch (err) {
     error.value = true;
