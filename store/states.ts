@@ -16,11 +16,17 @@ export interface menuItem {
   edit: ItemEditLevel;
 }
 
+export interface collectionItem {
+  name: string;
+  uuid: string;
+  cmetadata: any;
+}
+
 export const useStatesStore = defineStore('states', {
   state: () => ({
     user: null as UserDataStore | null,
     menu: [] as menuItem[],
-    collection: null as object | null,
+    collection: null as collectionItem | null,
   }),
 
   actions: {
