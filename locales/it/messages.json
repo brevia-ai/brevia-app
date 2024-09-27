@@ -105,6 +105,7 @@
     "NEW_PASSWORD": "Nuova password",
     "NEW_QUESTION": "Nuova domanda",
     "NO_AI_TOOL_HAS_BEEN_SET_UP_JUST_FOR_YOU": "Al momento nessuno strumento AI è stato ancora configurato per te",
+    "NO_CHUNKS": "Nessun chunk trovato",
     "NO_DOCUMENTS": "Non ci sono documenti per questa risposta",
     "NO_INDEXED_DOCUMENTS": "Il documento non è ancora stato indicizzato. Riprova tra qualche minuto.",
     "NO_FILES_FOUND": "Nessun file trovato",

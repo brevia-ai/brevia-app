@@ -12,7 +12,7 @@
         </div>
       </div>
       <div v-else class="flex flex-col space-y-3">
-        <p class="text-sm font-bold">{{ $t('NO_DOCUMENTS') }}</p>
+        <p class="text-sm font-bold">{{ $t('NO_CHUNKS') }}</p>
       </div>
     </div>
   </div>
@@ -20,14 +20,17 @@
 
 <script setup lang="ts">
 const props = defineProps({
-  documentId: String,
+  documentId: {
+    type: String,
+    default: () => '',
+  },
 });
 const emit = defineEmits(['enlargeWindow']);
 
 const statesStore = useStatesStore();
 const { $closeModal } = useNuxtApp();
 const collectionUuid: string = statesStore.collection?.uuid || '';
-const documentChunks = ref(<any>[]);
+const documentChunks = ref<any>([]);
 
 onBeforeMount(async () => {
   try {
