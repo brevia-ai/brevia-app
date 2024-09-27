@@ -19,31 +19,29 @@
 </template>
 
 <script setup lang="ts">
-  const props = defineProps({
-    documentId: String
-  });
-  const emit = defineEmits(['enlargeWindow']);
+const props = defineProps({
+  documentId: String,
+});
+const emit = defineEmits(['enlargeWindow']);
 
-  const statesStore = useStatesStore();
-  const { $closeModal } = useNuxtApp();
-  const collectionUuid: string = statesStore.collection?.uuid || '';
-  const documentChunks = ref(<any>[]);
+const statesStore = useStatesStore();
+const { $closeModal } = useNuxtApp();
+const collectionUuid: string = statesStore.collection?.uuid || '';
+const documentChunks = ref(<any>[]);
 
-  onBeforeMount( async () =>  {
-    try {
-      const response = await fetch(`/api/brevia/index/${collectionUuid}/${props.documentId}`);
-      const data = await response.json();
-      if(data) {
-        documentChunks.value = data.sort((a: any, b: any) => a.cmetadata.part - b.cmetadata.part);
-      }
-
-    } catch (err) {
-      console.log(err);
+onBeforeMount(async () => {
+  try {
+    const response = await fetch(`/api/brevia/index/${collectionUuid}/${props.documentId}`);
+    const data = await response.json();
+    if (data) {
+      documentChunks.value = data.sort((a: any, b: any) => a.cmetadata.part - b.cmetadata.part);
     }
-  });
+  } catch (err) {
+    console.log(err);
+  }
+});
 
-  onMounted(() => {
-    emit('enlargeWindow');
-  });
-
+onMounted(() => {
+  emit('enlargeWindow');
+});
 </script>

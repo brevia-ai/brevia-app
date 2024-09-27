@@ -21,11 +21,11 @@
 
     <div class="px-4 flex items-center justify-between space-x-4">
       <button
-            v-if="isIndexed"
-            class="button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
-            @click.stop.prevent="$openModal('SeeDocumentChunks', { documentId: item.custom_id })"
-          >
-            <Icon name="ph:code-block-bold" class="text-xl" />
+        v-if="isIndexed"
+        class="button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
+        @click.stop.prevent="$openModal('SeeDocumentChunks', { documentId: item.custom_id })"
+      >
+        <Icon name="ph:code-block-bold" class="text-xl" />
       </button>
 
       <button
