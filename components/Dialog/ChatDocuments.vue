@@ -5,7 +5,7 @@
       <Icon class="text-2xl hover:cursor-pointer hover:bg-sky-100" name="ph:x-bold" @click="$closeModal()" />
     </div>
     <div class="mb-4 p-2 w-full whitespace-break-spaces overflow-y-auto max-h-[60vh]">
-      <div v-if="documents.length > 0" class="flex flex-col space-y-3">
+      <div v-if="documents && documents.length > 0" class="flex flex-col space-y-3">
         <div v-for="(doc, n) in documents" :key="n" class="bg-sky-100 shadow-md p-3 rounded-lg">
           <p class="text-lg font-bold">{{ $t('DOCUMENT') }} {{ n + 1 }}.</p>
           <p class="pt-2 pb-2">{{ doc.page_content }}</p>

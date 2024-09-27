@@ -36,6 +36,14 @@
           <button
             v-if="linkIsIndexed"
             class="button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
+            title="Chunks"
+            @click.stop.prevent="$openModal('SeeDocumentChunks', { documentId: item.custom_id })"
+          >
+            <Icon name="ph:code-block-bold" class="text-xl" />
+          </button>
+          <button
+            v-if="linkIsIndexed"
+            class="button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
             title="Metadata"
             @click.stop.prevent="$openModal('DialogEditMetadata', { document: item })"
           >
