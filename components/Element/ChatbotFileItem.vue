@@ -19,23 +19,31 @@
       </div>
     </div>
 
-    <div class="space-x-1 whitespace-nowrap">
+    <div class="px-4 flex items-center justify-between space-x-4">
       <button
         v-if="isIndexed"
-        class="mr-auto button button-secondary button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
+        class="button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
+        @click.stop.prevent="$openModal('SeeDocumentChunks', { documentId: item.custom_id })"
+      >
+        <Icon name="ph:code-block-bold" class="text-xl" />
+      </button>
+
+      <button
+        v-if="isIndexed"
+        class="button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
         @click.stop.prevent="$openModal('DialogEditMetadata', { document: item })"
       >
         <Icon name="ph:code-bold" class="text-xl" />
       </button>
 
-      <a href="#" class="button-mock border-transparent py-2.5 px-1.5" @click.prevent="download">
+      <a href="#" class="button-transparent text-white hover:from-white hover:to-white hover:text-sky-500" @click.prevent="download">
         <Icon name="ph:download-simple-bold" class="text-xl" />
         <span class="sr-only">{{ $t('DOWNLOAD') }}</span>
       </a>
 
       <button
         v-if="item.custom_id"
-        class="mr-auto button button-secondary button-transparent text-pink-500 hover:bg-danger hover:border-danger hover:text-white pt-2.5 pb-2 px-3"
+        class="button-transparent text-pink-500 hover:bg-danger hover:border-danger hover:rounded-md hover:text-white p-2.5"
         :class="{ 'is-loading': isDeleting }"
         @click.stop.prevent="deleteFile"
       >

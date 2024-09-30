@@ -14,6 +14,7 @@
         <LazyDialogDeleteAccount v-if="featureAvailable('deleteAccount') && $isOpenModal('DialogDeleteAccount')" @stop-click="clickableOutside = false" />
         <LazyDialogShowFeedback v-if="$isOpenModal('ShowAnswerFeedback')" v-bind="modalStore.activeModalProps" />
         <LazyDialogChatDocuments v-if="$isOpenModal('ChatDocuments')" v-bind="modalStore.activeModalProps" @enlarge-window="largerModal = true" />
+        <LazyDialogDocumentChunks v-if="$isOpenModal('SeeDocumentChunks')" v-bind="modalStore.activeModalProps" @enlarge-window="largerModal = true" />
       </div>
     </div>
   </div>
