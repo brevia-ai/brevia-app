@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5">
-      <h3 class="text-xl font-semibold text-gray-900">{{ $t('CHUNKS_FOUND', { chunks: documentChunks.length } ) }}</h3>
+      <h3 class="text-xl font-semibold text-gray-900">{{ $t('CHUNKS_FOUND', { chunks: documentChunks.length }) }}</h3>
       <Icon class="text-2xl hover:cursor-pointer hover:bg-sky-100" name="ph:x-bold" @click="$closeModal()" />
     </div>
     <div class="mb-4 p-2 w-full whitespace-break-spaces overflow-y-auto max-h-[60vh]" v-if="!loadingChunks">
@@ -43,10 +43,10 @@ onBeforeMount(async () => {
     if (data) {
       documentChunks.value = data.sort((a: any, b: any) => a.cmetadata.part - b.cmetadata.part);
     }
-    setTimeout(() => loadingChunks.value = false, 250);
+    setTimeout(() => (loadingChunks.value = false), 250);
   } catch (err) {
     console.log(err);
-    setTimeout(() => loadingChunks.value = false, 250);
+    setTimeout(() => (loadingChunks.value = false), 250);
   }
 });
 
