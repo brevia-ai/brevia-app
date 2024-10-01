@@ -8,7 +8,7 @@
     }"
     @click.stop="download"
   >
-    <div class="flex space-x-3.5 items-center">
+    <div class="flex space-x-3.5 items-center break-words break-all">
       <div>
         <Icon name="ph:file-pdf-light" class="text-4xl" />
       </div>
