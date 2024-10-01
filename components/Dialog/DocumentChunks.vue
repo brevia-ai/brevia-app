@@ -7,7 +7,7 @@
     <div class="mb-4 p-2 w-full whitespace-break-spaces overflow-y-auto max-h-[60vh]" v-if="!loadingChunks">
       <div v-if="documentChunks && documentChunks.length > 0" class="flex flex-col space-y-3">
         <div v-for="(doc, n) in documentChunks" :key="n" class="bg-sky-100 shadow-md p-3 rounded-lg">
-          <p class="text-lg font-bold">{{ $t('CHUNK') }} {{ n + 1 }}. - {{ $t('NUM_CHARS', { num: doc.document.length}) }}</p>
+          <p class="text-lg font-bold">{{ $t('CHUNK') }} {{ n + 1 }}. - {{ $t('NUM_CHARS', { num: doc.document.length }) }}</p>
           <p class="pt-2 pb-2">{{ doc.document }}</p>
         </div>
       </div>
