@@ -1,7 +1,7 @@
 {
   "name": "brevia-admin",
   "private": true,
-  "version": "0.0.7",
+  "version": "0.1.1",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -15,7 +15,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@atlasconsulting/nuxt-bedita": "^0.2.2",
+    "@atlasconsulting/nuxt-bedita": "^0.4.1",
     "@nuxt/eslint": "^0.3.13",
     "@nuxtjs/i18n": "^8.0.0",
     "@nuxtjs/tailwindcss": "^6.6.5",

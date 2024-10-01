@@ -12,7 +12,7 @@
 
     <div v-else>
       <div class="px-4 pt-3.5 pb-4 flex items-start justify-between space-x-4 bg-gradient-to-br from-slate-700 to-slate-950 text-white">
-        <h2 class="text-lg leading-snug break-words" v-html="highlight(title, searchTerm)"></h2>
+        <h2 class="text-lg leading-snug break-words break-all" v-html="highlight(title, searchTerm)"></h2>
         <div class="px-4 flex items-start justify-between space-x-4">
           <button
             class="button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"

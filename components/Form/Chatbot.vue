@@ -10,7 +10,7 @@
       @keydown.enter.stop.prevent="save"
     />
 
-    <textarea v-model="description" :placeholder="$t('DESCRIPTION_PLACEHOLDER')" rows="4"></textarea>
+    <textarea v-model="description" :placeholder="$t('DESCRIPTION_PLACEHOLDER')" class="textarea" rows="4"></textarea>
 
     <div v-if="error" class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary">
       {{ $t('AN_ERROR_OCCURRED_PLEASE_RETRY') }}
@@ -37,6 +37,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { collectionItem } from '~/store/states';
+
 const props = defineProps({
   isModal: {
     type: Boolean,
@@ -90,7 +92,7 @@ const create = async () => {
       },
     });
 
-    collection = data;
+    collection = data as collectionItem;
     statesStore.collection = collection;
 
     statesStore.menu.push({
@@ -108,8 +110,8 @@ const create = async () => {
 
 const update = async () => {
   try {
-    collection.cmetadata = {
-      ...collection.cmetadata,
+    collection!.cmetadata = {
+      ...collection!.cmetadata,
       ...{ title: title.value, description: description.value },
     };
 

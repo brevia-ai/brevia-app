@@ -29,10 +29,18 @@
         }"
       >
         <div>
-          <a class="text-lg leading-snug break-words" target="_blank" :href="item.cmetadata?.url">{{ item.cmetadata?.url }}</a>
+          <a class="text-lg leading-snug break-words break-all" target="_blank" :href="item.cmetadata?.url">{{ item.cmetadata?.url }}</a>
           <p v-if="linkIsError" class="text-xs italic">Errore nella lettura del contenuto - codice errore {{ linkIsError }}</p>
         </div>
         <div class="px-4 flex items-start justify-between space-x-4">
+          <button
+            v-if="linkIsIndexed"
+            class="button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
+            title="Chunks"
+            @click.stop.prevent="$openModal('SeeDocumentChunks', { documentId: item.custom_id })"
+          >
+            <Icon name="ph:code-block-bold" class="text-xl" />
+          </button>
           <button
             v-if="linkIsIndexed"
             class="button-transparent text-white hover:from-white hover:to-white hover:text-sky-500"
