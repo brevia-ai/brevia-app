@@ -82,4 +82,6 @@ export default defineNuxtConfig({
       secret: '',
     },
   },
+
+  compatibilityDate: '2024-10-02',
 });
