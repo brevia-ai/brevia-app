@@ -42,7 +42,7 @@
                 <p class="text-xs">{{ item.who }}</p>
                 <div class="chat-balloon-status" :class="{ busy: isBusy && i === dialog.length - 1 }"></div>
               </div>
-              <p class="whitespace-break-spaces" v-html="formatResponse(item.message, collection?.cmetadata?.qa_completion_llm)"></p>
+              <p class="whitespace-break-spaces" v-html="formatResponse(item.message, responseFormat)"></p>
               <!--MENU CONTESTUALE-->
               <div
                 v-if="canSeeDocs && i === dialog.length - 1 && showResponseMenu && hovered === i"
@@ -95,7 +95,7 @@
 <script lang="ts" setup>
 const config = useRuntimeConfig();
 const store = useStatesStore();
-const { formatResponse } = useResponseFormat();
+const { formatResponse, llmResponseFormat } = useResponseFormat();
 useHead({ title: `Chatbot | ${config.public.appName}` });
 
 interface DialogItem {
@@ -126,6 +126,7 @@ const showResponseMenu = ref(true);
 let sessionId = '';
 let collectionName = '';
 let editLevel = ItemEditLevel.None;
+const responseFormat = ref('text');
 
 onBeforeMount(async () => {
   const route = useRoute();
@@ -149,6 +150,7 @@ onBeforeMount(async () => {
     });
   }
 
+  responseFormat.value = llmResponseFormat(collection.value.cmetadata?.qa_completion_llm);
   sessionId = crypto.randomUUID();
   isBusy.value = false;
   updateLeftMessages();

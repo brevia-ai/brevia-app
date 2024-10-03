@@ -71,7 +71,7 @@
             class="w-96 px-1 border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary hover:cursor-default"
           >
             <div class="flex flex-row justify-between" @click="openSelect = !openSelect">
-              <span v-html="formatResponse(selectedChat.title, collection?.cmetadata?.qa_completion_llm)"></span>
+              <span v-html="formatResponse(selectedChat.title, responseFormat)"></span>
               <Icon class="text-xs self-center" name="ph:caret-down-bold" />
             </div>
             <div v-if="openSelect" class="w-96 -mx-1 max-h-96 absolute z-50 bg-white border border-primary rounded shadow-md overflow-y-scroll">
@@ -86,7 +86,7 @@
                   openSelect = !openSelect;
                 "
               >
-                <span v-html="formatResponse(item.sessionTitle, collection?.cmetadata?.qa_completion_llm)"></span>
+                <span v-html="formatResponse(item.sessionTitle, responseFormat)"></span>
                 <span class="self-center text-xs italic">{{ getLocalCreationDate(item.sessionStart) }}</span>
               </div>
             </div>
@@ -135,7 +135,7 @@ import { utils, writeFile } from 'xlsx';
 import moment from 'moment';
 
 const config = useRuntimeConfig();
-const { formatResponse } = useResponseFormat();
+const { formatResponse, llmResponseFormat } = useResponseFormat();
 useHead({ title: `Chat history | ${config.public.appName}` });
 
 interface DialogItem {
@@ -176,6 +176,8 @@ if (!collection.value?.uuid) {
     fatal: true,
   });
 }
+
+const responseFormat = llmResponseFormat(collection.value.cmetadata?.qa_completion_llm);
 
 const csvKeys = ['question', 'answer', 'session_id', 'created', 'user_evaluation', 'user_feedback', 'chat_source'];
 
