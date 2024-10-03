@@ -2,7 +2,7 @@
   <main>
     <div class="space-y-10">
       <div class="flex items-start justify-between space-x-4">
-        <h2 class="text-2xl leading-tight">{{ $t('Chat history') }} “{{ collection.cmetadata?.title }}”</h2>
+        <h2 class="text-2xl leading-tight">{{ $t('CHAT_HISTORY_TITLE') }} “{{ collection.cmetadata?.title }}”</h2>
       </div>
 
       <div class="flex justify-between space-x-10">
@@ -56,7 +56,7 @@
             <option value="XSLX">XSLX</option>
           </select>
           <button type="submit" class="button button-primary uppercase" :disabled="historyItems.length === 0" @click="downloadHistory">
-            {{ $t('Download') }}
+            {{ $t('DOWNLOAD') }}
           </button>
         </div>
       </div>
@@ -104,7 +104,7 @@
                   <div class="flex space-x-3 justify-between">
                     <p class="text-xs">{{ item.who }}</p>
                   </div>
-                  <p class="whitespace-break-spaces" v-html="formatResponse(item.message, responseFormat)"></p>
+                  <p class="whitespace-break-spaces rich-text" v-html="formatResponse(item.message, responseFormat)"></p>
                   <div
                     v-if="item.who === 'ASSISTANT' && item.evaluation !== null"
                     class="p-2 absolute -bottom-4 right-4 z-20 bg-neutral-700 rounded-full flex flex-row"
