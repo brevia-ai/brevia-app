@@ -1,27 +1,16 @@
 <template>
   <form class="flex flex-col space-y-6" @submit.prevent="saveMeta">
-
-    <UIXInput
-      v-model.trim="chunkSize"
-      label="Chunk Size"
-      autocapitalize="on"
-      @keydown.enter.stop.prevent="saveMeta"
-    />
-    <UIXInput
-      v-model.trim="chundOverlap"
-      label="Chunk Overlap"
-      autocapitalize="none"
-      @keydown.enter.stop.prevent="saveMeta"
-    />
+    <UIXInput v-model.trim="chunkSize" label="Chunk Size" autocapitalize="on" @keydown.enter.stop.prevent="saveMeta" />
+    <UIXInput v-model.trim="chundOverlap" label="Chunk Overlap" autocapitalize="none" @keydown.enter.stop.prevent="saveMeta" />
 
     <label>
       Folloup LLm
-      <JsonEditorVue v-model="qaFollowupLLm"/>
+      <JsonEditorVue v-model="qaFollowupLLm" />
     </label>
 
     <label>
       Completion LLm
-      <JsonEditorVue v-model="qaCompletionLLM"/>
+      <JsonEditorVue v-model="qaCompletionLLM" />
     </label>
 
     <div v-if="error" class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary">
@@ -43,10 +32,10 @@
 </template>
 
 <script lang="ts" setup>
-import JsonEditorVue from 'json-editor-vue'
+import JsonEditorVue from 'json-editor-vue';
 
 const statesStore = useStatesStore();
-let collection = statesStore.collection;
+const collection = statesStore.collection;
 if (!collection?.cmetadata) {
   throw createError({
     statusCode: 404,
