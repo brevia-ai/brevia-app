@@ -16,12 +16,12 @@
 
     <label>
       Folloup LLm
-      <JsonEditorVue v-model="qaFollowupLLm" :options="{ mode: 'text' }" />
+      <JsonEditorVue v-model="qaFollowupLLm"/>
     </label>
 
     <label>
       Completion LLm
-      <JsonEditorVue v-model="qaCompletionLLM" :options="{ mode: 'text' }" />
+      <JsonEditorVue v-model="qaCompletionLLM"/>
     </label>
 
     <div v-if="error" class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary">
@@ -90,7 +90,7 @@ const update = async () => {
 const updateMetadataItems = () => {
   collection.cmetadata.chunk_size = parseInt(chunkSize.value);
   collection.cmetadata.chunk_overlap = parseInt(chundOverlap.value);
-  collection.cmetadata.qa_followup_llm = qaFollowupLLm.value;
-  collection.cmetadata.qa_completion_llm = qaCompletionLLM.value;
+  collection.cmetadata.qa_followup_llm = qaFollowupLLm.value ? JSON.parse(qaFollowupLLm.value) : null;
+  collection.cmetadata.qa_completion_llm = qaCompletionLLM.value ? JSON.parse(qaCompletionLLM.value) : null;
 };
 </script>
