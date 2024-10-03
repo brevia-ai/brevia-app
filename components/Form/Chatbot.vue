@@ -34,7 +34,6 @@
       </button>
     </div>
   </form>
-  <FormChatbotAdvanced />
 </template>
 
 <script lang="ts" setup>
