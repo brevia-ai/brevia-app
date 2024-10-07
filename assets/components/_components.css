@@ -11,7 +11,7 @@
     }
 
     ol {
-      @apply list-outside;
+      @apply list-outside list-decimal;
     }
 
     li {
