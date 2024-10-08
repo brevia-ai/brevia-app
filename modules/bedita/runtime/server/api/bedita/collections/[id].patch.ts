@@ -1,11 +1,6 @@
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
-    // update only title and description for now
-    const attributes = {
-      title: body.cmetadata.title,
-      description: body.cmetadata.description,
-    };
     // BEdita ID in cmetadata
     const id = body.cmetadata.id;
     const client = await beditaApiClient(event);
@@ -13,7 +8,7 @@ export default defineEventHandler(async (event) => {
       data: {
         id: `${id}`,
         type: 'collections',
-        attributes,
+        attributes: body.cmetadata,
       },
     });
 

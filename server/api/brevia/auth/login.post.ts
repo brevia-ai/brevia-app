@@ -5,16 +5,24 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   try {
     const body = await readBody(event);
-    let authCredentials = config.brevia.authCredentials;
-    if (typeof authCredentials === 'string') {
-      authCredentials = JSON.parse(authCredentials);
+    let authCredentials: UserCredentials[];
+    if (typeof config.brevia.authCredentials === 'string') {
+      authCredentials = JSON.parse(config.brevia.authCredentials);
+    } else {
+      authCredentials = config.brevia.authCredentials as UserCredentials[];
     }
-    const user = authCredentials.find((item) => {
+    const credentials = authCredentials.find((item) => {
       return item.username === body?.username && item.password === body?.password;
     });
-    if (!user) {
+    if (!credentials) {
       return handleApiError(event, { message: 'Invalid credentials', status: 401 });
     }
+    const user: UserDataStore = {
+      name: credentials.name,
+      surname: credentials.surname,
+      roles: credentials.roles || ['admin'], // assume admin role if not provided
+      username: credentials.username,
+    };
     const session = await useSession(event, breviaSessionConfig());
     await session.update({ user });
 

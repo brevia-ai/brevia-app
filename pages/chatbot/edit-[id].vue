@@ -9,7 +9,24 @@
       </div>
 
       <div class="space-y-8">
-        <UIXTabs :tabs="[t('OVERVIEW'), t('FILES'), 'Q & A', t('LINKS')]">
+        <UIXTabs v-if="isAdmin" :tabs="[t('OVERVIEW'), t('ADVANCED'), t('FILES'), 'Q & A', t('LINKS')]">
+          <template #0>
+            <FormChatbot @save-title="collection.cmetadata.title = $event" @save-descriprion="collection.cmetadata.description = $event" />
+          </template>
+          <template #1>
+            <FormChatbotAdvanced />
+          </template>
+          <template #2>
+            <ElementChatbotFiles />
+          </template>
+          <template #3>
+            <ElementChatbotQuestions />
+          </template>
+          <template #4>
+            <ElementChatbotLinks />
+          </template>
+        </UIXTabs>
+        <UIXTabs v-else :tabs="[t('OVERVIEW'), t('FILES'), 'Q & A', t('LINKS')]">
           <template #0>
             <FormChatbot @save-title="collection.cmetadata.title = $event" @save-descriprion="collection.cmetadata.description = $event" />
           </template>
@@ -47,4 +64,5 @@ if (!collection.value?.uuid) {
 
 const statesStore = useStatesStore();
 statesStore.collection = collection.value;
+const isAdmin = statesStore.userHasRole('admin');
 </script>

@@ -1,11 +1,19 @@
 import { ItemEditLevel, type menuItem } from '~~/store/states';
 
+export interface UserCredentials {
+  name?: string;
+  surname?: string;
+  roles?: string[];
+  username: string;
+  password: string;
+}
+
 export interface UserDataStore {
-  id: string;
-  name: string;
-  surname: string;
+  id?: string;
+  name?: string;
+  surname?: string;
   roles: string[];
-  meta: object;
+  meta?: object;
   username: string;
 }
 
