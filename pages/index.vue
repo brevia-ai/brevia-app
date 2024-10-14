@@ -3,6 +3,9 @@
     <div v-if="isLoading" class="mx-auto mt-16">
       <ElementLoader :loader-dim="82" />
     </div>
+    <div v-else-if="error" class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary">
+      {{ $t('AN_ERROR_OCCURRED_PLEASE_RETRY') }}
+    </div>
     <div v-else>
       <DashboardMenu
         v-if="statesStore.menu.length"
@@ -22,6 +25,7 @@ useHead({ title: config.public.appName });
 const modalStore = useModalStore();
 const statesStore = useStatesStore();
 const isLoading = ref(true);
+const error = ref(false);
 
 const isAddEnabled = computed(() => {
   if (config.public.maxUserChatbots === '') {
@@ -34,8 +38,13 @@ const isAddEnabled = computed(() => {
 
 const integration = useIntegration();
 const { data: menu, status } = await useFetch(`/api/${integration}/user_menu`);
-statesStore.menu = buildUserMenu(menu.value);
-setTimeout(() => (isLoading.value = false), 250);
+if (status.value === 'error') {
+  error.value = true;
+  isLoading.value = false;
+} else {
+  statesStore.menu = buildUserMenu(menu.value);
+  setTimeout(() => (isLoading.value = false), 250);
+}
 
 watch(status, (value) => {
   modalStore.isLoadingPage = value === 'pending';
