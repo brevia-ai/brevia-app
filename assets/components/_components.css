@@ -11,7 +11,12 @@
     }
 
     ol {
-      @apply list-outside;
+      @apply list-outside list-decimal;
+    }
+
+    ol ul,
+    ul ul {
+      @apply list-disc list-outside ml-4;
     }
 
     li {
