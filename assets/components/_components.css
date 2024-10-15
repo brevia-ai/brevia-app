@@ -22,7 +22,6 @@
     li {
       @apply list-item ml-4;
     }
-
   }
 
   .grid-dashboard {
