@@ -14,9 +14,15 @@
       @apply list-outside list-decimal;
     }
 
+    ol ul,
+    ul ul {
+      @apply list-disc list-outside ml-4;
+    }
+
     li {
       @apply list-item ml-4;
     }
+
   }
 
   .grid-dashboard {
