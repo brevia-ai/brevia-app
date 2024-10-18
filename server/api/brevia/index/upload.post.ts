@@ -20,11 +20,14 @@ export default defineEventHandler(async (event) => {
     }
   }
   try {
-    await fetch(apiUrl('/index/upload'), {
+    const response = await fetch(apiUrl('/index/upload'), {
       method: 'POST',
       headers: authorizationHeaders(),
       body: formData,
     });
+    if (!response.ok) {
+      return handleApiError(event, response);
+    }
   } catch (err) {
     return handleApiError(event, err);
   }

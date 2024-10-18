@@ -13,6 +13,10 @@
     </div>
 
     <p class="text-xs text-center sm:text-left text-slate-600">{{ $t('FILE_TYPE_MUST_BE') }} <span class="font-bold">PDF</span></p>
+
+    <div v-if="error" class="bg-neutral-100 text-center font-semibold text-brand_primary">
+      {{ $t('AN_ERROR_OCCURRED_PLEASE_RETRY') }}
+    </div>
   </div>
 </template>
 
@@ -21,13 +25,14 @@ const emit = defineEmits(['file-uploaded']);
 
 const inputFile = ref();
 const isLoading = ref(false);
+const error = ref(false);
 
 const statesStore = useStatesStore();
 const collection = statesStore.collection;
 
 const upload = async (newFile: File) => {
   isLoading.value = true;
-
+  error.value = false;
   const metadata = {
     type: 'files',
     file: newFile?.name,
@@ -51,7 +56,8 @@ const upload = async (newFile: File) => {
     inputFile.value?.reset();
     emit('file-uploaded', true);
   } catch (error) {
-    console.log(error);
+    error.value = true;
+    console.error(error);
   }
 
   isLoading.value = false;
