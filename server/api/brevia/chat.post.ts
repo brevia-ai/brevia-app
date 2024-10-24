@@ -33,10 +33,13 @@ export default defineEventHandler(async (event) => {
         event.node.res.write(chunk);
       }
 
+      if (!response.ok) {
+        console.error('API error:', response.statusText);
+      }
+
       event.node.res.end();
     });
   } catch (err) {
-    console.log(err);
-    return JSON.stringify({ error: err?.message || 'Unknown error' });
+    return handleApiError(event, err);
   }
 });
