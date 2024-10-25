@@ -20,7 +20,14 @@ function featureItems() {
   const jsonFeatureItemsPath = path.resolve(process.cwd(), 'feature_items.json');
   if (fs.existsSync(jsonFeatureItemsPath)) {
     const fileContents = fs.readFileSync(jsonFeatureItemsPath, 'utf8');
-    return JSON.parse(fileContents);
+    const featureItems = JSON.parse(fileContents);
+
+    return featureItems.map((item: any) => {
+      return {
+        type: 'features',
+        attributes: item,
+      };
+    });
   }
 
   return [

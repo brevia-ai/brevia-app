@@ -1,27 +1,21 @@
 [
   {
-    "type" : "features",
-    "attributes" : {
-      "feature_type" : "analysis",
-      "uname" : "summary",
-      "title" : "Document Summary",
-      "description" : "Upload a PDF document, even one with many pages, to get a textual summary."
-    }
+    "feature_type": "analysis",
+    "uname": "summary",
+    "title": "Document Summary",
+    "description": "Upload a PDF document, even one with many pages, to get a textual summary."
   },
   {
-    "type" : "features",
-    "attributes" : {
-      "feature_type" : "analysis",
-      "uname" : "questionnaire",
-      "title" : "Questionnaire Generator",
-      "description" : "Upload a PDF or TXT file and get a questionnaire with multiple questions and answers on the text provided",
-      "feature_params": {
-        "service": "services.GenerateQuestionsService",
-        "accept": "application/pdf,text/plain",
-        "payload": {
-          "max_duration": 60,
-          "max_attempts": 3
-        }
+    "feature_type": "analysis",
+    "uname": "questionnaire",
+    "title": "Questionnaire Generator",
+    "description": "Upload a PDF or TXT file and get a questionnaire with multiple questions and answers on the text provided",
+    "feature_params": {
+      "service": "services.GenerateQuestionsService",
+      "accept": "application/pdf,text/plain",
+      "payload": {
+        "max_duration": 60,
+        "max_attempts": 3
       }
     }
   }
