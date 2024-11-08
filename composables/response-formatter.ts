@@ -1,6 +1,3 @@
-import showdown from 'showdown';
-const converter = new showdown.Converter();
-
 export const useResponseFormat = () => {
   const formatResponse = (textToFormat: string, format: string = 'text') => {
     if (format === 'markdown') {
@@ -26,28 +23,27 @@ export const useResponseFormat = () => {
     const titleRegex = /^(#{1,6})\s+(.+)$/gm;
     //Regex for code (`...`)
     const codeRegex = /`([^`]*)`/g;
-    console.log("TEXT TO FORMAT", textToFormat);
     const lines = textToFormat.split('\n');
     let fortmattedLines;
     fortmattedLines = lines.map((line) => {
       return line.replace(boldRegex, (_, boldType1, boldType2) => {
         const boldText = boldType1 || boldType2;
-        return `<strong>${boldText}</strong>`
+        return `<strong>${boldText}</strong>`;
       });
     });
     fortmattedLines = fortmattedLines.map((line) => {
       return line.replace(titleRegex, (_, hashes, titleText) => {
         const titleLevel = hashes.length;
         return `<h${titleLevel}>${titleText}</h${titleLevel}>`;
-      })
+      });
     });
     fortmattedLines = fortmattedLines.map((line) => {
       return line.replace(codeRegex, (_, code) => {
         return `<code>${code}</code>`;
-      })
+      });
     });
     return fortmattedLines.join('\n');
-  }
+  };
 
   return {
     llmResponseFormat,
