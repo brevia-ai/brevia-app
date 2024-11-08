@@ -4,8 +4,8 @@ const converter = new showdown.Converter();
 export const useResponseFormat = () => {
   const formatResponse = (textToFormat: string, format: string = 'text') => {
     if (format === 'markdown') {
-      const indentedText = recognizeLists(textToFormat);
-      return converter.makeHtml(indentedText);
+      const formattedText = formatText(textToFormat);
+      return formattedText;
     }
 
     return textToFormat;
@@ -19,22 +19,35 @@ export const useResponseFormat = () => {
     return 'text';
   };
 
-  const recognizeLists = (input: string) => {
-    // This regex captures all lines that start with ordered lists (N. ) or unordered lists (- )
-    const listRegex = /^(\s*)([\d]+\.)?(-)?\s(.*)$/m;
-
-    const lines = input.split('\n');
-    const indentedLines = lines.map((line) => {
-      return line.replace(listRegex, (_, spaces, bulletLi, bulletUl, content) => {
-        const bullet = bulletLi !== undefined ? bulletLi : bulletUl;
-        // If the spaces are not multiple of 4 we change them to be so instead(Showdownjs uses 4 spaces for lists)
-        const mod4 = spaces.length % 4;
-        const newIndentation = ' '.repeat(mod4 != 0 ? mod4 * 4 : 0);
-        return `${newIndentation}${bullet} ${content}`;
+  const formatText = (textToFormat: string) => {
+    //Regex for recognizing bold text ( **...** e __...__ )
+    const boldRegex = /\*\*(.+?)\*\*|__(.+?)__/g;
+    //Regex for recognizing titles ( ###.... )
+    const titleRegex = /^(#{1,6})\s+(.+)$/gm;
+    //Regex for code (`...`)
+    const codeRegex = /`([^`]*)`/g;
+    console.log("TEXT TO FORMAT", textToFormat);
+    const lines = textToFormat.split('\n');
+    let fortmattedLines;
+    fortmattedLines = lines.map((line) => {
+      return line.replace(boldRegex, (_, boldType1, boldType2) => {
+        const boldText = boldType1 || boldType2;
+        return `<strong>${boldText}</strong>`
       });
     });
-    return indentedLines.join('\n');
-  };
+    fortmattedLines = fortmattedLines.map((line) => {
+      return line.replace(titleRegex, (_, hashes, titleText) => {
+        const titleLevel = hashes.length;
+        return `<h${titleLevel}>${titleText}</h${titleLevel}>`;
+      })
+    });
+    fortmattedLines = fortmattedLines.map((line) => {
+      return line.replace(codeRegex, (_, code) => {
+        return `<code>${code}</code>`;
+      })
+    });
+    return fortmattedLines.join('\n');
+  }
 
   return {
     llmResponseFormat,
