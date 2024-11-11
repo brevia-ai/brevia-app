@@ -8,6 +8,10 @@
       @click="$openModal('DialogNewChatbot')"
     >
       <Icon name="ph:plus-bold" size="64" />
+      <div class="flex items-center space-x-2">
+        <Icon class="opacity-70" name="carbon:chat-bot" size="28" />
+        <span class="text-xs uppercase tracking-wider">chatbot</span>
+      </div>
     </button>
   </div>
 </template>
