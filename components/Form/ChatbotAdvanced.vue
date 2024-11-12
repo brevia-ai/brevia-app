@@ -1,14 +1,9 @@
 <template>
   <form class="flex flex-col space-y-6" @submit.prevent="saveMeta">
     <!--PROMPTS-->
-    <div class="flex border-b-4 border-primary">
+    <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('Prompts')">
       <p class="mx-auto font-bold uppercase text-xl">Prompts</p>
-      <Icon
-        class="hover:cursor-pointer"
-        :name="promptVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'"
-        size="32"
-        @click="openCloseSection('Prompts')"
-      />
+      <Icon :name="promptVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'" size="32" />
     </div>
     <Transition name="section-fade">
       <div v-if="promptVisible" class="space-y-4">
@@ -22,14 +17,9 @@
     </Transition>
 
     <!--INDEX AND SEARCH-->
-    <div class="flex border-b-4 border-primary">
+    <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('IndexAndSearch')">
       <p class="mx-auto font-bold uppercase text-xl">Index and Search</p>
-      <Icon
-        class="hover:cursor-pointer"
-        :name="idxVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'"
-        size="32"
-        @click="openCloseSection('IndexAndSearch')"
-      />
+      <Icon :name="idxVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'" size="32" />
     </div>
     <Transition name="section-fade">
       <div v-if="idxVisible" class="space-y-4">
@@ -50,14 +40,9 @@
     </Transition>
 
     <!--Q&A AND CHAT-->
-    <div class="flex border-b-4 border-primary">
+    <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('Q&A and Chat')">
       <p class="mx-auto font-bold uppercase text-xl">Q&A and Chat</p>
-      <Icon
-        class="hover:cursor-pointer"
-        :name="qacVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'"
-        size="32"
-        @click="openCloseSection('Q&A and Chat')"
-      />
+      <Icon :name="qacVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'" size="32" />
     </div>
     <Transition name="section-fade">
       <div v-if="qacVisible" class="space-y-4">
@@ -81,18 +66,12 @@
     </Transition>
 
     <!--DOCUMENTS-->
-    <div class="flex border-b-4 border-primary">
+    <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('Documents')">
       <p class="mx-auto font-bold uppercase text-xl">Documents</p>
-      <Icon
-        class="hover:cursor-pointer"
-        :name="docVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'"
-        size="32"
-        @click="openCloseSection('Documents')"
-      />
+      <Icon :name="docVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'" size="32" />
     </div>
     <Transition name="section-fade">
       <div v-if="docVisible" class="space-y-4">
-        <UIXInput v-model.trim="docsNum" label="Documents Number" autocapitalize="none" @keydown.enter.stop.prevent="saveMeta" />
         <div>
           Documents Metadata
           <JsonEditorVue v-model="docMetadata" :mode="Mode.text" />
@@ -202,22 +181,22 @@ const update = async () => {
 const updateMetadataItems = () => {
   //Update prompts
   collection.cmetadata.chat_lang = lang.value;
-  collection.cmetadata.prompts = prompts.value ? JSON.parse(prompts.value) : null;
+  collection.cmetadata.prompts = prompts.value ? prompts.value : null;
   //Update index and search
-  collection.cmetadata.embeddings = embeddings.value ? JSON.parse(embeddings.value) : null;
+  collection.cmetadata.embeddings = embeddings.value ? embeddings.value : null;
   collection.cmetadata.chunk_size = parseInt(chunkSize.value);
   collection.cmetadata.chunk_overlap = parseInt(chundOverlap.value);
-  collection.cmetadata.text_splitter = textSplitter.value ? JSON.parse(textSplitter.value) : null;
+  collection.cmetadata.text_splitter = textSplitter.value ? textSplitter.value : null;
   //Q&A and chat
-  collection.cmetadata.qa_followup_llm = qaFollowupLLm.value ? JSON.parse(qaFollowupLLm.value) : null;
-  collection.cmetadata.qa_completion_llm = qaCompletionLLM.value ? JSON.parse(qaCompletionLLM.value) : null;
-  collection.cmetadata.qa_retriever = qaRetriever.value ? JSON.parse(qaRetriever.value) : null;
+  collection.cmetadata.qa_followup_llm = qaFollowupLLm.value ? qaFollowupLLm.value : null;
+  collection.cmetadata.qa_completion_llm = qaCompletionLLM.value ? qaCompletionLLM.value : null;
+  collection.cmetadata.qa_retriever = qaRetriever.value ? qaRetriever.value : null;
   collection.cmetadata.docs_num = parseInt(docsNum.value);
   //Documents
-  collection.cmetadata.documents_metadata = docMetadata.value ? JSON.parse(docMetadata.value) : null;
-  collection.cmetadata.metadata_defaults = docDefaults.value ? JSON.parse(docDefaults.value) : null;
-  collection.cmetadata.file_upload_options = upldOptions.value ? JSON.parse(upldOptions.value) : null;
-  collection.cmetadata.link_load_options = lnkLdOptions.value ? JSON.parse(lnkLdOptions.value) : null;
+  collection.cmetadata.documents_metadata = docMetadata.value ? docMetadata.value : null;
+  collection.cmetadata.metadata_defaults = docDefaults.value ? docDefaults.value : null;
+  collection.cmetadata.file_upload_options = upldOptions.value ? upldOptions.value : null;
+  collection.cmetadata.link_load_options = lnkLdOptions.value ? lnkLdOptions.value : null;
 };
 
 const openCloseSection = (sectionType: string) => {
