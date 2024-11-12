@@ -152,8 +152,6 @@ const lnkLdOptions = ref(collection.cmetadata.link_load_options);
 
 const integration = useIntegration();
 
-console.log(collection.cmetadata);
-
 const saveMeta = async () => {
   if (isLoading.value) {
     return;
