@@ -2,7 +2,7 @@
   <main>
     <div class="space-y-10">
       <div class="flex items-start justify-between space-x-4">
-        <h2 class="text-2xl leading-tight">{{ $t('Chat history') }} “{{ collection.cmetadata?.title }}”</h2>
+        <h2 class="text-2xl leading-tight">{{ $t('CHAT_HISTORY_TITLE') }} “{{ collection.cmetadata?.title }}”</h2>
       </div>
 
       <div class="flex justify-between space-x-10">
@@ -49,14 +49,14 @@
           <select
             id="download_format"
             v-model="downloadFormat"
-            class="border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary"
+            class="border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary px-2"
             name="download_format"
           >
             <option value="CSV">CSV</option>
             <option value="XSLX">XSLX</option>
           </select>
           <button type="submit" class="button button-primary uppercase" :disabled="historyItems.length === 0" @click="downloadHistory">
-            {{ $t('Download') }}
+            {{ $t('DOWNLOAD') }}
           </button>
         </div>
       </div>
@@ -64,14 +64,14 @@
         <span>{{ $t('CHAT_HISTORY_EMPTY') }}</span>
       </div>
       <div v-else class="flex flex-col space-y-3">
-        <div class="flex justify-between border-b border-slate-300">
-          <span>{{ $t('CHAT_HISTORY_PREVIEW') }}</span>
+        <div class="flex justify-between border-b border-primary pb-1.5 items-center">
+          <span class="uppercase px-4 font-bold">{{ $t('CHAT_HISTORY_PREVIEW') }}</span>
           <div
             id="customSelect"
             class="w-96 px-1 border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary hover:cursor-default"
           >
-            <div class="flex flex-row justify-between" @click="openSelect = !openSelect">
-              <span>{{ selectedChat.title }}</span>
+            <div class="flex flex-row justify-between py-3 px-4" @click="openSelect = !openSelect">
+              <span v-html="formatResponse(selectedChat.title, responseFormat)"></span>
               <Icon class="text-xs self-center" name="ph:caret-down-bold" />
             </div>
             <div v-if="openSelect" class="w-96 -mx-1 max-h-96 absolute z-50 bg-white border border-primary rounded shadow-md overflow-y-scroll">
@@ -86,7 +86,7 @@
                   openSelect = !openSelect;
                 "
               >
-                {{ item.sessionTitle }}
+                <span v-html="formatResponse(item.sessionTitle, responseFormat)"></span>
                 <span class="self-center text-xs italic">{{ getLocalCreationDate(item.sessionStart) }}</span>
               </div>
             </div>
@@ -104,7 +104,7 @@
                   <div class="flex space-x-3 justify-between">
                     <p class="text-xs">{{ item.who }}</p>
                   </div>
-                  <p class="whitespace-break-spaces">{{ item.message }} &nbsp;</p>
+                  <div class="break-words rich-text" v-html="formatResponse(item.message, responseFormat)"></div>
                   <div
                     v-if="item.who === 'ASSISTANT' && item.evaluation !== null"
                     class="p-2 absolute -bottom-4 right-4 z-20 bg-neutral-700 rounded-full flex flex-row"
@@ -135,6 +135,7 @@ import { utils, writeFile } from 'xlsx';
 import moment from 'moment';
 
 const config = useRuntimeConfig();
+const { formatResponse, llmResponseFormat } = useResponseFormat();
 useHead({ title: `Chat history | ${config.public.appName}` });
 
 interface DialogItem {
@@ -175,6 +176,8 @@ if (!collection.value?.uuid) {
     fatal: true,
   });
 }
+
+const responseFormat = llmResponseFormat(collection.value.cmetadata?.qa_completion_llm);
 
 const csvKeys = ['question', 'answer', 'session_id', 'created', 'user_evaluation', 'user_feedback', 'chat_source'];
 
