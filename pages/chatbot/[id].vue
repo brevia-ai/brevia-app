@@ -42,7 +42,7 @@
                 <p class="text-xs">{{ item.who }}</p>
                 <div class="chat-balloon-status" :class="{ busy: isBusy && i === dialog.length - 1 }"></div>
               </div>
-              <div class="whitespace-break-spaces rich-text" v-html="formatResponse(item.message, responseFormat)"></div>
+              <div class="break-words rich-text" v-html="formatResponse(item.message, responseFormat)"></div>
               <!--MENU CONTESTUALE-->
               <div
                 v-if="canSeeDocs && i === dialog.length - 1 && showResponseMenu && hovered === i"

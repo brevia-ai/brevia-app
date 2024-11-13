@@ -104,7 +104,7 @@
                   <div class="flex space-x-3 justify-between">
                     <p class="text-xs">{{ item.who }}</p>
                   </div>
-                  <div class="whitespace-break-spaces rich-text" v-html="formatResponse(item.message, responseFormat)"></div>
+                  <div class="break-words rich-text" v-html="formatResponse(item.message, responseFormat)"></div>
                   <div
                     v-if="item.who === 'ASSISTANT' && item.evaluation !== null"
                     class="p-2 absolute -bottom-4 right-4 z-20 bg-neutral-700 rounded-full flex flex-row"
