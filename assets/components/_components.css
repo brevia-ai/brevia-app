@@ -44,7 +44,7 @@
     }
 
     h6 {
-      @apply text-md font-bold;
+      @apply text-base font-bold;
     }
   }
 
