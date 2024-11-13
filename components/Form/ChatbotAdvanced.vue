@@ -125,6 +125,7 @@ if (!collection?.cmetadata) {
     fatal: true,
   });
 }
+
 const error = ref(false);
 const isLoading = ref(false);
 //Propmpts
@@ -134,15 +135,15 @@ const lang = ref(collection.cmetadata.chat_lang);
 //Index And Search
 const idxVisible = ref(true);
 const embeddings = ref(collection.cmetadata.embeddings);
-const chunkSize = ref(String(collection.cmetadata.chunk_size));
-const chundOverlap = ref(String(collection.cmetadata.chunk_overlap));
+const chunkSize = ref(String(collection.cmetadata.chunk_size ?? ''));
+const chundOverlap = ref(String(collection.cmetadata.chunk_overlap ?? ''));
 const textSplitter = ref(collection.cmetadata.text_splitter);
 //Q&A and Chat
 const qacVisible = ref(true);
 const qaFollowupLLm = ref(collection.cmetadata.qa_followup_llm);
 const qaCompletionLLM = ref(collection.cmetadata.qa_completion_llm);
 const qaRetriever = ref(collection.cmetadata.qa_retriever);
-const docsNum = ref(String(collection.cmetadata.docs_num));
+const docsNum = ref(String(collection.cmetadata.docs_num ?? ''));
 //Documents
 const docVisible = ref(true);
 const docMetadata = ref(collection.cmetadata.documents_metadata);
@@ -178,23 +179,23 @@ const update = async () => {
 
 const updateMetadataItems = () => {
   //Update prompts
-  collection.cmetadata.chat_lang = lang.value;
-  collection.cmetadata.prompts = prompts.value ? prompts.value : null;
+  lang.value != '' ? (collection.cmetadata.chat_lang = lang.value) : delete collection.cmetadata.chat_lang;
+  prompts.value ? (collection.cmetadata.prompts = prompts.value) : delete collection.cmetadata.prompts;
   //Update index and search
-  collection.cmetadata.embeddings = embeddings.value ? embeddings.value : null;
-  collection.cmetadata.chunk_size = parseInt(chunkSize.value);
-  collection.cmetadata.chunk_overlap = parseInt(chundOverlap.value);
-  collection.cmetadata.text_splitter = textSplitter.value ? textSplitter.value : null;
+  embeddings.value ? (collection.cmetadata.embeddings = embeddings.value) : delete collection.cmetadata.embeddings;
+  chunkSize.value != '' ? (collection.cmetadata.chunk_size = parseInt(chunkSize.value)) : delete collection.cmetadata.chunk_size;
+  chundOverlap.value != '' ? (collection.cmetadata.chunk_overlap = parseInt(chundOverlap.value)) : delete collection.cmetadata.chunk_overlap;
+  textSplitter.value ? (collection.cmetadata.text_splitter = textSplitter.value) : delete collection.cmetadata.text_splitter;
   //Q&A and chat
-  collection.cmetadata.qa_followup_llm = qaFollowupLLm.value ? qaFollowupLLm.value : null;
-  collection.cmetadata.qa_completion_llm = qaCompletionLLM.value ? qaCompletionLLM.value : null;
-  collection.cmetadata.qa_retriever = qaRetriever.value ? qaRetriever.value : null;
-  collection.cmetadata.docs_num = parseInt(docsNum.value);
+  qaFollowupLLm.value ? (collection.cmetadata.qa_followup_llm = qaFollowupLLm.value) : delete collection.cmetadata.qa_followup_llm;
+  qaCompletionLLM.value ? (collection.cmetadata.qa_completion_llm = qaCompletionLLM.value) : delete collection.cmetadata.qa_completion_llm;
+  qaRetriever.value ? (collection.cmetadata.qa_retriever = qaRetriever.value) : delete collection.cmetadata.qa_retriever;
+  docsNum.value != '' ? (collection.cmetadata.docs_num = parseInt(docsNum.value)) : delete collection.cmetadata.docs_num;
   //Documents
-  collection.cmetadata.documents_metadata = docMetadata.value ? docMetadata.value : null;
-  collection.cmetadata.metadata_defaults = docDefaults.value ? docDefaults.value : null;
-  collection.cmetadata.file_upload_options = upldOptions.value ? upldOptions.value : null;
-  collection.cmetadata.link_load_options = lnkLdOptions.value ? lnkLdOptions.value : null;
+  docMetadata.value ? (collection.cmetadata.documents_metadata = docMetadata.value) : delete collection.cmetadata.documents_metadata;
+  docDefaults.value ? (collection.cmetadata.metadata_defaults = docDefaults.value) : delete collection.cmetadata.metadata_defaults;
+  upldOptions.value ? (collection.cmetadata.file_upload_options = upldOptions.value) : delete collection.cmetadata.file_upload_options;
+  lnkLdOptions.value ? (collection.cmetadata.link_load_options = lnkLdOptions.value) : delete collection.cmetadata.link_load_options;
 };
 
 const openCloseSection = (sectionType: string) => {
