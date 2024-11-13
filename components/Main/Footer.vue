@@ -34,7 +34,9 @@
     <div class="flex gap-3 text-xs tracking-wider text-white">
       <span class="col-span-3 justify-self-end whitespace-nowrap"> Brevia App: {{ appVersion }} </span>
       <span v-if="data?.brevia" class="col-span-3 justify-self-end whitespace-nowrap"> Brevia API: {{ data.brevia }} </span>
-      <span v-if="data?.apiName && data?.apiVersion" class="col-span-3 justify-self-end whitespace-nowrap"> {{ data?.apiName }} API: {{ data?.apiVersion }} </span>
+      <span v-if="data?.apiName && data?.apiVersion" class="col-span-3 justify-self-end whitespace-nowrap">
+        {{ data?.apiName }} API: {{ data?.apiVersion }}
+      </span>
     </div>
   </footer>
 </template>

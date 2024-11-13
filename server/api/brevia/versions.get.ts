@@ -6,10 +6,10 @@ export default defineEventHandler(async (event) => {
     });
 
     return {
-      'brevia': response.headers.get('X-Brevia-Version'),
-      'apiName': response.headers.get('X-API-Name'),
-      'apiVersion': response.headers.get('X-API-Version'),
-    }
+      brevia: response.headers.get('X-Brevia-Version'),
+      apiName: response.headers.get('X-API-Name'),
+      apiVersion: response.headers.get('X-API-Version'),
+    };
   } catch (error) {
     return handleApiError(event, error);
   }
