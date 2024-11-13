@@ -200,6 +200,7 @@ const updateMetadataItems = () => {
 
 const handleIntMeta = (name: string, value: any) => {
   if (!value || value === '') {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete collection.cmetadata[name];
 
     return;
@@ -209,6 +210,7 @@ const handleIntMeta = (name: string, value: any) => {
 
 const handleJsonMeta = (name: string, value: any) => {
   if (!value || value === '') {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete collection.cmetadata[name];
 
     return;
