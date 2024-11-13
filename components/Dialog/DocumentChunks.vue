@@ -4,7 +4,7 @@
       <h3 class="text-xl font-semibold text-gray-900">{{ fileName }} {{ $t('CHUNKS_FOUND', { chunks: documentChunks.length }) }}</h3>
       <Icon class="text-2xl hover:cursor-pointer hover:bg-sky-100" name="ph:x-bold" @click="$closeModal()" />
     </div>
-    <div class="mb-4 p-2 w-full whitespace-break-spaces overflow-y-auto max-h-[60vh]" v-if="!loadingChunks">
+    <div v-if="!loadingChunks" class="mb-4 p-2 w-full whitespace-break-spaces overflow-y-auto max-h-[60vh]">
       <div v-if="documentChunks && documentChunks.length > 0" class="flex flex-col space-y-3">
         <div v-for="(doc, n) in documentChunks" :key="n" class="bg-sky-100 shadow-md p-3 rounded-lg">
           <p class="text-lg font-bold">{{ $t('CHUNK') }} {{ n + 1 }}. - {{ $t('NUM_CHARS', { num: doc.document.length }) }}</p>
@@ -15,7 +15,7 @@
         <p class="text-sm font-bold">{{ $t('NO_CHUNKS') }}</p>
       </div>
     </div>
-    <div class="flex items-center justify-center h-40" v-else>
+    <div v-else class="flex items-center justify-center h-40">
       <ElementLoader :loader-dim="80" />
     </div>
   </div>
