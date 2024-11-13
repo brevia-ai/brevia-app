@@ -180,22 +180,45 @@ const update = async () => {
 const updateMetadataItems = () => {
   //Update prompts
   lang.value != '' ? (collection.cmetadata.chat_lang = lang.value) : delete collection.cmetadata.chat_lang;
-  prompts.value ? (collection.cmetadata.prompts = prompts.value) : delete collection.cmetadata.prompts;
+  handleJsonMeta('prompts', prompts.value);
   //Update index and search
-  embeddings.value ? (collection.cmetadata.embeddings = embeddings.value) : delete collection.cmetadata.embeddings;
-  chunkSize.value != '' ? (collection.cmetadata.chunk_size = parseInt(chunkSize.value)) : delete collection.cmetadata.chunk_size;
-  chundOverlap.value != '' ? (collection.cmetadata.chunk_overlap = parseInt(chundOverlap.value)) : delete collection.cmetadata.chunk_overlap;
-  textSplitter.value ? (collection.cmetadata.text_splitter = textSplitter.value) : delete collection.cmetadata.text_splitter;
+  handleJsonMeta('embeddings', embeddings.value);
+  handleIntMeta('chunk_size', chunkSize.value);
+  handleIntMeta('chunk_overlap', chundOverlap.value);
+  handleJsonMeta('text_splitter', textSplitter.value);
   //Q&A and chat
-  qaFollowupLLm.value ? (collection.cmetadata.qa_followup_llm = qaFollowupLLm.value) : delete collection.cmetadata.qa_followup_llm;
-  qaCompletionLLM.value ? (collection.cmetadata.qa_completion_llm = qaCompletionLLM.value) : delete collection.cmetadata.qa_completion_llm;
-  qaRetriever.value ? (collection.cmetadata.qa_retriever = qaRetriever.value) : delete collection.cmetadata.qa_retriever;
-  docsNum.value != '' ? (collection.cmetadata.docs_num = parseInt(docsNum.value)) : delete collection.cmetadata.docs_num;
+  handleJsonMeta('qa_followup_llm', qaFollowupLLm.value);
+  handleJsonMeta('qa_completion_llm', qaCompletionLLM.value);
+  handleJsonMeta('qa_retriever', qaRetriever.value);
+  handleIntMeta('docs_num', docsNum.value);
   //Documents
-  docMetadata.value ? (collection.cmetadata.documents_metadata = docMetadata.value) : delete collection.cmetadata.documents_metadata;
-  docDefaults.value ? (collection.cmetadata.metadata_defaults = docDefaults.value) : delete collection.cmetadata.metadata_defaults;
-  upldOptions.value ? (collection.cmetadata.file_upload_options = upldOptions.value) : delete collection.cmetadata.file_upload_options;
-  lnkLdOptions.value ? (collection.cmetadata.link_load_options = lnkLdOptions.value) : delete collection.cmetadata.link_load_options;
+  handleJsonMeta('documents_metadata', docMetadata.value);
+  handleJsonMeta('metadata_defaults', docDefaults.value);
+  handleJsonMeta('file_upload_options', upldOptions.value);
+  handleJsonMeta('link_load_options', lnkLdOptions.value);
+};
+
+const handleIntMeta = (name: string, value: any) => {
+  if (!value || value === '') {
+    delete collection.cmetadata[name];
+
+    return;
+  }
+  collection.cmetadata[name] = parseInt(value);
+};
+
+const handleJsonMeta = (name: string, value: any) => {
+  if (!value || value === '') {
+    delete collection.cmetadata[name];
+
+    return;
+  }
+
+  try {
+    collection.cmetadata[name] = typeof value === 'string' ? JSON.parse(value) : value;
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 const openCloseSection = (sectionType: string) => {
