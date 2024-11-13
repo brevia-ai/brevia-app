@@ -106,6 +106,10 @@ export default defineNuxtModule<ModuleOptions>({
           './runtime/server/api/bedita/index/[collection_id]/[document_id].delete',
         ),
       },
+      {
+        route: '/api/bedita/versions',
+        handler: resolver.resolve('./runtime/server/api/bedita/versions.get'),
+      },
     ];
 
     endpointsEnabled.forEach((endpoint) => {
