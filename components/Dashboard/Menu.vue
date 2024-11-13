@@ -12,7 +12,7 @@
       </div>
       <div class="flex items-center space-x-2">
         <Icon class="opacity-70" name="carbon:chat-bot" size="28" />
-        <span class="text-xs uppercase tracking-wider">chatbot</span>
+        <span class="text-xs uppercase tracking-wider">new chatbot</span>
       </div>
     </button>
   </div>
