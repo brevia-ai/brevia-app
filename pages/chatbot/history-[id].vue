@@ -49,7 +49,7 @@
           <select
             id="download_format"
             v-model="downloadFormat"
-            class="border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary"
+            class="border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary px-2"
             name="download_format"
           >
             <option value="CSV">CSV</option>
@@ -64,13 +64,13 @@
         <span>{{ $t('CHAT_HISTORY_EMPTY') }}</span>
       </div>
       <div v-else class="flex flex-col space-y-3">
-        <div class="flex justify-between border-b border-slate-300">
-          <span>{{ $t('CHAT_HISTORY_PREVIEW') }}</span>
+        <div class="flex justify-between border-b border-primary pb-1.5 items-center">
+          <span class="uppercase px-4 font-bold">{{ $t('CHAT_HISTORY_PREVIEW') }}</span>
           <div
             id="customSelect"
             class="w-96 px-1 border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary hover:cursor-default"
           >
-            <div class="flex flex-row justify-between" @click="openSelect = !openSelect">
+            <div class="flex flex-row justify-between py-3 px-4" @click="openSelect = !openSelect">
               <span v-html="formatResponse(selectedChat.title, responseFormat)"></span>
               <Icon class="text-xs self-center" name="ph:caret-down-bold" />
             </div>
@@ -104,7 +104,7 @@
                   <div class="flex space-x-3 justify-between">
                     <p class="text-xs">{{ item.who }}</p>
                   </div>
-                  <p class="whitespace-break-spaces rich-text" v-html="formatResponse(item.message, responseFormat)"></p>
+                  <div class="whitespace-break-spaces rich-text" v-html="formatResponse(item.message, responseFormat)"></div>
                   <div
                     v-if="item.who === 'ASSISTANT' && item.evaluation !== null"
                     class="p-2 absolute -bottom-4 right-4 z-20 bg-neutral-700 rounded-full flex flex-row"

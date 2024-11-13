@@ -19,10 +19,13 @@ export const useResponseFormat = () => {
   const formatText = (textToFormat: string) => {
     //Regex for recognizing bold text ( **...** e __...__ )
     const boldRegex = /\*\*(.+?)\*\*|__(.+?)__/g;
+
     //Regex for recognizing titles ( ###.... )
     const titleRegex = /^(#{1,6})\s+(.+)$/gm;
+
     //Regex for code (`...`)
     const codeRegex = /`([^`]*)`/g;
+
     const lines = textToFormat.split('\n');
     let fortmattedLines;
     fortmattedLines = lines.map((line) => {
@@ -42,7 +45,7 @@ export const useResponseFormat = () => {
         return `<code>${code}</code>`;
       });
     });
-    return fortmattedLines.join('\n');
+    return fortmattedLines.join('<br />');
   };
 
   return {
