@@ -265,6 +265,11 @@ const handleStreamText = (text: string) => {
 
 const parseDocsJson = () => {
   try {
+    if (!docsJsonString) {
+      console.error('No docs found in response');
+      dialog.value[currIdx].error = true;
+      return;
+    }
     const parsed = JSON.parse(docsJsonString);
     if (parsed?.[0]?.chat_history_id) {
       const item = parsed?.shift() || {};
