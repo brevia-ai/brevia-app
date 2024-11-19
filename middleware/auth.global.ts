@@ -57,7 +57,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
       '/privacy/cookie-policy',
     );
   }
-  if (publicPages.includes(to.path)) {
+  if (publicPages.includes(to.path) || to.path.startsWith('/chatbot-iframe/')) {
     return;
   }
 
