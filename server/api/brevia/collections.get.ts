@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
   let url = '/collections';
   if (query.uuid) {
     url += `/${query.uuid}`;
-    delete query.id;
+    delete query.uuid;
   }
   try {
     const response: any = await $fetch(apiUrl(url), {

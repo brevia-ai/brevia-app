@@ -54,8 +54,8 @@
 </template>
 
 <script lang="ts" setup>
-const config = useRuntimeConfig();
-const store = useStatesStore();
+// const config = useRuntimeConfig();
+// const store = useStatesStore();
 const { formatResponse, llmResponseFormat } = useResponseFormat();
 
 interface DialogItem {
