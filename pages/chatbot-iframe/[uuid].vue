@@ -78,28 +78,19 @@ let docsJsonString = '';
 let responseEnded = false;
 let currIdx = 0;
 
-const isDemo = ref(store.userHasRole('demo'));
+// const isDemo = ref(store.userHasRole('demo'));
 const messagesLeft = ref('');
 const hovered = ref(-1);
 const showResponseMenu = ref(true);
 
 let sessionId = '';
-let collectionName = '';
-let editLevel = ItemEditLevel.None;
 const responseFormat = ref('text');
 
 onBeforeMount(async () => {
   const route = useRoute();
-  collectionName = route.params.id as string;
-
-  // check if user has access to this page (TODO: refactor to use middleware)
-  const link = `/chatbot/${collectionName}`;
-  store.userAccess(link);
-  const item = store.getMenuItem(link);
-  editLevel = item?.edit || ItemEditLevel.None;
-
+  const uuid = route.params.uuid as string;
   isBusy.value = true;
-  const data = await $fetch(`/api/brevia/collections?name=${collectionName}`);
+  const data = await $fetch(`/api/brevia/collections?uuid=${uuid}`);
   collection.value = data;
 
   if (!collection.value?.uuid) {
@@ -113,7 +104,7 @@ onBeforeMount(async () => {
   responseFormat.value = llmResponseFormat(collection.value.cmetadata?.qa_completion_llm);
   sessionId = crypto.randomUUID();
   isBusy.value = false;
-  updateLeftMessages();
+  // updateLeftMessages();
 });
 
 watch(isBusy, (val) => {
@@ -170,7 +161,7 @@ const streamingFetchRequest = async () => {
     },
     body: JSON.stringify({
       question,
-      collection: collectionName,
+      collection: collection.value.name,
       source_docs: true,
       streaming: true,
     }),
@@ -183,9 +174,9 @@ const streamingFetchRequest = async () => {
       handleStreamText(text);
     }
     parseDocsJson();
-    await updateLeftMessages();
+    // await updateLeftMessages();
   }
-  await updateLeftMessages();
+  // await updateLeftMessages();
 };
 
 const readChunks = (reader: ReadableStreamDefaultReader) => {
@@ -253,21 +244,21 @@ const showErrorInDialog = (index: number) => {
   dialog.value.push(dialogItem);
 };
 
-const updateLeftMessages = async () => {
-  if (!isDemo.value) {
-    return;
-  }
+// const updateLeftMessages = async () => {
+//   if (!isDemo.value) {
+//     return;
+//   }
 
-  const today = new Date().toISOString().substring(0, 10);
-  const query = `min_date=${today}&collection=${collection.value?.name}`;
-  try {
-    const response = await fetch(`/api/brevia/chat_history?${query}`);
-    const data = await response.json();
-    const numItems = data?.meta?.pagination?.count || 0;
-    const left = Math.max(0, parseInt(config.public.demo.maxChatMessages) - parseInt(numItems));
-    messagesLeft.value = String(left);
-  } catch (error) {
-    console.log(error);
-  }
-};
+//   const today = new Date().toISOString().substring(0, 10);
+//   const query = `min_date=${today}&collection=${collection.value?.name}`;
+//   try {
+//     const response = await fetch(`/api/brevia/chat_history?${query}`);
+//     const data = await response.json();
+//     const numItems = data?.meta?.pagination?.count || 0;
+//     const left = Math.max(0, parseInt(config.public.demo.maxChatMessages) - parseInt(numItems));
+//     messagesLeft.value = String(left);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 </script>
