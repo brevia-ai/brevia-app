@@ -68,7 +68,6 @@ const INTERVAL = 15000; // 15 seconds in ms
 const result = ref(null);
 const file = ref(null);
 const isBusy = ref(false);
-const summary = ref(null);
 const jobId = ref(null);
 const jobData = ref(null);
 const jobName = ref('');
@@ -81,6 +80,7 @@ const store = useStatesStore();
 const fileDrop = ref(null);
 
 const { $createPdf } = useNuxtApp();
+const { t } = useI18n();
 
 onBeforeRouteLeave(() => {
   stopPolling();
@@ -134,8 +134,8 @@ const elapsedTime = computed(() => {
 });
 
 const reset = () => {
+  result.value = null;
   file.value = null;
-  summary.value = null;
   error.value = '';
   isBusy.value = false;
   jobData.value = null;
@@ -214,9 +214,9 @@ const submit = async () => {
       store.setJobInfo(jobName.value, { id: jobId.value, file: { name: file.value?.name } });
       startPolling();
     }
-  } catch (error) {
-    error.value = error;
-    console.log(error);
+  } catch (err) {
+    error.value = t('AN_ERROR_OCCURRED_PLEASE_RETRY');
+    console.log(err);
   }
 };
 
@@ -248,9 +248,9 @@ const readJobData = async () => {
         updateJobsLeft();
       }
     }
-  } catch (error) {
-    error.value = error;
-    console.log(error);
+  } catch (err) {
+    error.value = t('AN_ERROR_OCCURRED_PLEASE_RETRY');
+    console.log(err);
   }
 };
 </script>
