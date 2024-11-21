@@ -1,10 +1,8 @@
 <template>
   <ClientOnly>
-    <div class="h-[100dvh] flex flex-col">
-      <NuxtLayout>
+    <NuxtLayout>
       <UIXProgressLinear v-if="modalStore.isLoadingPage" class="z-10 absolute top-24 w-full" />
-      </NuxtLayout>
-    </div>
+    </NuxtLayout>
 
     <AppModal v-if="$isActiveModal()" />
   </ClientOnly>

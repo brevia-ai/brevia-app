@@ -1,69 +1,64 @@
 <template>
   <div v-if="dialog.length">
-        <!-- <hr class="my-6 border-neutral-300"> -->
-        <div class="px-4 pt-6 pb-4 bg-white shadow-md rounded space-y-3">
-          <div class="flex flex-col space-y-6 pb-4">
+    <div class="pt-6 pb-4 shadow-md rounded space-y-3" :class="!isEmbedded ? 'bg-white px-4' : ''">
+      <div class="flex flex-col space-y-6 pb-4">
+        <div
+          v-for="(item, i) in dialog"
+          :key="i"
+          class="chat-balloon space-y-2"
+          :class="{ 'bg-pink-800': item.error }"
+          @mouseover="
+            showResponseMenu = true;
+            hovered = i;
+          "
+          @mouseleave="showResponseMenu = false"
+        >
+          <div class="flex space-x-3 justify-between">
+            <p class="text-xs">{{ item.who }}</p>
+            <div class="chat-balloon-status" :class="{ busy: isBusy && i === dialog.length - 1 }"></div>
+          </div>
+          <div class="break-words rich-text" v-html="formatResponse(item.message, responseFormat)"></div>
+          <!--MENU CONTESTUALE-->
+          <div
+            v-if="canSeeDocs && i === dialog.length - 1 && showResponseMenu && hovered === i"
+            class="px-2 py-0.5 absolute -bottom-5 right-4 z-50 bg-neutral-700 rounded-full flex flex-row"
+          >
             <div
-              v-for="(item, i) in dialog"
-              :key="i"
-              class="chat-balloon space-y-2"
-              :class="{ 'bg-pink-800': item.error }"
-              @mouseover="
-                showResponseMenu = true;
-                hovered = i;
-              "
-              @mouseleave="showResponseMenu = false"
+              class="px-1.5 pb-1 hover:bg-neutral-600 hover:rounded-full hover:cursor-pointer"
+              :title="$t('SHOW_DOCUMENTS_FOUND')"
+              @click="$openModal('ChatDocuments', { session_id: sessionId, documents: docs })"
             >
-              <div class="flex space-x-3 justify-between">
-                <p class="text-xs">{{ item.who }}</p>
-                <div class="chat-balloon-status" :class="{ busy: isBusy && i === dialog.length - 1 }"></div>
-              </div>
-              <div class="break-words rich-text" v-html="formatResponse(item.message, responseFormat)"></div>
-              <!--MENU CONTESTUALE-->
-              <div
-                v-if="canSeeDocs && i === dialog.length - 1 && showResponseMenu && hovered === i"
-                class="px-2 py-0.5 absolute -bottom-5 right-4 z-50 bg-neutral-700 rounded-full flex flex-row"
-              >
-                <div
-                  class="px-1.5 pb-1 hover:bg-neutral-600 hover:rounded-full hover:cursor-pointer"
-                  :title="$t('SHOW_DOCUMENTS_FOUND')"
-                  @click="$openModal('ChatDocuments', { session_id: sessionId, documents: docs })"
-                >
-                  <Icon name="fluent:document-question-mark-16-regular"></Icon>
-                </div>
-              </div>
+              <Icon name="fluent:document-question-mark-16-regular"></Icon>
             </div>
           </div>
         </div>
       </div>
-      <div class="space-y-4">
-        <div class="flex space-x-4">
-          <input
-            ref="input"
-            v-model.trim="prompt"
-            type="text"
-            class="grow text-lg p-2 rounded border border-sky-500 disabled:bg-neutral-100 disabled:border-neutral-300 shadow-md disabled:shadow-none"
-            :disabled="isBusy || messagesLeft == '0'"
-            @keydown.enter="submit"
-          />
-          <button class="px-6 button shadow-md disabled:shadow-none" :disabled="isBusy || messagesLeft == '0'" @click="submit">
-            <span class="sm:hidden">›</span>
-            <span class="hidden sm:inline">{{ $t('SEND') }}</span>
-          </button>
-        </div>
-        <slot name="messageCounter"></slot>
-      </div>
+    </div>
+  </div>
+  <div class="space-y-4">
+    <div class="flex space-x-4">
+      <input
+        ref="input"
+        v-model.trim="prompt"
+        type="text"
+        class="grow text-lg p-2 rounded border border-sky-500 disabled:bg-neutral-100 disabled:border-neutral-300 shadow-md disabled:shadow-none"
+        :disabled="isBusy || messagesLeft == '0'"
+        @keydown.enter="submit"
+      />
+      <button class="px-6 button shadow-md disabled:shadow-none" :disabled="isBusy || messagesLeft == '0'" @click="submit">
+        <span class="sm:hidden">›</span>
+        <span class="hidden sm:inline">{{ $t('SEND') }}</span>
+      </button>
+    </div>
+    <slot name="messageCounter"></slot>
+  </div>
 </template>
 
 <script setup lang="ts">
 const { $openModal } = useNuxtApp();
 const config = useRuntimeConfig();
 const { formatResponse, llmResponseFormat } = useResponseFormat();
-const props = defineProps([
-  'isDemoChatbot',
-  'messagesLeft',
-  'collection'
-]);
+const props = defineProps(['isDemoChatbot', 'messagesLeft', 'collection', 'isEmbedded']);
 const emit = defineEmits(['updateLeft']);
 
 interface DialogItem {
@@ -73,7 +68,6 @@ interface DialogItem {
 }
 
 const { t } = useI18n();
-
 
 const isBusy = ref(false);
 const prompt = ref('');
@@ -168,9 +162,9 @@ const streamingFetchRequest = async () => {
       handleStreamText(text);
     }
     parseDocsJson();
-    if(props.isDemoChatbot) await updateLeftMessages();
+    if (props.isDemoChatbot) await updateLeftMessages();
   }
-  if(props.isDemoChatbot) await updateLeftMessages();
+  if (props.isDemoChatbot) await updateLeftMessages();
 };
 
 const readChunks = (reader: ReadableStreamDefaultReader) => {
@@ -255,5 +249,4 @@ const updateLeftMessages = async () => {
     console.log(error);
   }
 };
-
 </script>

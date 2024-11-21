@@ -1,21 +1,14 @@
 <template>
   <main>
     <div v-if="collection.uuid" class="space-y-12">
-      <div class="flex justify-between items-start space-x-4">
-        <div class="space-y-4">
-          <h2 class="text-2xl md:text-3xl leading-tight font-bold">{{ collection.cmetadata?.title }}</h2>
-          <div v-if="collection.cmetadata?.description" class="text-neutral-600" v-html="collection.cmetadata?.description"></div>
-        </div>
-      </div>
-
-      <ChatZone :collection :is-demo-chatbot="false" />
+      <ChatZone :collection :is-demo-chatbot="false" :is-embedded="true" />
     </div>
   </main>
 </template>
 
 <script lang="ts" setup>
 definePageMeta({
-  layout: 'iframe'
+  layout: 'iframe',
 });
 const { t } = useI18n();
 
@@ -51,5 +44,4 @@ watch(isBusy, (val) => {
     }, 100);
   }
 });
-
 </script>

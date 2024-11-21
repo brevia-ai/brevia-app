@@ -26,17 +26,16 @@
       <ChatZone :collection :isDemoChatbot="isDemo" :messagesLeft @updateLeft="updateLeftMessages">
         <template v-slot:messageCounter>
           <div v-if="isDemo" class="flex space-x-4">
-          <span class="grow text-lg">{{ $t('MESSAGES_LEFT') }}: {{ messagesLeft }}</span>
-        </div>
-
-        <div v-if="isDemo && messagesLeft == '0'" class="space-x-4">
-          <div class="w-full bg-red-100 border border-red-400 rounded text-center">
-            {{ $t('NO_MORE_CHAT_MESSAGES') }}
+            <span class="grow text-lg">{{ $t('MESSAGES_LEFT') }}: {{ messagesLeft }}</span>
           </div>
-        </div>
+
+          <div v-if="isDemo && messagesLeft == '0'" class="space-x-4">
+            <div class="w-full bg-red-100 border border-red-400 rounded text-center">
+              {{ $t('NO_MORE_CHAT_MESSAGES') }}
+            </div>
+          </div>
         </template>
       </ChatZone>
-
     </div>
   </main>
 </template>
@@ -91,5 +90,5 @@ watch(isBusy, (val) => {
   }
 });
 
-const updateLeftMessages = (left: number)  => messagesLeft.value = String(left);
+const updateLeftMessages = (left: number) => (messagesLeft.value = String(left));
 </script>
