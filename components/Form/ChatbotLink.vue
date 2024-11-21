@@ -148,13 +148,18 @@ const create = async () => {
 };
 
 const linkOptions = (url: string) => {
-  let selector: any = linkLoadOptions.find((o: any) => o.url === url)?.selector;
-  if (selector) {
-    return { selector };
-  }
-  selector = linkLoadOptions.find((o: any) => url.startsWith(o.url))?.selector;
+  return {
+    selector: linkOptionsProperty(url, 'selector'),
+    callback: linkOptionsProperty(url, 'callback'),
+  };
+};
 
-  return selector ? { selector } : {};
+const linkOptionsProperty = (url: string, property: string) => {
+  const option = linkLoadOptions.find((o: any) => o.url === url)?.[property];
+  if (option) {
+    return option;
+  }
+  return linkLoadOptions.find((o: any) => url.startsWith(o.url))?.[property];
 };
 
 const deleteLink = async () => {
