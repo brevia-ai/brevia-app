@@ -14,6 +14,9 @@
 </template>
 
 <script lang="ts" setup>
+definePageMeta({
+  layout: 'iframe'
+});
 const { t } = useI18n();
 
 const collection = ref<{ name?: string; uuid?: string; cmetadata?: any }>({});
