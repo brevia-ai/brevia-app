@@ -25,7 +25,7 @@ onBeforeMount(async () => {
   const data = await $fetch(`/api/brevia/collections?uuid=${uuid}`);
   collection.value = data;
 
-  if (!collection.value?.uuid) {
+  if (!checkChatbotAvailable()) {
     throw createError({
       statusCode: 404,
       message: 'not found',
@@ -44,4 +44,11 @@ watch(isBusy, (val) => {
     }, 100);
   }
 });
+
+const checkChatbotAvailable = (): boolean => {
+  if (!collection.value?.uuid) {
+    return false;
+  }
+  return collection.value.cmetadata?.brevia_app?.public_iframe || false;
+};
 </script>
