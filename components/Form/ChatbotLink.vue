@@ -147,11 +147,22 @@ const create = async () => {
   }
 };
 
-const linkOptions = (url: string) => {
-  return {
-    selector: linkOptionsProperty(url, 'selector'),
-    callback: linkOptionsProperty(url, 'callback'),
-  };
+const linkOptions = (url: string): Record<string, any> => {
+  const uniqueKeys = new Set<string>();
+  linkLoadOptions.forEach((option: any) => {
+    Object.keys(option).forEach((key) => {
+      if (key !== 'url') {
+        uniqueKeys.add(key);
+      }
+    });
+  });
+
+  const options: Record<string, any> = {};
+  uniqueKeys.forEach((key) => {
+    options[key] = linkOptionsProperty(url, key);
+  });
+
+  return options;
 };
 
 const linkOptionsProperty = (url: string, property: string) => {
