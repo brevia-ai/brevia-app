@@ -23,8 +23,8 @@
         </div>
       </div>
 
-      <ChatZone :collection :isDemoChatbot="isDemo" :messagesLeft @updateLeft="updateLeftMessages">
-        <template v-slot:messageCounter>
+      <ChatZone :collection :is-demo-chatbot="isDemo" :messages-left @update-left="updateLeftMessages">
+        <template #messageCounter>
           <div v-if="isDemo" class="flex space-x-4">
             <span class="grow text-lg">{{ $t('MESSAGES_LEFT') }}: {{ messagesLeft }}</span>
           </div>
@@ -46,7 +46,6 @@ import { ItemEditLevel } from '#imports';
 const config = useRuntimeConfig();
 const store = useStatesStore();
 useHead({ title: `Chatbot | ${config.public.appName}` });
-const { t } = useI18n();
 
 const collection = ref<{ name?: string; uuid?: string; cmetadata?: any }>({});
 const isBusy = ref(false);

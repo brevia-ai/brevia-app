@@ -10,13 +10,10 @@
 definePageMeta({
   layout: 'iframe',
 });
-const { t } = useI18n();
 
 const collection = ref<{ name?: string; uuid?: string; cmetadata?: any }>({});
 const isBusy = ref(false);
 const input = ref<HTMLElement | null>(null);
-
-let sessionId = '';
 
 onBeforeMount(async () => {
   const route = useRoute();
@@ -33,7 +30,6 @@ onBeforeMount(async () => {
     });
   }
 
-  sessionId = crypto.randomUUID();
   isBusy.value = false;
 });
 
