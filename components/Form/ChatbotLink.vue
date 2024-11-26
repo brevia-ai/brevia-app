@@ -79,7 +79,6 @@ if (props.item.cmetadata) {
 const statesStore = useStatesStore();
 const collectionUuid = statesStore.collection?.uuid || '';
 const metadataDefaults = statesStore.collection?.cmetadata?.metadata_defaults?.links || {};
-const linkLoadOptions = statesStore.collection?.cmetadata?.link_load_options || [];
 const integration = useIntegration();
 const indexingResult = ref<'Indexed' | 'Not Indexed' | 'None'>('None');
 
@@ -138,39 +137,12 @@ const create = async () => {
         link: url.value,
         collection_id: collectionUuid,
         metadata: { ...metadata, ...metadataDefaults },
-        options: linkOptions(url.value),
       },
     });
   } catch (err) {
     console.log(err);
     error.value = true;
   }
-};
-
-const linkOptions = (url: string): Record<string, any> => {
-  const uniqueKeys = new Set<string>();
-  linkLoadOptions.forEach((option: any) => {
-    Object.keys(option).forEach((key) => {
-      if (key !== 'url') {
-        uniqueKeys.add(key);
-      }
-    });
-  });
-
-  const options: Record<string, any> = {};
-  uniqueKeys.forEach((key) => {
-    options[key] = linkOptionsProperty(url, key);
-  });
-
-  return options;
-};
-
-const linkOptionsProperty = (url: string, property: string) => {
-  const option = linkLoadOptions.find((o: any) => o.url === url)?.[property];
-  if (option) {
-    return option;
-  }
-  return linkLoadOptions.find((o: any) => url.startsWith(o.url))?.[property];
 };
 
 const deleteLink = async () => {
@@ -199,7 +171,6 @@ const reindexLink = async (item: Record<string, any>, collection: string | undef
         link: url,
         collection_id: collection,
         metadata: metadata,
-        options: linkOptions(url),
         document_id: document_id,
       },
     });
