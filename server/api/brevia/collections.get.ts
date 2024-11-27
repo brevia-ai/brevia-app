@@ -1,7 +1,12 @@
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
+  let url = '/collections';
+  if (query.uuid) {
+    url += `/${query.uuid}`;
+    delete query.uuid;
+  }
   try {
-    const response: any = await $fetch(apiUrl('/collections'), {
+    const response: any = await $fetch(apiUrl(url), {
       headers: authorizationHeaders(),
       query,
     });
