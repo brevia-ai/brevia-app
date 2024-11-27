@@ -35,7 +35,7 @@
       </div>
     </div>
   </div>
-  <div class="space-y-4" :class="{ 'bottom-6 left-0 px-4 grow w-full': isEmbedded }">
+  <div class="space-y-4" :class="{ 'bottom-6 left-0 px-4 absolute grow w-full': isEmbedded }">
     <div class="flex space-x-4">
       <input
         ref="input"
