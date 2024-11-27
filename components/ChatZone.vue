@@ -1,9 +1,9 @@
 <template>
   <div v-if="dialog.length">
     <div
+      ref="dialogZone"
       class="pt-6 pb-4 space-y-3"
       :class="isEmbedded ? 'h-[85vh] px-4 sm:px-6 overflow-y-auto w-full' : 'bg-white px-4 relative shadow-md rounded'"
-      ref="dialogZone"
     >
       <div class="flex flex-col space-y-6 pb-4">
         <div
@@ -62,7 +62,15 @@
 const { $openModal } = useNuxtApp();
 const config = useRuntimeConfig();
 const { formatResponse, llmResponseFormat } = useResponseFormat();
-const props = defineProps(['isDemoChatbot', 'messagesLeft', 'collection', 'isEmbedded']);
+const props = defineProps({
+  isDemoChatbot: Boolean,
+  messagesLeft: { type: String, default: '' },
+  collection: {
+    type: Object as PropType<{ name?: string; uuid?: string; cmetadata?: any }>,
+    default: () => ({ name: '', uuid: '', cmetadata: {} }),
+  },
+  isEmbedded: Boolean,
+});
 const emit = defineEmits(['updateLeft']);
 
 interface DialogItem {
@@ -93,7 +101,7 @@ let collectionName = '';
 const responseFormat = ref('text');
 
 onBeforeMount(async () => {
-  collectionName = props.collection.name;
+  collectionName = props.collection.name || '';
   responseFormat.value = llmResponseFormat(props.collection.cmetadata?.qa_completion_llm);
   sessionId = crypto.randomUUID();
   isBusy.value = false;
@@ -245,7 +253,7 @@ const updateLeftMessages = async () => {
   }
 
   const today = new Date().toISOString().substring(0, 10);
-  const query = `min_date=${today}&collection=${props.collection.name}`;
+  const query = `min_date=${today}&collection=${props.collection?.name}`;
   try {
     const response = await fetch(`/api/brevia/chat_history?${query}`);
     const data = await response.json();
