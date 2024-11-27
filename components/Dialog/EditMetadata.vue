@@ -39,13 +39,6 @@
             </VueDatePicker>
           </slot>
 
-          <slot v-if="isSimpleString(meta)">
-            <label class="flex flex-col items-start space-y-2">
-              <span>{{ name }}</span>
-            </label>
-            <input id="item_{{ index}}" v-model="metadata[name]" type="text" name="item_{{ index}}" />
-          </slot>
-
           <slot v-if="isCheckbox(meta)">
             <label class="flex flex-row items-center space-x-2">
               <span>{{ name }}</span>
@@ -114,10 +107,6 @@ const isSelect = (prop: any) => {
 
 const isDate = (prop: any) => {
   return prop?.type == 'string' && prop?.format == 'date';
-};
-
-const isSimpleString = (prop: any) => {
-  return prop?.type == 'string' && !prop?.format && !prop?.enum;
 };
 
 const isCheckbox = (prop: any) => {
