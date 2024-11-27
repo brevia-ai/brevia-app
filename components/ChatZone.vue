@@ -1,6 +1,10 @@
 <template>
   <div v-if="dialog.length">
-    <div class="pt-6 pb-4 space-y-3" :class="isEmbedded ? 'h-[85vh] px-4 sm:px-6 overflow-y-auto w-full' : 'bg-white px-4 relative shadow-md rounded'">
+    <div
+      class="pt-6 pb-4 space-y-3"
+      :class="isEmbedded ? 'h-[85vh] px-4 sm:px-6 overflow-y-auto w-full' : 'bg-white px-4 relative shadow-md rounded'"
+      ref="dialogZone"
+    >
       <div class="flex flex-col space-y-6 pb-4">
         <div
           v-for="(item, i) in dialog"
@@ -68,6 +72,7 @@ interface DialogItem {
 }
 
 const { t } = useI18n();
+const dialogZone = ref();
 
 const isBusy = ref(false);
 const prompt = ref('');
@@ -116,6 +121,7 @@ const submit = async () => {
   if (!prompt.value) return;
 
   isBusy.value = true;
+  if (props.isEmbedded) nextTick(() => dialogZone.value.scrollTo({ top: dialogZone.value.scrollHeight, behavior: 'smooth' }));
 
   dialog.value.push(formatDialogItem('YOU', prompt.value));
   dialog.value.push(formatDialogItem('BREVIA', ''));
@@ -199,6 +205,7 @@ const handleStreamText = (text: string) => {
     }
   } else {
     dialog.value[currIdx].message += text;
+    if (props.isEmbedded) nextTick(() => dialogZone.value.scrollTo({ top: dialogZone.value.scrollHeight, behavior: 'smooth' }));
   }
 };
 
