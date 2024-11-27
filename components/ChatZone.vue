@@ -1,6 +1,6 @@
 <template>
   <div v-if="dialog.length">
-    <div class="pt-6 pb-4 space-y-3" :class="{ 'bg-white px-4 relative shadow-md rounded': !isEmbedded }">
+    <div class="pt-6 pb-4 space-y-3" :class="(isEmbedded)? 'h-[85vh] px-4 sm:px-6 overflow-y-auto w-full' : 'bg-white px-4 relative shadow-md rounded'">
       <div class="flex flex-col space-y-6 pb-4">
         <div
           v-for="(item, i) in dialog"
@@ -35,7 +35,7 @@
       </div>
     </div>
   </div>
-  <div class="space-y-4" :class="{ 'bottom-6 left-0 absolute px-4 grow w-full': isEmbedded }">
+  <div class="space-y-4" :class="{ 'bottom-6 left-0 px-4 grow w-full': isEmbedded }">
     <div class="flex space-x-4">
       <input
         ref="input"
