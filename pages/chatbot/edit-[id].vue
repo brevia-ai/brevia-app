@@ -9,7 +9,7 @@
       </div>
 
       <div class="space-y-8">
-        <UIXTabs v-if="isAdmin" :tabs="[t('OVERVIEW'), t('ADVANCED'), t('FILES'), 'Q & A', t('LINKS'), '<Embedding>']">
+        <UIXTabs v-if="isAdmin" :tabs="[t('OVERVIEW'), t('ADVANCED'), t('FILES'), 'Q & A', t('LINKS'), t('SHARE')]">
           <template #0>
             <FormChatbot @save-title="collection.cmetadata.title = $event" @save-descriprion="collection.cmetadata.description = $event" />
           </template>
@@ -26,7 +26,7 @@
             <ElementChatbotLinks />
           </template>
           <template #5>
-            <ElementEmbeddings :uuid="collection.uuid" :name="collection.cmetadata?.title" />
+            <ElementChatbotShare :uuid="collection.uuid" :name="collection.cmetadata?.title" />
           </template>
         </UIXTabs>
         <UIXTabs v-else :tabs="[t('OVERVIEW'), t('FILES'), 'Q & A', t('LINKS')]">

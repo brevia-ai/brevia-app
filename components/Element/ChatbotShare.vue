@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col space-y-6">
-    <h1 class="text-2xl font-semibold mb-4 border-b-primary border-b-2">Embeddings</h1>
+    <h1 class="text-2xl font-semibold mb-4 border-b-primary border-b-2">Embed</h1>
     <p class="text-lg">Per aggiungere il tuo chatbot ovunque nel tuo sito, aggiungi questo iframe al tuo html:</p>
     <code ref="codeArea" class="w-full flex-1 bg-slate-300 p-2 rounded-md">
       &lt;iframe<br />
-      &emsp;&emsp;src={{ host }}/chatbot-iframe/{{ uuid }} <br />
+      &emsp;&emsp;src="{{ protocol }}//{{ host }}/chatbot-iframe/{{ uuid }}"<br />
       &emsp;&emsp;style="height: 30rem; width: 24rem" <br />
       &gt;<br />
       &lt;/iframe&gt;
@@ -40,9 +40,9 @@ const props = defineProps({
   name: String,
 });
 const route = useRoute();
-console.log(route);
 
 const host = window.location.host;
+const protocol = window.location.protocol;
 const iframeSrc = ref('/chatbot-iframe/' + props.uuid);
 const iframeVisible = ref(false);
 const codeArea = ref();
