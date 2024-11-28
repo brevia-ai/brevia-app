@@ -39,7 +39,6 @@ const props = defineProps({
   uuid: String,
   name: String,
 });
-const route = useRoute();
 
 const host = window.location.host;
 const protocol = window.location.protocol;
