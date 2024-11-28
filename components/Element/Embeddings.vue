@@ -4,7 +4,7 @@
     <p class="text-lg">Per aggiungere il tuo chatbot ovunque nel tuo sito, aggiungi questo iframe al tuo html:</p>
     <code ref="codeArea" class="w-full flex-1 bg-slate-300 p-2 rounded-md">
       &lt;iframe<br />
-      &emsp;&emsp;src={{ host }}/chatbot-iframe/{{ uuid }} <br />
+      &emsp;&emsp;src={{ iframeSrc }} <br />
       &emsp;&emsp;style="height: 30rem; width: 24rem" <br />
       &gt;<br />
       &lt;/iframe&gt;
@@ -43,7 +43,7 @@ const route = useRoute();
 console.log(route);
 
 const host = window.location.host;
-const iframeSrc = ref('/chatbot-iframe/' + props.uuid);
+const iframeSrc = ref('https://test-zanichelli-chatbot.brevia.app/chatbot/76eedcfa-a0ad-4bda-a2df-26cf0e3788b1');
 const iframeVisible = ref(false);
 const codeArea = ref();
 const copiedToClip = ref(false);
