@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col space-y-6">
-    <h1 class="text-2xl font-semibold mb-4 border-b-primary border-b-2">Embeddings</h1>
+    <h1 class="text-2xl font-semibold mb-4 border-b-primary border-b-2">Embed</h1>
     <p class="text-lg">Per aggiungere il tuo chatbot ovunque nel tuo sito, aggiungi questo iframe al tuo html:</p>
     <code ref="codeArea" class="w-full flex-1 bg-slate-300 p-2 rounded-md">
       &lt;iframe<br />
@@ -39,8 +39,6 @@ const props = defineProps({
   uuid: String,
   name: String,
 });
-const route = useRoute();
-console.log(route);
 
 const host = window.location.host;
 const iframeSrc = ref('https://test-zanichelli-chatbot.brevia.app/chatbot/76eedcfa-a0ad-4bda-a2df-26cf0e3788b1');
