@@ -1,4 +1,5 @@
 <template>
+  <component v-if="shouldPreloadIframe" :is="'link'" rel="preload" :href="iframeSrc" as=fetch />
   <div class="flex flex-col space-y-6">
     <h1 class="text-2xl font-semibold mb-4 border-b-primary border-b-2">Embed</h1>
     <p class="text-lg">Per aggiungere il tuo chatbot ovunque nel tuo sito, aggiungi questo iframe al tuo html:</p>
@@ -19,8 +20,7 @@
       <Transition name="iframe" appear>
         <div v-if="iframeVisible" class="shadow-md border-0.5 border-slate-700 rounded-md bg-white z-50">
           <h1 class="pl-6 py-0.5 shadow-sm text-xl font-bold">{{ name }}</h1>
-          <div v-if="iframeError" class="h-[30rem] w-96 text-center content-center font-semibold text-lg text-red-500">Errore nel caricamento del chatbot</div>
-          <iframe v-else-if="iframeLoaded" class="h-[30rem] w-96 rounded-md center" :src="iframeSrc" sandbox="allow-same-origin allow-scripts allow-forms">
+          <iframe class="h-[30rem] w-96 rounded-md center" :src="iframeSrc" sandbox="allow-same-origin allow-scripts allow-forms">
           </iframe>
         </div>
       </Transition>
@@ -46,27 +46,15 @@ const host = window.location.host;
 const protocol = window.location.protocol;
 const iframeSrc = ref('/chatbot-iframe/' + props.uuid);
 const iframeVisible = ref(false);
-const iframeLoaded = ref(false);
-const iframeError = ref(false);
+const shouldPreloadIframe = ref(true);
 const codeArea = ref();
 const copiedToClip = ref(false);
 
 onMounted(() => {
-  preloadIframe();
-});
-
-const preloadIframe = async () => {
-  try {
-    const response = await fetch(iframeSrc.value);
-    if (response.ok) {
-      iframeLoaded.value = true;
-    } else {
-      iframeError.value = true;
-    }
-  } catch (err) {
-    iframeError.value = true;
-  }
-};
+  setTimeout(()=>{
+    shouldPreloadIframe.value = false;
+  },5000);
+})
 
 const copyCode = () => {
   navigator.clipboard.writeText(codeArea.value.textContent).then(() => {
