@@ -1,5 +1,5 @@
 <template>
-  <component v-if="shouldPreloadIframe" :is="'link'" rel="preload" :href="iframeSrc" as=fetch />
+  <component v-if="shouldPreloadIframe" :is="'link'" rel="preload" :href="iframeSrc" as="fetch" />
   <div class="flex flex-col space-y-6">
     <h1 class="text-2xl font-semibold mb-4 border-b-primary border-b-2">Embed</h1>
     <p class="text-lg">Per aggiungere il tuo chatbot ovunque nel tuo sito, aggiungi questo iframe al tuo html:</p>
@@ -20,8 +20,7 @@
       <Transition name="iframe" appear>
         <div v-if="iframeVisible" class="shadow-md border-0.5 border-slate-700 rounded-md bg-white z-50">
           <h1 class="pl-6 py-0.5 shadow-sm text-xl font-bold">{{ name }}</h1>
-          <iframe class="h-[30rem] w-96 rounded-md center" :src="iframeSrc" sandbox="allow-same-origin allow-scripts allow-forms">
-          </iframe>
+          <iframe class="h-[30rem] w-96 rounded-md center" :src="iframeSrc" sandbox="allow-same-origin allow-scripts allow-forms"> </iframe>
         </div>
       </Transition>
       <div class="flex flex-row self-end">
@@ -51,10 +50,10 @@ const codeArea = ref();
 const copiedToClip = ref(false);
 
 onMounted(() => {
-  setTimeout(()=>{
+  setTimeout(() => {
     shouldPreloadIframe.value = false;
-  },5000);
-})
+  }, 5000);
+});
 
 const copyCode = () => {
   navigator.clipboard.writeText(codeArea.value.textContent).then(() => {
