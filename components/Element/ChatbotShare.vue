@@ -4,7 +4,7 @@
     <p class="text-lg">Per aggiungere il tuo chatbot ovunque nel tuo sito, aggiungi questo iframe al tuo html:</p>
     <code ref="codeArea" class="w-full flex-1 bg-slate-300 p-2 rounded-md">
       &lt;iframe<br />
-      &emsp;&emsp;src={{ iframeSrc }} <br />
+      &emsp;&emsp;src="{{ iframeSrc }}" <br />
       &emsp;&emsp;style="height: 30rem; width: 24rem" <br />
       &gt;<br />
       &lt;/iframe&gt;
