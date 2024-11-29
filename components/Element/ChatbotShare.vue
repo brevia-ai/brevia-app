@@ -19,7 +19,9 @@
       <Transition name="iframe" appear>
         <div v-if="iframeVisible" class="shadow-md border-0.5 border-slate-700 rounded-md bg-white z-50">
           <h1 class="pl-6 py-0.5 shadow-sm text-xl font-bold">{{ name }}</h1>
-          <iframe class="h-[30rem] w-96" :src="iframeSrc" sandbox="allow-same-origin allow-scripts allow-forms"> </iframe>
+          <div v-if="iframeError" class="h-[30rem] w-96 text-center content-center font-semibold text-lg text-red-500">Errore nel caricamento del chatbot</div>
+          <iframe v-else-if="iframeLoaded" class="h-[30rem] w-96 rounded-md center" :src="iframeSrc" sandbox="allow-same-origin allow-scripts allow-forms">
+          </iframe>
         </div>
       </Transition>
       <div class="flex flex-row self-end">
@@ -44,8 +46,27 @@ const host = window.location.host;
 const protocol = window.location.protocol;
 const iframeSrc = ref('/chatbot-iframe/' + props.uuid);
 const iframeVisible = ref(false);
+const iframeLoaded = ref(false);
+const iframeError = ref(false);
 const codeArea = ref();
 const copiedToClip = ref(false);
+
+onMounted(() => {
+  preloadIframe();
+});
+
+const preloadIframe = async () => {
+  try {
+    const response = await fetch(iframeSrc.value);
+    if (response.ok) {
+      iframeLoaded.value = true;
+    } else {
+      iframeError.value = true;
+    }
+  } catch (err) {
+    iframeError.value = true;
+  }
+};
 
 const copyCode = () => {
   navigator.clipboard.writeText(codeArea.value.textContent).then(() => {
