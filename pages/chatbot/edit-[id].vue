@@ -9,7 +9,7 @@
       </div>
 
       <div class="space-y-8">
-        <UIXTabs v-if="isAdmin" :tabs="[t('OVERVIEW'), t('ADVANCED'), t('FILES'), 'Q & A', t('LINKS')]">
+        <UIXTabs v-if="isAdmin" :tabs="[t('OVERVIEW'), t('ADVANCED'), t('FILES'), 'Q & A', t('LINKS'), t('SHARE')]">
           <template #0>
             <FormChatbot @save-title="collection.cmetadata.title = $event" @save-descriprion="collection.cmetadata.description = $event" />
           </template>
@@ -24,6 +24,9 @@
           </template>
           <template #4>
             <ElementChatbotLinks />
+          </template>
+          <template #5>
+            <ElementChatbotShare :uuid="collection.uuid" :name="collection.cmetadata?.title" />
           </template>
         </UIXTabs>
         <UIXTabs v-else :tabs="[t('OVERVIEW'), t('FILES'), 'Q & A', t('LINKS')]">
@@ -47,6 +50,7 @@
 
 <script lang="ts" setup>
 const config = useRuntimeConfig();
+const { $openModal } = useNuxtApp();
 useHead({ title: `Edit Chatbot | ${config.public.appName}` });
 
 const { t } = useI18n();
