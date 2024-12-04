@@ -9,16 +9,14 @@ export default defineEventHandler(async (event) => {
     body.content = `${body.title}\n${body.answer}`;
     delete body.title;
     delete body.answer;
-
-    const response: any = await $fetch(apiUrl('/index'), {
+    const options = {
       method: 'POST',
-      headers: apiHeaders(true),
+      headers: { 'Content-Type': 'application/json' },
       body,
-    });
+    }
 
-    return response;
-  } catch (err: any) {
-    console.log(err);
-    return { error: err?.message || 'Unknown error' };
+    return await apiFetch('/index', options, event);
+  } catch (error) {
+    return handleApiError(event, error);
   }
 });

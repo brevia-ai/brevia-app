@@ -7,13 +7,12 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    await fetch(apiUrl('/index/link'), {
-      method: 'POST',
-      headers: apiHeaders(true),
-      body: JSON.stringify(body),
-    });
-  } catch (err) {
-    console.log(err);
-    return JSON.stringify({ error: err?.message || 'Unknown error' });
+    return await apiFetch(
+      '/index/link',
+      { method: 'POST', body },
+      event
+    );
+  } catch (error) {
+    return handleApiError(event, error);
   }
 });

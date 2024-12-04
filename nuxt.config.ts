@@ -5,6 +5,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     apiSecret: '',
     apiBaseUrl: '',
+    // multi project configuration
+    projects: {},
     public: {
       appName: 'BREVIA',
       appDescription: '',

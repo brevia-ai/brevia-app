@@ -4,22 +4,24 @@ export const useIntegrationAuth = () => {
   const integration = useIntegration();
   const statesStore = useStatesStore();
 
-  const login = async (username: string, password: string) => {
+  const login = async (username: string, password: string, project: string | null = null) => {
     if (integration === 'brevia') {
       const response = await $fetch('/api/brevia/auth/login', {
         method: 'POST',
         body: {
           username,
           password,
+          project,
         },
       });
-      statesStore.userLogin(response);
+      statesStore.userLogin(response.user);
 
       return response;
     } else if (integration === 'bedita') {
       const response = await useBeditaAuth().login(username, password);
-      const data = filterUserDataToStore(response);
-      statesStore.userLogin(data);
+      const user = filterUserDataToStore(response);
+      const data = { user, project: null} // no multi-project support in Bedita (for now)
+      statesStore.userLogin(user);
 
       return data;
     }

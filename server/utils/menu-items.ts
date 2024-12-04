@@ -1,4 +1,5 @@
-import { authorizationHeaders, apiUrl } from '~/server/utils/api-client';
+import { apiFetch } from '~/server/utils/api-client';
+import { H3Event } from 'h3';
 
 function chatbotItems(response): Array<any> {
   return response.map((item) => {
@@ -28,11 +29,8 @@ function featureItems() {
   ];
 }
 
-export async function menuItems() {
-  const response: any = await $fetch(apiUrl('/collections'), {
-    method: 'GET',
-    headers: authorizationHeaders(),
-  });
+export async function menuItems(event: H3Event): Promise<Array<any>> {
+  const response: any = await apiFetch('/collections', {}, event);
 
   return featureItems().concat(chatbotItems(response));
 }
