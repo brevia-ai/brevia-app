@@ -4,7 +4,7 @@ import { breviaSessionConfig } from '~~/server/utils/session';
 export default defineEventHandler(async (event) => {
   try {
     const session = await useSession(event, breviaSessionConfig());
-    await session.update({ user: null });
+    await session.update({ user: null, project: null });
   } catch (error) {
     return handleApiError(event, error);
   }

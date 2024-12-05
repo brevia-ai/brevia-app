@@ -28,10 +28,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
     if (user) {
       const statesStore = useStatesStore();
       statesStore.userLogin(user);
+      statesStore.project = session.data?.project || null;
       if (to.path !== '/index' && to.path !== '/') {
         // In index page menu is loaded client side
         try {
-          const items = await menuItems();
+          const items = await menuItems(event);
           statesStore.menu = buildUserMenu(items);
         } catch (error) {
           console.error('Error loading menu', error);
@@ -57,7 +58,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
       '/privacy/cookie-policy',
     );
   }
-  if (publicPages.includes(to.path) || to.path.startsWith('/chatbot-iframe/')) {
+  if (publicPages.includes(to.path) || to.path.startsWith('/chatbot-iframe/')
+      || to.path.startsWith('/project-login/')) {
     return;
   }
 
