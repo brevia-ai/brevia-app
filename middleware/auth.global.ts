@@ -28,6 +28,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     if (user) {
       const statesStore = useStatesStore();
       statesStore.userLogin(user);
+      statesStore.project = session.data?.project || null;
       if (to.path !== '/index' && to.path !== '/') {
         // In index page menu is loaded client side
         try {
