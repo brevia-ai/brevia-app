@@ -60,8 +60,13 @@ const availableLocales = computed(() => {
 });
 
 async function onLogout() {
+  let to = '/auth';
+  if (!!config.public.projectLogin === true) {
+    const path = statesStore.project?.toLowerCase()?.replace(/ /g, '-');
+    to = `/project-login/${path}`;
+  }
   await logout();
   statesStore.$reset();
-  await navigateTo('/auth');
+  await navigateTo(to);
 }
 </script>

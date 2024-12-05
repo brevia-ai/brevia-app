@@ -5,9 +5,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     apiSecret: '',
     apiBaseUrl: '',
-    // multi project configuration
+    // multi-project configuration
     projects: {},
     public: {
+      projectLogin: false, // disable/enable project-login page
       appName: 'BREVIA',
       appDescription: '',
       appLogo: '/brevia-logo.svg',

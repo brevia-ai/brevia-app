@@ -27,7 +27,7 @@ export const useStatesStore = defineStore('states', {
     user: null as UserDataStore | null,
     menu: [] as menuItem[],
     collection: null as collectionItem | null,
-    project: null as string | null,
+    project: null as string | null, // selected project in multi-project mode
   }),
 
   actions: {
