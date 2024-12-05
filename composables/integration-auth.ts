@@ -20,7 +20,7 @@ export const useIntegrationAuth = () => {
     } else if (integration === 'bedita') {
       const response = await useBeditaAuth().login(username, password);
       const user = filterUserDataToStore(response);
-      const data = { user, project: null} // no multi-project support in Bedita (for now)
+      const data = { user, project: null }; // no multi-project support in Bedita (for now)
       statesStore.userLogin(user);
 
       return data;

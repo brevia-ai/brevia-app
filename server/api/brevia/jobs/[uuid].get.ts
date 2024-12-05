@@ -1,4 +1,3 @@
-
 export default defineEventHandler(async (event) => {
   const uuid = event.context.params?.uuid;
   if (!uuid) {

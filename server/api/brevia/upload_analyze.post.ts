@@ -1,7 +1,5 @@
 import { FormData } from 'node-fetch-native';
 
-const config = useRuntimeConfig();
-
 export default defineEventHandler(async (event) => {
   const form = await readMultipartFormData(event);
   const formData = new FormData();

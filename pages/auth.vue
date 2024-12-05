@@ -2,12 +2,8 @@
   <main class="mt-16">
     <div v-if="!statesStore.isLogged()" class="mt-6 max-w-sm mx-auto space-y-8">
       <form class="flex flex-col space-y-8" @submit.stop.prevent>
-
-        <div class="flex justify-between space-x-4" v-if="availableProjects.length > 0">
-          <select
-            v-model="projectSelected"
-            class="border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary px-2"
-          >
+        <div v-if="availableProjects.length > 0" class="flex justify-between space-x-4">
+          <select v-model="projectSelected" class="border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary px-2">
             <option v-for="item in availableProjects" :key="item" :value="item">{{ item }}</option>
           </select>
         </div>

@@ -1,5 +1,3 @@
-const config = useRuntimeConfig();
-
 export default defineEventHandler(async (event) => {
   // This endpoint is available only in Playground API
   const query = getQuery(event);

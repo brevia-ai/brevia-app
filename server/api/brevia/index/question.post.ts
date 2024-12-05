@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body,
-    }
+    };
 
     return await apiFetch('/index', options, event);
   } catch (error) {

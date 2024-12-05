@@ -1,5 +1,5 @@
 import { apiFetch } from '~/server/utils/api-client';
-import { H3Event } from 'h3';
+import type { H3Event } from 'h3';
 
 function chatbotItems(response): Array<any> {
   return response.map((item) => {

@@ -1,5 +1,3 @@
-const config = useRuntimeConfig();
-
 function readChunks(reader) {
   return {
     async *[Symbol.asyncIterator]() {
@@ -19,7 +17,7 @@ export default defineEventHandler(async (event) => {
   const authHeader = authorizationHeaders(project);
   const headers = {
     ...authHeader,
-    ...{ 'X-Chat-Session': sessionId, 'Content-Type': 'application/json'},
+    ...{ 'X-Chat-Session': sessionId, 'Content-Type': 'application/json' },
   };
 
   try {

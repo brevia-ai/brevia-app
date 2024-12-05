@@ -7,11 +7,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    return await apiFetch(
-      '/index/link',
-      { method: 'POST', body },
-      event
-    );
+    return await apiFetch('/index/link', { method: 'POST', body }, event);
   } catch (error) {
     return handleApiError(event, error);
   }

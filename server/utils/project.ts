@@ -1,8 +1,9 @@
 import { breviaSessionConfig } from '~~/server/utils/session';
-import { H3Event, useSession } from 'h3';
+import type { H3Event } from 'h3';
+import { useSession } from 'h3';
 
 // Multi projects setup: update project configuration based on the current project
-export const currentProject = async (event: H3Event):Promise<string | null> => {
+export const currentProject = async (event: H3Event): Promise<string | null> => {
   const config = useRuntimeConfig();
 
   if (!config.projects) {

@@ -41,7 +41,6 @@ export const apiUrl = (path: string = '', project: string | null = null) => {
   return `${apiBaseUrl(project)}${path}`;
 };
 
-
 export const apiFetch = async (path: string, options: any, event: H3Event) => {
   const project = await currentProject(event);
   const headers = options.headers || {};
