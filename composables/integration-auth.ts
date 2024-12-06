@@ -19,11 +19,18 @@ export const useIntegrationAuth = () => {
 
       return response;
     } else if (integration === 'bedita') {
+      if (project) {
+        // setup project API base URL and key in session
+        await $fetch('/api/setup_bedita_project', {
+          method: 'POST',
+          body: { project },
+        });
+      }
       const response = await useBeditaAuth().login(username, password);
       const user = filterUserDataToStore(response);
-      const data = { user, project: null }; // no multi-project support in Bedita (for now)
+      const data = { user, project };
       statesStore.userLogin(user);
-      statesStore.project = null;
+      statesStore.project = project;
 
       return data;
     }
