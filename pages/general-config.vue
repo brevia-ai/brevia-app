@@ -16,6 +16,10 @@
         <UIXInput v-model.trim="chunkSize" label="Chunk Size" autocapitalize="on" @keydown.enter.stop.prevent="saveConfig" />
 
         <UIXInput v-model.trim="chundOverlap" label="Chunk Overlap" autocapitalize="none" @keydown.enter.stop.prevent="saveConfig" />
+        <div>
+          Text Splitter
+          <JsonEditorVue v-model="textSplitter" :mode="Mode.text" />
+        </div>
       </div>
     </Transition>
 
@@ -26,7 +30,7 @@
     </div>
     <Transition name="section-fade">
       <div v-if="qacVisible" class="space-y-4">
-        <UIXInput v-model.trim="docsNum" label="Documents Number" autocapitalize="none" @keydown.enter.stop.prevent="saveConfig" />
+        <UIXInput v-model.trim="searchDocsNum" label="Documents Number" autocapitalize="none" @keydown.enter.stop.prevent="saveConfig" />
         <div>
           Folloup LLm
           <JsonEditorVue v-model="qaFollowupLLm" :mode="Mode.text" />
@@ -44,6 +48,24 @@
       </div>
     </Transition>
 
+    <!--SUMMARIZE-->
+    <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('Summarize')">
+      <p class="mx-auto font-bold uppercase text-xl">Summarize</p>
+      <Icon :name="sumVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'" size="32" />
+    </div>
+    <Transition name="section-fade">
+      <div v-if="sumVisible" class="space-y-4">
+        <div>
+          Summarize LLm
+          <JsonEditorVue v-model="summarizeLLm" :mode="Mode.text" />
+        </div>
+
+        <UIXInput v-model.trim="summarizeChunkSize" label="Summarize Chunk Size" autocapitalize="on" @keydown.enter.stop.prevent="saveConfig" />
+
+        <UIXInput v-model.trim="summarizeChunkOverlap" label="Summarize Chunk Overlap" autocapitalize="none" @keydown.enter.stop.prevent="saveConfig" />
+      </div>
+    </Transition>
+
     <div v-if="error" class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary">
       {{ $t('AN_ERROR_OCCURRED_PLEASE_RETRY') }}
     </div>
@@ -58,6 +80,13 @@
       >
         {{ $t('SAVE') }}
       </button>
+      <button
+        class="button button-primary uppercase"
+        :class="{'is-loading': isLoading}"
+        @click="$openModal('ResetConfig', {settings: settings})"
+      >
+        {{ $t('RESET') }}
+      </button>
     </div>
   </form>
 </template>
@@ -65,6 +94,8 @@
 <script lang="ts" setup>
 import JsonEditorVue from 'json-editor-vue';
 import { Mode } from 'vanilla-jsoneditor';
+
+const { $openModal } = useNuxtApp();
 
 definePageMeta({
   middleware: [
@@ -81,21 +112,30 @@ definePageMeta({
 const error = ref(false);
 const isLoading = ref(false);
 
-const breviaConfig = await $fetch('/api/brevia/config');
-console.log(breviaConfig);
+const breviaConfig: any = await $fetch('/api/brevia/config');
+const breviaConfigSchema: any = await $fetch('/api/brevia/config/schema');
 
-//Index And Search
+const updatedSettings = ref({});
+const resettedSettings = ref([]);
+
+// Index And Search
 const idxVisible = ref(true);
 const embeddings = ref(breviaConfig.embeddings);
-const chunkSize = ref(breviaConfig.text_chunk_size);
-const chundOverlap = ref(breviaConfig.text_chunk_overlap);
+const chunkSize = ref(String(breviaConfig.text_chunk_size));
+const chundOverlap = ref(String(breviaConfig.text_chunk_overlap));
 const textSplitter = ref(breviaConfig.text_splitter);
-//Q&A and Chat
+// Q&A and Chat
 const qacVisible = ref(true);
 const qaFollowupLLm = ref(breviaConfig.qa_followup_llm);
 const qaCompletionLLM = ref(breviaConfig.qa_completion_llm);
 const qaRetriever = ref(breviaConfig.qa_retriever);
-const docsNum = ref(breviaConfig.docs_num);
+const searchDocsNum = ref(String(breviaConfig.search_docs_num));
+// Summarize
+const sumVisible = ref(true);
+const summarizeLLm = ref(breviaConfig.summarize_llm);
+const summarizeChunkSize = ref(String(breviaConfig.summ_token_splitter));
+const summarizeChunkOverlap = ref(String(breviaConfig.summ_token_overlap));
+
 
 const saveConfig = async () => {
   if (isLoading.value) {
@@ -107,56 +147,82 @@ const saveConfig = async () => {
 };
 
 const update = async () => {
-  // try {
-  //   updateMetadataItems();
-  //   await $fetch(`/api/${integration}/collections/${statesStore?.collection?.uuid}`, {
-  //     method: 'PATCH',
-  //     body: collection,
-  //   });
-
-  //   statesStore.collection = collection;
-  // } catch (err) {
-  //   error.value = true;
-  //   console.error(err);
-  // }
+  try {
+    checkSettings();
+    if (Object.keys(updatedSettings.value).length) {
+      await $fetch('/api/brevia/config', {
+        method: 'POST',
+        body: updatedSettings.value,
+      });
+    }
+    if (resettedSettings.value.length) {
+      await $fetch('/api/brevia/config/reset', {
+        method: 'POST',
+        body: resettedSettings.value,
+      });
+    }
+  } catch (err) {
+    error.value = true;
+    console.error(err);
+  }
 };
 
-const updateMetadataItems = () => {
-  //Update index and search
-  handleJsonMeta('embeddings', embeddings.value);
-  handleIntMeta('chunk_size', chunkSize.value);
-  handleIntMeta('chunk_overlap', chundOverlap.value);
-  handleJsonMeta('text_splitter', textSplitter.value);
-  //Q&A and chat
-  handleJsonMeta('qa_followup_llm', qaFollowupLLm.value);
-  handleJsonMeta('qa_completion_llm', qaCompletionLLM.value);
-  handleJsonMeta('qa_retriever', qaRetriever.value);
-  handleIntMeta('docs_num', docsNum.value);
+const settings = computed(() => {
+  return Object.keys(breviaConfig);
+});
+
+const isSettingChanged = (setting: string, value: any) => {
+  const defaultValue = breviaConfigSchema.properties?.[setting]?.default || null;
+
+  return JSON.stringify(defaultValue) !== JSON.stringify(value);
 };
 
-const handleIntMeta = (name: string, value: any) => {
-  // if (!value || value === '') {
-  //   // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-  //   delete collection.cmetadata[name];
-
-  //   return;
-  // }
-  // collection.cmetadata[name] = parseInt(value);
+const checkSettings = () => {
+  updatedSettings.value = {};
+  resettedSettings.value = [];
+  // Index and search
+  handleJson('embeddings', embeddings.value);
+  handleInt('text_chunk_size', chunkSize.value);
+  handleInt('text_chunk_overlap', chundOverlap.value);
+  handleJson('text_splitter', textSplitter.value);
+  // Q&A and chat
+  handleJson('qa_followup_llm', qaFollowupLLm.value);
+  handleJson('qa_completion_llm', qaCompletionLLM.value);
+  handleJson('qa_retriever', qaRetriever.value);
+  handleInt('search_docs_num', searchDocsNum.value);
+  // Summarize
+  handleJson('summarize_llm', summarizeLLm.value);
+  handleInt('summ_token_splitter', summarizeChunkSize.value);
+  handleInt('summ_token_overlap', summarizeChunkOverlap.value);
 };
 
-const handleJsonMeta = (name: string, value: any) => {
-  // if (!value || value === '') {
-  //   // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-  //   delete collection.cmetadata[name];
+const handleInt = (name: string, targetValue: any) => {
+  const value = JSON.parse(JSON.stringify(targetValue));
+  if (!value || value === '') {
+    resettedSettings.value.push(name);
 
-  //   return;
-  // }
+    return;
+  }
+  if (isSettingChanged(name, parseInt(value))) {
+    updatedSettings.value[name] = parseInt(value);
+  }
+};
 
-  // try {
-  //   collection.cmetadata[name] = typeof value === 'string' ? JSON.parse(value) : value;
-  // } catch (err) {
-  //   console.error(err);
-  // }
+const handleJson = (name: string, targetValue: any) => {
+  const value = JSON.parse(JSON.stringify(targetValue));
+  if (!value || value === '') {
+    resettedSettings.value.push(name);
+
+    return;
+  }
+
+  try {
+    if (isSettingChanged(name, value)) {
+      updatedSettings.value[name] = typeof value === 'string' ? value : JSON.stringify(value);
+    }
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 const openCloseSection = (sectionType: string) => {
@@ -167,29 +233,9 @@ const openCloseSection = (sectionType: string) => {
     case 'Q&A and Chat':
       qacVisible.value = !qacVisible.value;
       break;
-  }
+    case 'Summarize':
+      sumVisible.value = !sumVisible.value;
+      break;
+    }
 };
 </script>
-
-<style>
-/* Entrata */
-.section-fade-enter-active {
-  transition: opacity 0.5s ease;
-}
-.section-fade-enter-from {
-  opacity: 0;
-}
-.section-fade-enter-to {
-  opacity: 1;
-}
-/* Uscita */
-.section-fade-leave-active {
-  transition: opacity 0s ease;
-}
-.section-fade-leave-from {
-  opacity: 1;
-}
-.section-fade-leave-to {
-  opacity: 0;
-}
-</style>
