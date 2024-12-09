@@ -14,7 +14,7 @@
     <div class="flex justify-between space-x-4">
       <button class="button button-secondary uppercase" @click="$closeModal">{{ $t('CANCEL') }}</button>
 
-      <button class="button button-danger uppercase" :class="{ 'is-loading': isLoading }" @click="resetConfig">{{ $t('RESET') }} </button>
+      <button class="button button-danger uppercase" :class="{ 'is-loading': isLoading }" @click="resetConfig">{{ $t('RESET') }}</button>
     </div>
 
     <div v-if="error" class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary">

@@ -1,6 +1,5 @@
 <template>
   <form class="flex flex-col space-y-6" @submit.prevent="saveConfig">
-
     <!--INDEX AND SEARCH-->
     <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('IndexAndSearch')">
       <p class="mx-auto font-bold uppercase text-xl">Index and Search</p>
@@ -80,11 +79,7 @@
       >
         {{ $t('SAVE') }}
       </button>
-      <button
-        class="button button-primary uppercase"
-        :class="{'is-loading': isLoading}"
-        @click="$openModal('ResetConfig', {settings: settings})"
-      >
+      <button class="button button-primary uppercase" :class="{ 'is-loading': isLoading }" @click="$openModal('ResetConfig', { settings: settings })">
         {{ $t('RESET') }}
       </button>
     </div>
@@ -135,7 +130,6 @@ const sumVisible = ref(true);
 const summarizeLLm = ref(breviaConfig.summarize_llm);
 const summarizeChunkSize = ref(String(breviaConfig.summ_token_splitter));
 const summarizeChunkOverlap = ref(String(breviaConfig.summ_token_overlap));
-
 
 const saveConfig = async () => {
   if (isLoading.value) {
@@ -236,6 +230,6 @@ const openCloseSection = (sectionType: string) => {
     case 'Summarize':
       sumVisible.value = !sumVisible.value;
       break;
-    }
+  }
 };
 </script>
