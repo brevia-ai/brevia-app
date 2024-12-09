@@ -39,6 +39,13 @@
         <span class="hidden sr-only sm:not-sr-only sm:inline">{{ $t('LOGOUT') }}</span>
       </button>
 
+      <button v-if="statesStore.userHasRole('admin')" class="h-10 px-4 button border-none text-sm uppercase">
+        <NuxtLink to="/general-config" class="flex space-x-2">
+          <Icon name="ph:gear-bold" class="text-lg" />
+          <span class="hidden sr-only sm:not-sr-only sm:inline">{{ $t('SETTINGS') }}</span>
+        </NuxtLink>
+      </button>
+
       <NuxtLink v-if="$route.name === 'about'" class="w-12 h-10 button border-none" to="/">
         <Icon name="ph:house-simple-bold" class="text-lg" />
       </NuxtLink>
