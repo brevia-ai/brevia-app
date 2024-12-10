@@ -13,7 +13,6 @@
             :accept-types="acceptTypes"
             @file-change="file = $event"
           />
-          />
         </div>
 
         <div v-if="menuItem?.params?.payload?.prompts" class="flex flex-col justify-center gap-6">

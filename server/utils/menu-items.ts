@@ -1,4 +1,6 @@
 import { authorizationHeaders, apiUrl } from '~/server/utils/api-client';
+import fs from 'fs';
+import path from 'path';
 
 function chatbotItems(response): Array<any> {
   return response.map((item) => {
@@ -15,6 +17,19 @@ function chatbotItems(response): Array<any> {
 }
 
 function featureItems() {
+  const jsonFeatureItemsPath = path.resolve(process.cwd(), 'feature_items.json');
+  if (fs.existsSync(jsonFeatureItemsPath)) {
+    const fileContents = fs.readFileSync(jsonFeatureItemsPath, 'utf8');
+    const featureItems = JSON.parse(fileContents);
+
+    return featureItems.map((item: any) => {
+      return {
+        type: 'features',
+        attributes: item,
+      };
+    });
+  }
+
   return [
     {
       type: 'features',
