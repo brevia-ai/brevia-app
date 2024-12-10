@@ -1,4 +1,4 @@
-import { breviaSessionConfig } from '~~/server/utils/session';
+import { sessionConfig } from '~~/server/utils/session';
 import type { H3Event } from 'h3';
 import { useSession } from 'h3';
 
@@ -9,6 +9,6 @@ export const currentProject = async (event: H3Event): Promise<string | null> => 
   if (!config.projects) {
     return null;
   }
-  const session = await useSession(event, breviaSessionConfig());
-  return session.data.project || null;
+  const session = await useSession(event, sessionConfig());
+  return session.data._project || null;
 };
