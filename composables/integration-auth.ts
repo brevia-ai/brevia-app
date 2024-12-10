@@ -20,8 +20,8 @@ export const useIntegrationAuth = () => {
       return response;
     } else if (integration === 'bedita') {
       if (project) {
-        // setup project API base URL and key in session
-        await $fetch('/api/setup_bedita_project', {
+        // setup project API in session
+        await $fetch('/api/bedita/_project', {
           method: 'POST',
           body: { project },
         });
