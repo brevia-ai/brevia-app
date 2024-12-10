@@ -1,11 +1,8 @@
 export default defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, 'id');
-    await $fetch(apiUrl(`/collections/${id}`), {
-      method: 'DELETE',
-      headers: authorizationHeaders(),
-    });
+    await apiFetch(`/collections/${id}`, { method: 'DELETE' }, event);
   } catch (error) {
-    return handleBeditaApiError(event, error);
+    return handleApiError(event, error);
   }
 });

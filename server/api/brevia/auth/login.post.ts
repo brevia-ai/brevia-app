@@ -23,10 +23,11 @@ export default defineEventHandler(async (event) => {
       roles: credentials.roles || ['admin'], // assume admin role if not provided
       username: credentials.username,
     };
+    const _project = config.projects && body?.project ? body.project : null;
     const session = await useSession(event, breviaSessionConfig());
-    await session.update({ user });
+    await session.update({ user, _project });
 
-    return user;
+    return { user, _project };
   } catch (error) {
     return handleApiError(event, error);
   }

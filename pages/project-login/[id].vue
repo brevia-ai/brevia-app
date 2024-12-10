@@ -2,10 +2,12 @@
   <main class="mt-16">
     <div v-if="!statesStore.isLogged()" class="mt-6 max-w-sm mx-auto space-y-8">
       <form class="flex flex-col space-y-8" @submit.stop.prevent>
-        <select v-if="availableProjects.length > 0" v-model="projectSelected"
-            class="border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary text-xl h-14 px-4">
-          <option v-for="item in availableProjects" :key="item" :value="item" class="px-4">{{ item }}</option>
-        </select>
+        <div>
+          <span class="text-xl h-14 px-4">
+            {{ projectSelected }} {{ $t('LOGIN') }}
+          </span>
+
+        </div>
 
         <UIXInput
           v-model="username"
@@ -77,15 +79,18 @@ const username = ref('');
 const password = ref('');
 const isLoading = ref(false);
 const features = useIntegrationFeatures();
-const projectSelected = ref('');
-const availableProjects = await $fetch('/api/projects');
+const projectSelected = ref('')
 const loginEnabled = computed(() => {
-  return username.value && password.value && (availableProjects.length == 0 || projectSelected.value);
+  return username.value && password.value;
 });
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
+  const availableProjects = await $fetch('/api/projects');
+  const route = useRoute();
+  const project = (route.params.id as string).toLowerCase().replace(/ /g, '-');
+  projectSelected.value = availableProjects.find((p: string) => p.toLowerCase().replace(/ /g, '-') === project);
   const config = useRuntimeConfig();
-  if (!!config.public.projectLogin === true) {
+  if (!projectSelected.value || !!config.public.projectLogin === false) {
     throw createError({
       statusCode: 404,
       message: 'not found',
