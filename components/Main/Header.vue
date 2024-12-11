@@ -4,7 +4,7 @@
       <h1 class="flex space-x-1.5 text-4xl font-black text-slate-900 hover:text-sky-600 cursor-pointer">
         <ElementLogo class="mt-0.5 h-[36px] w-auto" />
         <NuxtLink to="/">
-          <span v-if="statesStore.project" class="leading-none">{{ config.public.appName }} - {{ statesStore.project}}</span>
+          <span v-if="statesStore.project" class="leading-none">{{ config.public.appName }} - {{ statesStore.project }}</span>
           <span v-else class="leading-none">{{ config.public.appName }}</span>
         </NuxtLink>
       </h1>

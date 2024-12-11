@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     };
     const _project = config.projects && body?.project ? body.project : null;
     const session = await useSession(event, breviaSessionConfig());
-    await session.update({...session.data, ...{ user, _project }});
+    await session.update({ ...session.data, ...{ user, _project } });
 
     return user;
   } catch (error) {

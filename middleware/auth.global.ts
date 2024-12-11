@@ -4,7 +4,6 @@ import { sessionConfig } from '~~/server/utils/session';
 import { buildUserMenu } from '~~/utils/user-data-store';
 import { menuItems } from '~~/server/utils/menu-items';
 
-
 const userSession = (sessionData: SessionData) => {
   const integration = useIntegration();
   if (integration === 'brevia') {
@@ -54,8 +53,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
       '/privacy/cookie-policy',
     );
   }
-  if (publicPages.includes(to.path) || to.path.startsWith('/chatbot-iframe/')
-      || to.path.startsWith('/project-login/')) {
+  if (
+    publicPages.includes(to.path) ||
+    to.path.startsWith('/chatbot-iframe/') ||
+    to.path.startsWith('/project-login/')
+  ) {
     return;
   }
 
