@@ -14,8 +14,8 @@ export const useIntegrationAuth = () => {
           project,
         },
       });
-      statesStore.userLogin(response.user);
-      statesStore.project = response.project;
+      statesStore.userLogin(response);
+      statesStore.project = project;
 
       return response;
     } else if (integration === 'bedita') {
