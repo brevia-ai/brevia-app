@@ -32,29 +32,18 @@
     </div>
 
     <div class="flex gap-3 text-xs tracking-wider text-white">
-      <span class="col-span-3 justify-self-end whitespace-nowrap"> Brevia App: {{ appVersion }} </span>
-      <span v-if="versions?.brevia" class="col-span-3 justify-self-end whitespace-nowrap"> Brevia API: {{ versions.brevia }} </span>
-      <span v-if="versions?.apiName && versions?.apiVersion" class="col-span-3 justify-self-end whitespace-nowrap">
-        {{ versions?.apiName }} API: {{ versions?.apiVersion }}
+      <span v-if="statesStore.userHasRole('admin')" class="col-span-3 justify-self-end whitespace-nowrap">
+        <NuxtLink @click="$openModal('DialogSystemInfo')" to="#">
+          {{ appVersion }}
+          <Icon name="ph:info-bold" />
+        </NuxtLink>
       </span>
-    </div>
-
-    <div v-if="integration !== 'brevia'" class="flex gap-3 text-xs tracking-wider text-white">
-      <span v-if="integrationVersions?.get(integration)" class="col-span-3 justify-self-end whitespace-nowrap"> {{ integration }} API: {{ integrationVersions?.get(integration) }} </span>
-      <span v-if="integrationVersions?.get('apiName') && integrationVersions?.get('apiVersion')" class="col-span-3 justify-self-end whitespace-nowrap">
-        {{ integrationVersions?.get('apiName') }} API: {{ integrationVersions?.get('apiVersion') }}
-      </span>
+      <span v-else class="col-span-3 justify-self-end whitespace-nowrap"> v{{ appVersion }} </span>
     </div>
   </footer>
 </template>
 <script setup lang="ts">
 const cookiesPrivacyTerms = useRuntimeConfig().public.cookiesPrivacyTerms !== '';
-
 const appVersion = useRuntimeConfig().public.version;
-
-const response = await fetch('/api/brevia/versions');
-const versions = await response.json();
-
-const integration = useIntegration();
-const integrationVersions = await useIntegrationVersion();
+const statesStore = useStatesStore();
 </script>

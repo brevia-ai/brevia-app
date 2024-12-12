@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
       bedita: response.headers.get('X-BEdita-Version'),
       apiName: response.headers.get('X-API-Name'),
       apiVersion: response.headers.get('X-API-Version'),
+      baseUrl: useRuntimeConfig().bedita.apiBaseUrl,
     };
   } catch (error) {
     return handleBeditaApiError(event, error);
