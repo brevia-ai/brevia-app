@@ -39,6 +39,30 @@
             </VueDatePicker>
           </slot>
 
+          <slot v-if="isDateTime(meta)">
+            <label class="flex items-center space-x-2">
+              <span>{{ name }}</span>
+            </label>
+            <VueDatePicker
+              v-model="metadata[name]"
+              :range="false"
+              :enable-time-picker="true"
+              time-picker-inline
+              text-input
+              position="center"
+              model-type="yyyy-MM-dd HH:mm:ss"
+              :format="formatDateTime"
+            >
+            </VueDatePicker>
+          </slot>
+
+          <slot v-if="isSimpleString(meta)">
+            <label class="flex flex-col items-start space-y-2">
+              <span>{{ name }}</span>
+            </label>
+            <input id="item_{{ index}}" v-model="metadata[name]" type="text" name="item_{{ index}}" />
+          </slot>
+
           <slot v-if="isCheckbox(meta)">
             <label class="flex flex-row items-center space-x-2">
               <span>{{ name }}</span>
@@ -68,6 +92,8 @@
 <script lang="ts" setup>
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import moment from 'moment';
+
 const props = defineProps({
   document: {
     type: Object,
@@ -109,6 +135,14 @@ const isDate = (prop: any) => {
   return prop?.type == 'string' && prop?.format == 'date';
 };
 
+const isDateTime = (prop: any) => {
+  return prop?.type == 'string' && prop?.format == 'date-time';
+};
+
+const isSimpleString = (prop: any) => {
+  return prop?.type == 'string' && !prop?.format && !prop?.enum;
+};
+
 const isCheckbox = (prop: any) => {
   return prop?.type == 'boolean';
 };
@@ -134,10 +168,15 @@ const formatDate = (date: any) => {
   if (!date) {
     return ``;
   }
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
 
-  return `${day}/${month}/${year}`;
+  return moment(date).format('DD/MM/YYYY');
+};
+
+const formatDateTime = (date: any) => {
+  if (!date) {
+    return ``;
+  }
+
+  return moment(date).format('DD/MM/YYYY HH:mm');
 };
 </script>
