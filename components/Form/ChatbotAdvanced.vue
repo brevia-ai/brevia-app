@@ -94,6 +94,20 @@
       </div>
     </Transition>
 
+    <!--UI-->
+    <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('UI')">
+      <p class="mx-auto font-bold uppercase text-xl">UI</p>
+      <Icon :name="uiVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'" size="32" />
+    </div>
+    <Transition name="section-fade">
+      <div v-if="uiVisible" class="space-y-4">
+        <div>
+          Brevia App
+          <JsonEditorVue v-model="breviaAppOptions" :mode="Mode.text" />
+        </div>
+      </div>
+    </Transition>
+
     <div v-if="error" class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary">
       {{ $t('AN_ERROR_OCCURRED_PLEASE_RETRY') }}
     </div>
@@ -150,6 +164,9 @@ const docMetadata = ref(collection.cmetadata.documents_metadata);
 const docDefaults = ref(collection.cmetadata.metadata_defaults);
 const upldOptions = ref(collection.cmetadata.file_upload_options);
 const lnkLdOptions = ref(collection.cmetadata.link_load_options);
+// Brevia App
+const uiVisible = ref(true);
+const breviaAppOptions = ref(collection.cmetadata.brevia_app);
 
 const integration = useIntegration();
 
@@ -196,6 +213,8 @@ const updateMetadataItems = () => {
   handleJsonMeta('metadata_defaults', docDefaults.value);
   handleJsonMeta('file_upload_options', upldOptions.value);
   handleJsonMeta('link_load_options', lnkLdOptions.value);
+  // UI
+  handleJsonMeta('brevia_app', breviaAppOptions.value);
 };
 
 const handleIntMeta = (name: string, value: any) => {
