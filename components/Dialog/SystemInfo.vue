@@ -6,18 +6,24 @@
     </div>
 
     <div class="gap-3 tracking-wider">
-      <span class="col-span-3 justify-self-end whitespace-nowrap"> Brevia App <strong>v{{ appVersion }}</strong> </span>
+      <span class="col-span-3 justify-self-end whitespace-nowrap">
+        Brevia App <strong>v{{ appVersion }}</strong>
+      </span>
     </div>
 
     <hr class="border-t border-gray-300" />
 
     <div class="gap-3 tracking-wider">
       <template v-if="versions?.brevia">
-        <span class="col-span-3 justify-self-end whitespace-nowrap"> Brevia API <strong>v{{ versions.brevia }}</strong> </span>
+        <span class="col-span-3 justify-self-end whitespace-nowrap">
+          Brevia API <strong>v{{ versions.brevia }}</strong>
+        </span>
         <br />
       </template>
       <template v-if="versions?.apiName && versions?.apiVersion">
-        <span class="col-span-3 justify-self-end whitespace-nowrap"> {{ versions.apiName }} API <strong>v{{ versions.apiVersion }}</strong> </span>
+        <span class="col-span-3 justify-self-end whitespace-nowrap">
+          {{ versions.apiName }} API <strong>v{{ versions.apiVersion }}</strong>
+        </span>
         <br />
       </template>
       <span class="col-span-3 justify-self-end whitespace-nowrap">
@@ -29,11 +35,15 @@
 
     <div v-if="integration !== 'brevia'" class="gap-3 tracking-wider">
       <template v-if="integrationVersions?.get(integration)">
-        <span class="col-span-3 justify-self-end whitespace-nowrap"> {{ integrationName }} API <strong>v{{ integrationVersions?.get(integration) }}</strong> </span>
+        <span class="col-span-3 justify-self-end whitespace-nowrap">
+          {{ integrationName }} API <strong>v{{ integrationVersions?.get(integration) }}</strong>
+        </span>
         <br />
       </template>
       <template v-if="integrationVersions?.get('apiName') && integrationVersions?.get('apiVersion')">
-        <span class="col-span-3 justify-self-end whitespace-nowrap"> {{ integrationVersions?.get('apiName') }} API <strong>v{{ integrationVersions?.get('apiVersion') }}</strong> </span>
+        <span class="col-span-3 justify-self-end whitespace-nowrap">
+          {{ integrationVersions?.get('apiName') }} API <strong>v{{ integrationVersions?.get('apiVersion') }}</strong>
+        </span>
         <br />
       </template>
       <span class="col-span-3 justify-self-end whitespace-nowrap">

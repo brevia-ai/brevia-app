@@ -1,4 +1,4 @@
-export const useIntegrationVersion = async (): Promise<Map<String, String>> => {
+export const useIntegrationVersion = async (): Promise<Map<string, string>> => {
   const integration = useIntegration();
   if (integration === 'brevia') {
     return new Map();

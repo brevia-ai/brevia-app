@@ -33,7 +33,7 @@
 
     <div class="flex gap-3 text-xs tracking-wider text-white">
       <span v-if="statesStore.userHasRole('admin')" class="col-span-3 justify-self-end whitespace-nowrap">
-        <NuxtLink @click="$openModal('DialogSystemInfo')" to="#">
+        <NuxtLink to="#" @click="$openModal('DialogSystemInfo')">
           {{ appVersion }}
           <Icon name="ph:info-bold" />
         </NuxtLink>
