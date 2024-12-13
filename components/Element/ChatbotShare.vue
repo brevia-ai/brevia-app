@@ -1,5 +1,5 @@
 <template>
-  <component v-if="shouldPreloadIframe" :is="'link'" rel="preload" :href="iframeSrc" as="fetch" />
+  <component :is="'link'" v-if="shouldPreloadIframe" rel="preload" :href="iframeSrc" as="fetch" />
   <div class="flex flex-col space-y-6">
     <h1 class="text-2xl font-semibold mb-4 border-b-primary border-b-2">Embed</h1>
 
@@ -25,7 +25,7 @@
       <span v-else>{{ $t('COPY') }}!</span>
     </button>
     <template v-if="chatbotIframeEnabled">
-      <p class="text-lg" v-if="chatbotIframeEnabled">{{ $t('BUBBLE_TRY_CHATBOT') }}</p>
+      <p v-if="chatbotIframeEnabled" class="text-lg">{{ $t('BUBBLE_TRY_CHATBOT') }}</p>
       <div class="absolute bottom-12 right-6 flex flex-col space-y-6">
         <Transition name="iframe" appear>
           <div v-if="iframeVisible" class="shadow-md border-0.5 border-slate-700 rounded-md bg-white z-50">
@@ -41,15 +41,15 @@
             <Icon :name="!iframeVisible ? 'ph:chat-circle-text-bold' : 'ph:arrow-down-bold'" class="text-3xl m-4" />
           </button>
         </div>
-    </div>
+      </div>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
 const props = defineProps({
-  uuid: String,
-  name: String,
+  uuid: { type: String, default: '' },
+  name: { type: String, default: '' },
 });
 
 const host = window.location.host;
