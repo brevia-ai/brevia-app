@@ -20,18 +20,54 @@ Copy `.env.sample` in `.env` and set at least
 
 With these env vars you can run a minimal version with default access credentials.
 
-To change the access credentials edit `NUXT_BREVIA_AUTH_CREDENTIALS` and set some simple basic username/password items.
+### Authentication
 
-To activate BEdita integration edit:
+To change the access credentials, edit `NUXT_BREVIA_AUTH_CREDENTIALS` and set some simple basic username/password items. Example:
 
-* `NUXT_BEDITA_API_BASE_URL` BEdita API base URL
-* `NUXT_BEDITA_API_KEY` BEdita API KEY
-* `NUXT_BEDITA_SESSION_NAME` (optional, default is `bedita`) The name used for session cookie
-* `NUXT_BEDITA_SESSION_SECRET` The secret used to crypt/decrypt the session stored in cookie. It must be **at least 32 chars**.
+```bash
+NUXT_BREVIA_AUTH_CREDENTIALS='[{"username":"tizio","password":"incognito","name":"Tizio Incognito", "roles": ["user"]}]'
+```
+
+If `NUXT_BREVIA_AUTH_CREDENTIALS` is not set, you can log in using the default credentials:
+
+* Username: `brevia`
+* Password: `brevia`
+
+### Session
+
+Configure the session settings with the following variables:
+
+```bash
+## SESSION
+NUXT_BREVIA_SESSION_NAME=Brevia
+NUXT_BREVIA_SESSION_SECRET=example-32-characters-long-secret-key
+```
+
+* `NUXT_BREVIA_SESSION_NAME` (optional, default: `Brevia`) - The name of the session cookie.
+* `NUXT_BREVIA_SESSION_SECRET` - A secret used to encrypt/decrypt the session cookie. It must be **at least 32 chars**.
+
+## BEdita Integration
+
+To activate BEdita integration, configure the following variables:
+
+```bash
+## BEDITA INTEGRATION
+NUXT_BEDITA_API_BASE_URL=<BEDITA API BASE URL>
+NUXT_BEDITA_API_KEY=<BEDITA API KEY>
+NUXT_BEDITA_SESSION_NAME=bedita
+NUXT_BEDITA_SESSION_SECRET=<BEDITA SESSION SECRET>
+```
+
+* `NUXT_BEDITA_API_BASE_URL` - BEdita API base URL.
+* `NUXT_BEDITA_API_KEY` - BEdita API key.
+* `NUXT_BEDITA_SESSION_NAME` (optional, default is `bedita`) - The name used for the session cookie.
+* `NUXT_BEDITA_SESSION_SECRET` - The secret used to encrypt/decrypt the session stored in the cookie. It must be **at least 32 chars**.
+
+### Recaptcha
 
 To enable/disable Recaptcha you should edit these vars:
 
-* `NUXT_PUBLIC_RECAPTCHA_ENABLED` (optional, default is `false`)  Enable or disable Recaptcha
+* `NUXT_PUBLIC_RECAPTCHA_ENABLED` (optional, default is `false`) Enable or disable Recaptcha
 * `NUXT_PUBLIC_RECAPTCHA_SITE_KEY` (required if Recaptcha is enabled) Recaptcha site key
 * `NUXT_BEDITA_RECAPTCHA_SECRET_KEY` (required if Recaptcha is enabled) Recaptcha secret key
 
