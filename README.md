@@ -52,6 +52,37 @@ If `NUXT_BREVIA_AUTH_CREDENTIALS` is not set, you can log in using the default c
 * Username: `brevia`
 * Password: `brevia`
 
+### Multi-project setup
+
+Through `NUXT_PROJECTS` env var you can enable multi-project setup.
+
+You can define multiple projects with different API base URLs and secrets using a JSON object.Every project must have a unique name.
+
+```bash
+NUXT_PROJECTS='{
+  "Project 1": {
+    "apiBaseUrl": "https://project1-api.example.com",
+    "apiSecret": "#####"
+  },
+  "Project 2": {
+    "apiBaseUrl": "https://project2-api.example.com",
+    "apiSecret": "#####"
+  }
+}'
+```
+
+If `NUXT_PROJECTS` is set the default `NUXT_API_BASE_URL` and `NUXT_API_SECRET` vars are ignored and as default the login page will show a dropdown to select the project to log in to.
+
+You may also set the `NUXT_PUBLIC_PROJECT_LOGIN` env var to `true` to enable the `/project-login/{project}` page.
+
+If enabled login is available only on `/project-login/{project}` where `{project}` must match a project unique name in `NUXT_PROJECTS` - match is performed with lowercase versions and with hyphens ('-') instead of spaces.
+
+If enabled, using the above `NUXT_PROJECTS` example:
+
+* `/project-login/project-1` will use `"Project 1"` configuration
+* `/project-login/project-2` will use `"Project 2"` configuration
+* `/project-login/project-3` will raise a 404 error page
+
 ## BEdita Integration
 
 To activate BEdita integration, configure the following variables:
@@ -78,6 +109,29 @@ To enable/disable Recaptcha you should edit these vars:
 * `NUXT_PUBLIC_RECAPTCHA_ENABLED` (optional, default is `false`) Enable or disable Recaptcha
 * `NUXT_PUBLIC_RECAPTCHA_SITE_KEY` (required if Recaptcha is enabled) Recaptcha site key
 * `NUXT_BEDITA_RECAPTCHA_SECRET_KEY` (required if Recaptcha is enabled) Recaptcha secret key
+
+### Multi-project BEdita setup
+
+By editing `NUXT_BEDITA_PROJECTS` you can enable multi-project setup using BEdita integration.
+Just like in `NUXT_PROJECTS` you can define multiple projects with different API base URLs and secrets using a JSON object.
+
+Every project must have the same unique name as in `NUXT_PROJECTS` and every BEdita API instance
+ must have the `brevia-bedita` plugin installed and configured to use the same `NUXT_API_BASE_URL` used in the corresponding `NUXT_PROJECTS` configuration
+
+Here `NUXT_BEDITA_PROJECTS` configuration sample for the `NUXT_PROJECTS` configuration example above:
+
+```bash
+NUXT_BEDITA_PROJECTS='{
+  "Project 1": {
+    "apiBaseUrl": "https://project1-bedita-api.example.com",
+    "apiKey": "#####"
+  },
+  "Project 2": {
+    "apiBaseUrl": "https://project2-bedita-api.example.com",
+    "apiKey": "#####"
+  }
+}'
+```
 
 ## Development Server
 

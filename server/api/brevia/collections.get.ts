@@ -6,18 +6,14 @@ export default defineEventHandler(async (event) => {
     delete query.uuid;
   }
   try {
-    const response: any = await $fetch(apiUrl(url), {
-      headers: authorizationHeaders(),
-      query,
-    });
+    const response: any = await apiFetch(url, { query }, event);
 
     if ('name' in query && response.length > 0) {
       return response[0];
     }
 
     return response;
-  } catch (err: any) {
-    console.log(err);
-    return { error: err?.message || 'Unknown error' };
+  } catch (error) {
+    return handleApiError(event, error);
   }
 });

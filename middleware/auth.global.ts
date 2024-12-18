@@ -1,20 +1,15 @@
 import { useStatesStore } from '~~/store/states';
-import { useSession } from 'h3';
-import { breviaSessionConfig, beditaSessionConfig } from '~~/server/utils/session';
+import { useSession, type SessionData } from 'h3';
+import { sessionConfig } from '~~/server/utils/session';
 import { buildUserMenu } from '~~/utils/user-data-store';
 import { menuItems } from '~~/server/utils/menu-items';
 
-const sessionConfig = () => {
-  const integration = useIntegration();
-  return integration == 'brevia' ? breviaSessionConfig() : beditaSessionConfig();
-};
-
-const userSession = (session) => {
+const userSession = (sessionData: SessionData) => {
   const integration = useIntegration();
   if (integration === 'brevia') {
-    return session.data?.user;
+    return sessionData?.user;
   } else if (integration === 'bedita') {
-    return session.data?.['bedita.user'];
+    return sessionData?.['bedita.user'];
   }
 
   return null;
@@ -24,14 +19,15 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.server) {
     const event = useRequestEvent();
     const session = await useSession(event, sessionConfig());
-    const user = userSession(session);
+    const user = userSession(session.data);
     if (user) {
       const statesStore = useStatesStore();
       statesStore.userLogin(user);
+      statesStore.project = session.data?._project || null;
       if (to.path !== '/index' && to.path !== '/') {
         // In index page menu is loaded client side
         try {
-          const items = await menuItems();
+          const items = await menuItems(event);
           statesStore.menu = buildUserMenu(items);
         } catch (error) {
           console.error('Error loading menu', error);
@@ -57,7 +53,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
       '/privacy/cookie-policy',
     );
   }
-  if (publicPages.includes(to.path) || to.path.startsWith('/chatbot-iframe/')) {
+  if (
+    publicPages.includes(to.path) ||
+    to.path.startsWith('/chatbot-iframe/') ||
+    to.path.startsWith('/project-login/')
+  ) {
     return;
   }
 

@@ -1,5 +1,3 @@
-const config = useRuntimeConfig();
-
 function readChunks(reader) {
   return {
     async *[Symbol.asyncIterator]() {
@@ -13,18 +11,19 @@ function readChunks(reader) {
 }
 
 export default defineEventHandler(async (event) => {
-  const url = config.apiBaseUrl + '/chat';
   const body = await readBody(event);
   const sessionId = getRequestHeader(event, 'X-Chat-Session') || '';
+  const project = await currentProject(event);
+  const authHeader = authorizationHeaders(project);
+  const headers = {
+    ...authHeader,
+    ...{ 'X-Chat-Session': sessionId, 'Content-Type': 'application/json' },
+  };
 
   try {
-    await fetch(url, {
+    await fetch(apiUrl('/chat', project), {
       method: 'POST',
-      headers: {
-        Authorization: 'Bearer ' + config.apiSecret,
-        'X-Chat-Session': sessionId,
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(body),
     }).then(async (response) => {
       // response.body is a ReadableStream
