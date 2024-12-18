@@ -32,12 +32,18 @@
     </div>
 
     <div class="flex gap-3 text-xs tracking-wider text-white">
-      <span class="col-span-3 justify-self-end whitespace-nowrap"> v{{ version }} </span>
+      <span v-if="statesStore.userHasRole('admin')" class="col-span-3 justify-self-end whitespace-nowrap">
+        <button @click="$openModal('DialogSystemInfo')">
+          {{ appVersion }}
+          <Icon name="ph:info-bold" />
+        </button>
+      </span>
+      <span v-else class="col-span-3 justify-self-end whitespace-nowrap"> v{{ appVersion }} </span>
     </div>
   </footer>
 </template>
 <script setup lang="ts">
 const cookiesPrivacyTerms = useRuntimeConfig().public.cookiesPrivacyTerms !== '';
-
-const version = useRuntimeConfig().public.version;
+const appVersion = useRuntimeConfig().public.version;
+const statesStore = useStatesStore();
 </script>
