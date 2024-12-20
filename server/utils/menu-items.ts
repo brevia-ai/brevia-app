@@ -1,4 +1,5 @@
-import { authorizationHeaders, apiUrl } from '~/server/utils/api-client';
+import { apiFetch } from '~/server/utils/api-client';
+import type { H3Event } from 'h3';
 import fs from 'fs';
 import path from 'path';
 
@@ -43,11 +44,8 @@ function featureItems() {
   ];
 }
 
-export async function menuItems() {
-  const response: any = await $fetch(apiUrl('/collections'), {
-    method: 'GET',
-    headers: authorizationHeaders(),
-  });
+export async function menuItems(event: H3Event): Promise<Array<any>> {
+  const response: any = await apiFetch('/collections', {}, event);
 
   return featureItems().concat(chatbotItems(response));
 }
