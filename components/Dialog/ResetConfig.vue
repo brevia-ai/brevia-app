@@ -12,7 +12,7 @@
     </div>
 
     <div class="flex justify-between space-x-4">
-      <button class="button button-secondary uppercase" @click="$closeModal">{{ $t('CANCEL') }}</button>
+      <button class="button button-secondary uppercase" @click="modal.closeModal">{{ $t('CANCEL') }}</button>
 
       <button class="button button-danger uppercase" :class="{ 'is-loading': isLoading }" @click="resetConfig">{{ $t('RESET') }}</button>
     </div>
@@ -30,7 +30,7 @@ const props = defineProps({
     default: () => [],
   },
 });
-const { $closeModal } = useNuxtApp();
+const modal = useModalStore();
 
 const error = ref(false);
 const isLoading = ref(false);
@@ -45,7 +45,6 @@ const resetConfig = async () => {
     console.error(err);
   }
   isLoading.value = false;
-
-  $closeModal();
+  modal.closeModalAction('refresh');
 };
 </script>

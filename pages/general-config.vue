@@ -1,4 +1,7 @@
 <template>
+  <div v-if="quickLoad" class="fixed flex items-center inset-0 z-50 h-full w-full bg-slate-500 opacity-45">
+    <ElementLoader class="mx-auto z-[60]" :loader-dim="95" />
+  </div>
   <form class="flex flex-col space-y-6" @submit.prevent="saveConfig">
     <!--INDEX AND SEARCH-->
     <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('IndexAndSearch')">
@@ -14,7 +17,7 @@
 
         <UIXInput v-model.trim="chunkSize" label="Chunk Size" autocapitalize="on" @keydown.enter.stop.prevent="saveConfig" />
 
-        <UIXInput v-model.trim="chundOverlap" label="Chunk Overlap" autocapitalize="none" @keydown.enter.stop.prevent="saveConfig" />
+        <UIXInput v-model.trim="chunkOverlap" label="Chunk Overlap" autocapitalize="none" @keydown.enter.stop.prevent="saveConfig" />
         <div>
           Text Splitter
           <JsonEditorVue v-model="textSplitter" :mode="Mode.text" />
@@ -79,7 +82,7 @@
       >
         {{ $t('SAVE') }}
       </button>
-      <button class="button button-primary uppercase" :class="{ 'is-loading': isLoading }" @click="$openModal('ResetConfig', { settings: settings })">
+      <button class="button button-primary uppercase" :class="{ 'is-loading': isLoading }" @click="handleReset">
         {{ $t('RESET') }}
       </button>
     </div>
@@ -90,7 +93,7 @@
 import JsonEditorVue from 'json-editor-vue';
 import { Mode } from 'vanilla-jsoneditor';
 
-const { $openModal } = useNuxtApp();
+const modal = useModalStore();
 
 definePageMeta({
   middleware: [
@@ -106,18 +109,19 @@ definePageMeta({
 
 const error = ref(false);
 const isLoading = ref(false);
+const quickLoad = ref(false);
 
 const breviaConfig: any = await $fetch('/api/brevia/config');
 const breviaConfigSchema: any = await $fetch('/api/brevia/config/schema');
 
-const updatedSettings = ref({});
-const resettedSettings = ref([]);
+const updatedSettings = ref<any>({});
+const resettedSettings = ref<any>([]);
 
 // Index And Search
 const idxVisible = ref(true);
 const embeddings = ref(breviaConfig.embeddings);
 const chunkSize = ref(String(breviaConfig.text_chunk_size));
-const chundOverlap = ref(String(breviaConfig.text_chunk_overlap));
+const chunkOverlap = ref(String(breviaConfig.text_chunk_overlap));
 const textSplitter = ref(breviaConfig.text_splitter);
 // Q&A and Chat
 const qacVisible = ref(true);
@@ -155,11 +159,28 @@ const update = async () => {
         body: resettedSettings.value,
       });
     }
+    quickLoad.value = true;
+    refreshValues();
   } catch (err) {
     error.value = true;
     console.error(err);
   }
 };
+
+const handleReset = () => {
+  modal.openModal('ResetConfig', { settings: settings });
+  modal.$onAction(({ after, onError }) => {
+    after((result) => {
+      if(result === 'refresh'){
+        quickLoad.value = true;
+        refreshValues();
+      }
+    })
+    onError((error) => {
+        console.log(error);
+    })
+  }, false)
+}
 
 const settings = computed(() => {
   return Object.keys(breviaConfig);
@@ -177,7 +198,7 @@ const checkSettings = () => {
   // Index and search
   handleJson('embeddings', embeddings.value);
   handleInt('text_chunk_size', chunkSize.value);
-  handleInt('text_chunk_overlap', chundOverlap.value);
+  handleInt('text_chunk_overlap', chunkOverlap.value);
   handleJson('text_splitter', textSplitter.value);
   // Q&A and chat
   handleJson('qa_followup_llm', qaFollowupLLm.value);
@@ -232,4 +253,23 @@ const openCloseSection = (sectionType: string) => {
       break;
   }
 };
+
+const refreshValues = async() => {
+  let updatedConfig = await $fetch('/api/brevia/config');
+  // Index And Search
+  embeddings.value = updatedConfig.embeddings;
+  chunkSize.value = String(updatedConfig.text_chunk_size);
+  chunkOverlap.value = String(updatedConfig.text_chunk_overlap);
+  textSplitter.value = updatedConfig.text_splitter;
+  // Q&A and Chat
+  qaFollowupLLm.value = updatedConfig.qa_followup_llm;
+  qaCompletionLLM.value = updatedConfig.qa_completion_llm;
+  qaRetriever.value = updatedConfig.qa_retriever;
+  searchDocsNum.value = String(updatedConfig.search_docs_num);
+  // Summarize
+  summarizeLLm.value = updatedConfig.summarize_llm;
+  summarizeChunkSize.value = String(updatedConfig.summ_token_splitter);
+  summarizeChunkOverlap.value = String(updatedConfig.summ_token_overlap);
+  setTimeout(() => quickLoad.value = false, 500);
+}
 </script>

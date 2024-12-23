@@ -28,6 +28,13 @@
         </NuxtLink>
       </button>
 
+      <button v-if="statesStore.userHasRole('admin')" class="h-10 px-4 button border-none text-sm uppercase">
+        <NuxtLink to="/general-config" class="flex space-x-2">
+          <Icon name="ph:gear-bold" class="text-lg" />
+          <span class="hidden sr-only sm:not-sr-only sm:inline">{{ $t('SETTINGS') }}</span>
+        </NuxtLink>
+      </button>
+
       <button
         v-if="statesStore.isLogged()"
         class="h-10 px-4 sm:px-8 button text-sm leading-none bg-slate-900 hover:bg-danger hover:border-pink-800"
@@ -39,14 +46,7 @@
         <span class="hidden sr-only sm:not-sr-only sm:inline">{{ $t('LOGOUT') }}</span>
       </button>
 
-      <button v-if="statesStore.userHasRole('admin')" class="h-10 px-4 button border-none text-sm uppercase">
-        <NuxtLink to="/general-config" class="flex space-x-2">
-          <Icon name="ph:gear-bold" class="text-lg" />
-          <span class="hidden sr-only sm:not-sr-only sm:inline">{{ $t('SETTINGS') }}</span>
-        </NuxtLink>
-      </button>
-
-      <NuxtLink v-if="$route.name === 'about'" class="w-12 h-10 button border-none" to="/">
+      <NuxtLink v-if="route.name === 'about'" class="w-12 h-10 button border-none" to="/">
         <Icon name="ph:house-simple-bold" class="text-lg" />
       </NuxtLink>
       <NuxtLink v-else-if="!statesStore.isLogged()" class="w-12 h-10 button font-bold text-lg" to="/about">?</NuxtLink>
@@ -56,6 +56,7 @@
 
 <script setup lang="ts">
 const config = useRuntimeConfig();
+const route = useRoute();
 const { locale, locales, setLocale } = useI18n();
 const { logout } = useIntegrationAuth();
 const statesStore = useStatesStore();
