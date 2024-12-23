@@ -171,16 +171,16 @@ const handleReset = () => {
   modal.openModal('ResetConfig', { settings: settings });
   modal.$onAction(({ after, onError }) => {
     after((result) => {
-      if(result === 'refresh'){
+      if (result === 'refresh') {
         quickLoad.value = true;
         refreshValues();
       }
-    })
+    });
     onError((error) => {
-        console.log(error);
-    })
-  }, false)
-}
+      console.log(error);
+    });
+  }, false);
+};
 
 const settings = computed(() => {
   return Object.keys(breviaConfig);
@@ -254,8 +254,8 @@ const openCloseSection = (sectionType: string) => {
   }
 };
 
-const refreshValues = async() => {
-  let updatedConfig = await $fetch('/api/brevia/config');
+const refreshValues = async () => {
+  const updatedConfig = await $fetch('/api/brevia/config');
   // Index And Search
   embeddings.value = updatedConfig.embeddings;
   chunkSize.value = String(updatedConfig.text_chunk_size);
@@ -270,6 +270,6 @@ const refreshValues = async() => {
   summarizeLLm.value = updatedConfig.summarize_llm;
   summarizeChunkSize.value = String(updatedConfig.summ_token_splitter);
   summarizeChunkOverlap.value = String(updatedConfig.summ_token_overlap);
-  setTimeout(() => quickLoad.value = false, 500);
-}
+  setTimeout(() => (quickLoad.value = false), 500);
+};
 </script>
