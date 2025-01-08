@@ -17,5 +17,11 @@ export const useModalStore = defineStore('modal', {
       this.activeModal = null;
       this.activeModalProps = {};
     },
+
+    closeModalAction(action: string) {
+      this.activeModal = null;
+      this.activeModalProps = {};
+      return action;
+    },
   },
 });
