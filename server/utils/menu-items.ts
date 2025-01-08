@@ -1,4 +1,7 @@
-import { authorizationHeaders, apiUrl } from '~/server/utils/api-client';
+import { apiFetch } from '~/server/utils/api-client';
+import type { H3Event } from 'h3';
+import fs from 'fs';
+import path from 'path';
 
 function chatbotItems(response): Array<any> {
   return response.map((item) => {
@@ -15,6 +18,19 @@ function chatbotItems(response): Array<any> {
 }
 
 function featureItems() {
+  const jsonFeatureItemsPath = path.resolve(process.cwd(), 'feature_items.json');
+  if (fs.existsSync(jsonFeatureItemsPath)) {
+    const fileContents = fs.readFileSync(jsonFeatureItemsPath, 'utf8');
+    const featureItems = JSON.parse(fileContents);
+
+    return featureItems.map((item: any) => {
+      return {
+        type: 'features',
+        attributes: item,
+      };
+    });
+  }
+
   return [
     {
       type: 'features',
@@ -28,11 +44,8 @@ function featureItems() {
   ];
 }
 
-export async function menuItems() {
-  const response: any = await $fetch(apiUrl('/collections'), {
-    method: 'GET',
-    headers: authorizationHeaders(),
-  });
+export async function menuItems(event: H3Event): Promise<Array<any>> {
+  const response: any = await apiFetch('/collections', {}, event);
 
   return featureItems().concat(chatbotItems(response));
 }

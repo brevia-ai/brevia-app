@@ -4,7 +4,8 @@
       <h1 class="flex space-x-1.5 text-4xl font-black text-slate-900 hover:text-sky-600 cursor-pointer">
         <ElementLogo class="mt-0.5 h-[36px] w-auto" />
         <NuxtLink to="/">
-          <span class="leading-none">{{ config.public.appName }}</span>
+          <span v-if="statesStore.project" class="leading-none">{{ config.public.appName }} - {{ statesStore.project }}</span>
+          <span v-else class="leading-none">{{ config.public.appName }}</span>
         </NuxtLink>
       </h1>
       <h2 class="ml-0.5 pl-3 sm:pl-10 text-sky-950 text-sm sm:text-base leading-none">
@@ -67,9 +68,13 @@ const availableLocales = computed(() => {
 });
 
 async function onLogout() {
+  let to = '/auth';
+  if (!!config.public.projectLogin === true) {
+    const path = statesStore.project?.toLowerCase()?.replace(/ /g, '-');
+    to = `/project-login/${path}`;
+  }
   await logout();
-  const statesStore = useStatesStore();
   statesStore.$reset();
-  await navigateTo('/auth');
+  await navigateTo(to);
 }
 </script>
