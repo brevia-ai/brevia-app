@@ -27,6 +27,9 @@ onBeforeMount(async () => {
       statusCode: 404,
       message: 'not found',
       fatal: true,
+      data: {
+        noBackHome: true,
+      }
     });
   }
 
