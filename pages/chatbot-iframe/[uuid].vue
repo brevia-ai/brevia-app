@@ -29,7 +29,7 @@ onBeforeMount(async () => {
       fatal: true,
       data: {
         noBackHome: true,
-      }
+      },
     });
   }
 
