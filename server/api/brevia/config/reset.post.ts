@@ -1,9 +1,9 @@
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   try {
-    return await $fetch(apiUrl('/config/reset'), {
+    return await $fetch(apiUrl(event, '/config/reset'), {
       method: 'POST',
-      headers: { ...authorizationHeaders(), ...{ 'Content-Type': 'application/json' } },
+      headers: { ...authorizationHeaders(event), ...{ 'Content-Type': 'application/json' } },
       body,
     });
   } catch (err: any) {

@@ -3,8 +3,8 @@ import { isAxiosError } from 'axios';
 import type { H3Event } from 'h3';
 import { currentProject } from './project';
 
-export const apiBaseUrl = (project: string | null = null): string => {
-  const config = useRuntimeConfig();
+export const apiBaseUrl = (event: H3Event, project: string | null = null): string => {
+  const config = useRuntimeConfig(event);
   if (!project) {
     return config.apiBaseUrl;
   }
@@ -16,20 +16,20 @@ export const apiBaseUrl = (project: string | null = null): string => {
   return URL;
 };
 
-export const authorizationHeaders = (project: string | null = null) => {
+export const authorizationHeaders = (event: H3Event, project: string | null = null) => {
   return {
-    Authorization: `Bearer ` + apiSecret(project),
+    Authorization: `Bearer ` + apiSecret(event, project),
   };
 };
 
-export const apiSecret = (project: string | null = null): string | null => {
-  const config = useRuntimeConfig();
+export const apiSecret = (event: H3Event, project: string | null = null): string | null => {
+  const config = useRuntimeConfig(event);
 
   return project ? config.projects?.[project]?.apiSecret || null : config.apiSecret;
 };
 
-export const apiHeaders = (json_content = false, custom = {}, project = null) => {
-  const authHeader = authorizationHeaders(project);
+export const apiHeaders = (event: H3Event, json_content = false, custom = {}, project = null) => {
+  const authHeader = authorizationHeaders(event, project);
   if (json_content) {
     return { ...authHeader, ...custom, ...{ 'Content-Type': 'application/json' } };
   }
@@ -37,16 +37,16 @@ export const apiHeaders = (json_content = false, custom = {}, project = null) =>
   return { ...authHeader, ...custom };
 };
 
-export const apiUrl = (path: string = '', project: string | null = null) => {
-  return `${apiBaseUrl(project)}${path}`;
+export const apiUrl = (event: H3Event, path: string = '', project: string | null = null) => {
+  return `${apiBaseUrl(event, project)}${path}`;
 };
 
 export const apiFetch = async (path: string, options: any, event: H3Event) => {
   const project = await currentProject(event);
   const headers = options.headers || {};
-  const authHeader = authorizationHeaders(project);
+  const authHeader = authorizationHeaders(event, project);
   options.headers = { ...headers, ...authHeader };
-  const url = apiUrl(path, project);
+  const url = apiUrl(event, path, project);
 
   return $fetch(url, options);
 };

@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
   try {
-    const config = useRuntimeConfig();
+    const config = useRuntimeConfig(event);
     const projects = config.projects ? Object.keys(config.projects) : [];
 
     return projects;

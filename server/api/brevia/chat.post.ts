@@ -14,14 +14,14 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const sessionId = getRequestHeader(event, 'X-Chat-Session') || '';
   const project = await currentProject(event);
-  const authHeader = authorizationHeaders(project);
+  const authHeader = authorizationHeaders(event, project);
   const headers = {
     ...authHeader,
     ...{ 'X-Chat-Session': sessionId, 'Content-Type': 'application/json' },
   };
 
   try {
-    await fetch(apiUrl('/chat', project), {
+    await fetch(apiUrl(event, '/chat', project), {
       method: 'POST',
       headers,
       body: JSON.stringify(body),

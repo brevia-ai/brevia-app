@@ -22,11 +22,11 @@ export default defineEventHandler(async (event) => {
   const project = await currentProject(event);
   const options = {
     method: 'POST',
-    headers: authorizationHeaders(project),
+    headers: authorizationHeaders(event, project),
     body: formData,
   };
   try {
-    const response = await fetch(apiUrl('/index/upload', project), options);
+    const response = await fetch(apiUrl(event, '/index/upload', project), options);
     if (!response.ok) {
       return handleApiError(event, response);
     }
