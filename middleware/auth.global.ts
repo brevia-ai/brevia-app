@@ -18,7 +18,7 @@ const userSession = (sessionData: SessionData) => {
 export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.server) {
     const event = useRequestEvent();
-    const session = await useSession(event, sessionConfig());
+    const session = await useSession(event, sessionConfig(event));
     const user = userSession(session.data);
     if (user) {
       const statesStore = useStatesStore();
