@@ -20,11 +20,11 @@ export default defineEventHandler(async (event) => {
   const project = await currentProject(event);
   const options = {
     method: 'POST',
-    headers: authorizationHeaders(project),
+    headers: authorizationHeaders(event, project),
     body: formData,
   };
   try {
-    const response = await fetch(apiUrl('/upload_summarize', project), options);
+    const response = await fetch(apiUrl(event, '/upload_summarize', project), options);
     const respBody = await response.json();
     if (!response.ok) {
       return {

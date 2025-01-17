@@ -19,11 +19,11 @@ export default defineEventHandler(async (event) => {
   const project = await currentProject(event);
   const options = {
     method: 'POST',
-    headers: authorizationHeaders(project),
+    headers: authorizationHeaders(event, project),
     body: formData,
   };
   try {
-    const response = await fetch(apiUrl('/transcribe', project), options);
+    const response = await fetch(apiUrl(event, '/transcribe', project), options);
     const respBody = await response.json();
     if (!response.ok) {
       return {
