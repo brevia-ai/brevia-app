@@ -11,7 +11,9 @@ export default defineEventHandler(async (event) => {
     const response = await client.get('/auth/user', {
       responseInterceptors: [new FormatUserInterceptor(client)],
     });
-    await client.getStorageService().set('user', filterUserDataToStore(response?.formattedData, event));
+    await client
+      .getStorageService()
+      .set('user', filterUserDataToStore(response?.formattedData, event));
 
     return response.formattedData as UserAuth;
   } catch (error) {
