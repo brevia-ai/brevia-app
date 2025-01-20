@@ -26,10 +26,10 @@
             <ElementChatbotLinks />
           </template>
           <template #5>
-            <ElementChatbotShare :uuid="collection.uuid" :name="collection.cmetadata?.title" />
+            <ElementChatbotShare />
           </template>
         </UIXTabs>
-        <UIXTabs v-else :tabs="[t('OVERVIEW'), t('FILES'), 'Q & A', t('LINKS')]">
+        <UIXTabs v-else :tabs="[t('OVERVIEW'), t('FILES'), 'Q & A', t('LINKS'), t('SHARE')]">
           <template #0>
             <FormChatbot @save-title="collection.cmetadata.title = $event" @save-descriprion="collection.cmetadata.description = $event" />
           </template>
@@ -41,6 +41,9 @@
           </template>
           <template #3>
             <ElementChatbotLinks />
+          </template>
+          <template #4>
+            <ElementChatbotShare />
           </template>
         </UIXTabs>
       </div>

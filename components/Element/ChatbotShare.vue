@@ -5,7 +5,7 @@
 
     <template v-if="!chatbotIframeEnabled">
       <p class="text-lg"><Icon name="ph:warning-circle-bold" class="text-2xl text-pink-700" />&nbsp; {{ $t('CHATBOT_IFRAME_DISABLED') }}</p>
-      <button class="mx-auto px-5 py-1.5 button rounded-lg" @click="enableChatbotIframe">
+      <button v-if="isAdmin" class="mx-auto px-5 py-1.5 button rounded-lg" @click="enableChatbotIframe">
         <Icon name="ph:check-square-fill" />
         <span>{{ $t('ENABLE') }}</span>
       </button>
@@ -14,7 +14,7 @@
     <p class="text-lg">{{ $t('ADD_CHATBOT_IFRAME') }}:</p>
     <code ref="codeArea" class="w-full flex-1 bg-slate-300 p-2 rounded-md">
       &lt;iframe<br />
-      &emsp;&emsp;src="{{ protocol }}//{{ host }}/chatbot-iframe/{{ uuid }}"<br />
+      &emsp;&emsp;src="{{ protocol }}//{{ host }}/chatbot-iframe/{{ collection.uuid }}"<br />
       &emsp;&emsp;style="height: 30rem; width: 24rem" <br />
       &gt;<br />
       &lt;/iframe&gt;
@@ -29,7 +29,7 @@
       <div class="absolute bottom-12 right-6 flex flex-col space-y-6">
         <Transition name="iframe" appear>
           <div v-if="iframeVisible" class="shadow-md border-0.5 border-slate-700 rounded-md bg-white z-50">
-            <h1 class="pl-6 py-0.5 shadow-sm text-xl font-bold">{{ name }}</h1>
+            <h1 class="pl-6 py-0.5 shadow-sm text-xl font-bold">{{ collection.name }}</h1>
             <iframe class="h-[30rem] w-96 rounded-md center" :src="iframeSrc" sandbox="allow-same-origin allow-scripts allow-forms"> </iframe>
           </div>
         </Transition>
@@ -47,20 +47,17 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  uuid: { type: String, default: '' },
-  name: { type: String, default: '' },
-});
+const statesStore = useStatesStore();
+const collection = statesStore.collection as any;
+const isAdmin = statesStore.userHasRole('admin');
 
 const host = window.location.host;
 const protocol = window.location.protocol;
-const iframeSrc = ref('/chatbot-iframe/' + props.uuid);
+const iframeSrc = ref('/chatbot-iframe/' + collection.uuid);
 const iframeVisible = ref(false);
 const shouldPreloadIframe = ref(true);
 const codeArea = ref();
 const copiedToClip = ref(false);
-const statesStore = useStatesStore();
-const collection = statesStore.collection as any;
 const chatbotIframeEnabled = computed(() => !!collection.cmetadata?.brevia_app?.public_iframe);
 
 onMounted(() => {
