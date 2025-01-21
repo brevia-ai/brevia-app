@@ -148,13 +148,19 @@ const isCheckbox = (prop: any) => {
 };
 
 const updateMetadata = async () => {
+  let formattedMetadata: typeof metadata.value = {};
+  formattedMetadata.category = metadata.value.category;
+  formattedMetadata.file = metadata.value.file;
+  formattedMetadata.type = metadata.value.type;
+  formattedMetadata.valid_from = new Date(metadata.value.valid_from).toISOString();
+  formattedMetadata.valid_to = new Date(metadata.value.valid_to).toISOString();
   try {
     await $fetch('/api/brevia/index/metadata', {
       method: 'POST',
       body: {
         collection_id: statesStore.collection?.uuid || '',
         document_id: props.document.custom_id,
-        metadata: metadata.value,
+        metadata: formattedMetadata,
       },
     });
     $closeModal();
