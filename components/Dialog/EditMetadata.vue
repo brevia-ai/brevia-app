@@ -148,7 +148,7 @@ const isCheckbox = (prop: any) => {
 };
 
 const updateMetadata = async () => {
-  let formattedMetadata: typeof metadata.value = {};
+  const formattedMetadata: typeof metadata.value = {};
   formattedMetadata.category = metadata.value.category;
   formattedMetadata.file = metadata.value.file;
   formattedMetadata.type = metadata.value.type;
