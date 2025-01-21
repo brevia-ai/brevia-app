@@ -5,6 +5,7 @@
 
     <template v-if="!chatbotIframeEnabled">
       <p class="text-lg"><Icon name="ph:warning-circle-bold" class="text-2xl text-pink-700" />&nbsp; {{ $t('CHATBOT_IFRAME_DISABLED') }}</p>
+      <p v-if="isAdmin" class="text-lg">{{ $t('CLICK_BELOW_ACTIVATE') }}</p>
       <button v-if="isAdmin" class="mx-auto px-5 py-1.5 button rounded-lg" @click="enableChatbotIframe">
         <Icon name="ph:check-square-fill" />
         <span>{{ $t('ENABLE') }}</span>
