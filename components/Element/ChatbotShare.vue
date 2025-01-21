@@ -48,8 +48,9 @@
 </template>
 
 <script setup lang="ts">
+import type { collectionItem } from '~/store/states';
 const statesStore = useStatesStore();
-const collection = statesStore.collection as any;
+const collection = statesStore.collection as collectionItem;
 const isAdmin = statesStore.userHasRole('admin');
 
 const host = window.location.host;
