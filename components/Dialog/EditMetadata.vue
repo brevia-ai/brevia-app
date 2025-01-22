@@ -14,7 +14,7 @@
       </div>
 
       <div v-else class="flex flex-col space-y-2.5">
-        <div v-for="(meta, name) in properties" :key="name" class="mx-12 content-start grid grid-cols-2 gap-2">
+        <div v-for="(meta, name) in properties" :key="name" class="mx-8 content-start grid grid-cols-2 gap-2">
           <slot v-if="isSelect(meta)">
             <label class="items-center space-x-2 justify-end py-1" for="item_{{ index}}">{{ name }}</label>
             <select id="item_{{ index}}" v-model="metadata[name]" class="justify-self-start border rounded border-slate-300 p-1" name="item_{{ index}}">
@@ -57,10 +57,10 @@
           </slot>
 
           <slot v-if="isSimpleString(meta)">
-            <label class="flex flex-col items-start space-y-2">
+            <label class="my-auto">
               <span>{{ name }}</span>
             </label>
-            <input id="item_{{ index}}" v-model="metadata[name]" type="text" name="item_{{ index}}" />
+            <input id="item_{{ index}}" v-model="metadata[name]" type="text" name="item_{{ index}}" class="max-h-10"/>
           </slot>
 
           <slot v-if="isCheckbox(meta)">
@@ -149,11 +149,13 @@ const isCheckbox = (prop: any) => {
 
 const updateMetadata = async () => {
   const formattedMetadata: typeof metadata.value = {};
-  formattedMetadata.category = metadata.value.category;
-  formattedMetadata.file = metadata.value.file;
-  formattedMetadata.type = metadata.value.type;
-  formattedMetadata.valid_from = new Date(metadata.value.valid_from).toISOString();
-  formattedMetadata.valid_to = new Date(metadata.value.valid_to).toISOString();
+  Object.entries(metadata.value).forEach(([k,v]) => {
+    formattedMetadata[k] = v;
+    if(isDate(properties[k]) || isDateTime(properties[k])){
+      formattedMetadata[k] = new Date(v as string).toISOString();
+    }
+  });
+
   try {
     await $fetch('/api/brevia/index/metadata', {
       method: 'POST',
