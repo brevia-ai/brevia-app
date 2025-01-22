@@ -19,14 +19,24 @@ onBeforeMount(async () => {
   const route = useRoute();
   const uuid = route.params.uuid as string;
   isBusy.value = true;
-  const data = await $fetch(`/api/brevia/collections?uuid=${uuid}`);
-  collection.value = data;
+  let err = false;
 
-  if (!checkChatbotAvailable()) {
+  try {
+    const data = await $fetch(`/api/brevia/collections?uuid=${uuid}`);
+    collection.value = data;
+  } catch (e) {
+    console.error(e);
+    err = true;
+  }
+
+  if (err || !checkChatbotAvailable()) {
     throw createError({
       statusCode: 404,
       message: 'not found',
       fatal: true,
+      data: {
+        noBackHome: true,
+      },
     });
   }
 
