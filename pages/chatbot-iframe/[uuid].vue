@@ -23,7 +23,7 @@ onBeforeMount(async () => {
 
   try {
     const data = await $fetch(`/api/brevia/collections?uuid=${uuid}`);
-  collection.value = data;
+    collection.value = data;
   } catch (e) {
     console.error(e);
     err = true;
