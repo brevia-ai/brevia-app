@@ -60,7 +60,7 @@
             <label class="my-auto">
               <span>{{ name }}</span>
             </label>
-            <input id="item_{{ index}}" v-model="metadata[name]" type="text" name="item_{{ index}}" class="max-h-10"/>
+            <input id="item_{{ index}}" v-model="metadata[name]" type="text" name="item_{{ index}}" class="max-h-10" />
           </slot>
 
           <slot v-if="isCheckbox(meta)">
@@ -149,9 +149,9 @@ const isCheckbox = (prop: any) => {
 
 const updateMetadata = async () => {
   const formattedMetadata: typeof metadata.value = {};
-  Object.entries(metadata.value).forEach(([k,v]) => {
+  Object.entries(metadata.value).forEach(([k, v]) => {
     formattedMetadata[k] = v;
-    if(isDate(properties[k]) || isDateTime(properties[k])){
+    if (isDate(properties[k]) || isDateTime(properties[k])) {
       formattedMetadata[k] = new Date(v as string).toISOString();
     }
   });
