@@ -1,9 +1,6 @@
 import { FormData } from 'node-fetch-native';
 
-const config = useRuntimeConfig();
-
 export default defineEventHandler(async (event) => {
-  const url = config.apiBaseUrl + '/upload_analyze';
   const form = await readMultipartFormData(event);
   const formData = new FormData();
 
@@ -20,15 +17,14 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const project = await currentProject(event);
+  const options = {
+    method: 'POST',
+    headers: authorizationHeaders(event, project),
+    body: formData,
+  };
   try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: 'Bearer ' + config.apiSecret,
-      },
-      body: formData,
-    });
-
+    const response = await fetch(apiUrl(event, '/upload_analyze', project), options);
     const respBody = await response.json();
     if (!response.ok) {
       return {
@@ -37,8 +33,7 @@ export default defineEventHandler(async (event) => {
       };
     }
     return respBody;
-  } catch (err) {
-    console.log(err);
-    return { error: err?.message || 'Unknown error' };
+  } catch (error) {
+    return handleApiError(event, error);
   }
 });

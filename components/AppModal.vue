@@ -15,6 +15,8 @@
         <LazyDialogShowFeedback v-if="$isOpenModal('ShowAnswerFeedback')" v-bind="modalStore.activeModalProps" />
         <LazyDialogChatDocuments v-if="$isOpenModal('ChatDocuments')" v-bind="modalStore.activeModalProps" @enlarge-window="largerModal = true" />
         <LazyDialogDocumentChunks v-if="$isOpenModal('SeeDocumentChunks')" v-bind="modalStore.activeModalProps" @enlarge-window="largerModal = true" />
+        <LazyDialogResetConfig v-if="$isOpenModal('ResetConfig')" v-bind="modalStore.activeModalProps" />
+        <LazyDialogSystemInfo v-if="$isOpenModal('DialogSystemInfo')" v-bind="modalStore.activeModalProps" />
       </div>
     </div>
   </div>

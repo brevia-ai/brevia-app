@@ -2,7 +2,7 @@ import { breviaSessionConfig } from '~~/server/utils/session';
 
 // Dummy implementation of a user login -> this must be changed for your app/platform/cms of choice
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig();
+  const config = useRuntimeConfig(event);
   try {
     const body = await readBody(event);
     let authCredentials: UserCredentials[];
@@ -23,8 +23,9 @@ export default defineEventHandler(async (event) => {
       roles: credentials.roles || ['admin'], // assume admin role if not provided
       username: credentials.username,
     };
-    const session = await useSession(event, breviaSessionConfig());
-    await session.update({ user });
+    const _project = config.projects && body?.project ? body.project : null;
+    const session = await useSession(event, breviaSessionConfig(event));
+    await session.update({ ...session.data, ...{ user, _project } });
 
     return user;
   } catch (error) {

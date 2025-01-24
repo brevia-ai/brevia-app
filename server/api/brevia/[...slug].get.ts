@@ -1,9 +1,8 @@
 export default defineEventHandler(async (event) => {
-  // This endpoint is available only in Playground API
   const query = getQuery(event);
-
+  const url = `/${event.context?.params?.slug}`;
   try {
-    return await apiFetch('/service_usage', { query }, event);
+    return await apiFetch(url, { query }, event);
   } catch (error) {
     return handleApiError(event, error);
   }

@@ -19,12 +19,14 @@ export default defineEventHandler(async (event) => {
       formData.append('document_id', uuidv4());
     }
   }
+  const project = await currentProject(event);
+  const options = {
+    method: 'POST',
+    headers: authorizationHeaders(event, project),
+    body: formData,
+  };
   try {
-    const response = await fetch(apiUrl('/index/upload'), {
-      method: 'POST',
-      headers: authorizationHeaders(),
-      body: formData,
-    });
+    const response = await fetch(apiUrl(event, '/index/upload', project), options);
     if (!response.ok) {
       return handleApiError(event, response);
     }

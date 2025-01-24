@@ -1,13 +1,8 @@
 export default defineEventHandler(async (event) => {
+  const url = `/${event.context?.params?.slug}`;
   const body = await readBody(event);
-  const options = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body,
-  };
-
   try {
-    await apiFetch('/index/metadata', options, event);
+    return await apiFetch(url, { method: 'POST', body }, event);
   } catch (error) {
     return handleApiError(event, error);
   }

@@ -1,0 +1,40 @@
+[
+  {
+    "feature_type": "summary",
+    "uname": "summary",
+    "title": "Document Summary",
+    "description": ""
+  },
+  {
+    "feature_type": "transcription",
+    "uname": "transcription",
+    "title": "Audio Transcription",
+    "description": ""
+  },
+  {
+    "feature_type": "analysis",
+    "uname": "questions_generator",
+    "title": "Questions Generator",
+    "description": "Upload a PDF or TXT file and get a questionnaire with multiple questions and answers on the text provided",
+    "feature_params": {
+      "service": "brevia.services.RefineTextAnalysisService",
+      "accept": "application/pdf,text/plain",
+      "payload": {
+        "max_duration": 60,
+        "max_attempts": 3
+      }
+    },
+    "prompts": {
+      "initial_prompt": {
+        "_type": "prompt",
+        "input_variables": ["text"],
+        "template": "Analyze the following text and generate 1-2 multiple choice questions, each with four options\n(A, B, C, D), of which only one is correct.\nHighlight the correct answer and make sure that the questions are relevant and understandable.\n\nReference text:\n-------------------\n{text}\n"
+      },
+      "refine_prompt": {
+        "_type": "prompt",
+        "input_variables": ["existing_answer", "text"],
+        "template": "You are given the following partial document containing a list of multiple choice questions:\nPartial Document:\n-------------------\n{existing_answer}\n-------------------\nRewrite the list of questions by adding 1-2 more questions at the bottom from the context provided below:\n\n-------------\n{text}\n-------------------"
+      }
+    }
+  }
+]
