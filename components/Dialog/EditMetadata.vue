@@ -118,6 +118,11 @@ onBeforeMount(async () => {
     const data = await response.json();
     docsFound.value = (data?.length || 0) > 0;
     metadata.value = data?.[0]?.cmetadata || {};
+    Object.entries(metadata.value).forEach(([k, v]) => {
+      if (isDateTime(properties[k])) {
+        metadata.value[k] = moment(v as any).format('yyyy-MM-DD HH:mm:ss');
+      }
+    });
     setTimeout(() => (loaded.value = true), 250);
   } catch (err) {
     console.log(err);
@@ -151,7 +156,7 @@ const updateMetadata = async () => {
   const formattedMetadata: typeof metadata.value = {};
   Object.entries(metadata.value).forEach(([k, v]) => {
     formattedMetadata[k] = v;
-    if (isDate(properties[k]) || isDateTime(properties[k])) {
+    if (isDateTime(properties[k])) {
       formattedMetadata[k] = new Date(v as string).toISOString();
     }
   });
