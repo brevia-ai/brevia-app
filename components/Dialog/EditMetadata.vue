@@ -156,7 +156,7 @@ const updateMetadata = async () => {
   const formattedMetadata: typeof metadata.value = {};
   Object.entries(metadata.value).forEach(([k, v]) => {
     formattedMetadata[k] = v;
-    if (isDateTime(properties[k])) {
+    if (isDateTime(properties[k]) && !!v) {
       formattedMetadata[k] = new Date(v as string).toISOString();
     }
   });
