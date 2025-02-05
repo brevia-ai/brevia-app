@@ -3,6 +3,7 @@ import {
   addServerHandler,
   addImportsDir,
   createResolver,
+  installModule,
   addServerImportsDir,
   logger,
 } from '@nuxt/kit';
@@ -38,10 +39,17 @@ export default defineNuxtModule<ModuleOptions>({
     },
   },
 
-  setup(options, nuxt) {
+  async setup(options, nuxt) {
+    const runtimeConfig = nuxt.options.runtimeConfig;
+    const integration = process.env.NUXT_PUBLIC_INTEGRATION || runtimeConfig.public.integration;
+    if (integration !== 'bedita') {
+      logger.info('Skipping bedita integration setup');
+      return;
+    }
     logger.start('Setting up bedita integration...');
 
-    const runtimeConfig = nuxt.options.runtimeConfig;
+    await installModule('@atlasconsulting/nuxt-bedita');
+
     runtimeConfig.public.bedita = defu(runtimeConfig.public.bedita || {}, {
       features: options.features,
     });

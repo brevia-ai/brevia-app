@@ -54,7 +54,6 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     'nuxt-icon',
     'nuxt-gtag',
-    '@atlasconsulting/nuxt-bedita',
     '@nuxt/eslint',
   ],
   build: {
