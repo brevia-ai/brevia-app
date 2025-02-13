@@ -34,9 +34,10 @@
       <div v-if="qacVisible" class="space-y-4">
         <UIXInput v-model.trim="searchDocsNum" label="Documents Number" autocapitalize="none" @keydown.enter.stop.prevent="saveConfig" />
         <div>
-          Folloup LLm
+          Followup LLm
           <JsonEditorVue v-model="qaFollowupLLm" :mode="Mode.text" />
         </div>
+        <UIXInput v-model.trim="qaFollowupSimThreshold" label="Follow Up Sim Threshold" autocapitalize="none" @keydown.enter.stop.prevent="saveConfig" />
 
         <div>
           Completion LLm
@@ -126,6 +127,7 @@ const textSplitter = ref(breviaConfig.text_splitter);
 // Q&A and Chat
 const qacVisible = ref(true);
 const qaFollowupLLm = ref(breviaConfig.qa_followup_llm);
+const qaFollowupSimThreshold = ref(String(breviaConfig.qa_followup_sim_threshold));
 const qaCompletionLLM = ref(breviaConfig.qa_completion_llm);
 const qaRetriever = ref(breviaConfig.qa_retriever);
 const searchDocsNum = ref(String(breviaConfig.search_docs_num));
@@ -205,6 +207,7 @@ const checkSettings = () => {
   handleJson('qa_completion_llm', qaCompletionLLM.value);
   handleJson('qa_retriever', qaRetriever.value);
   handleInt('search_docs_num', searchDocsNum.value);
+  handleFloat('qa_followup_sim_threshold', qaFollowupSimThreshold.value);
   // Summarize
   handleJson('summarize_llm', summarizeLLm.value);
   handleInt('summ_token_splitter', summarizeChunkSize.value);
@@ -220,6 +223,18 @@ const handleInt = (name: string, targetValue: any) => {
   }
   if (isSettingChanged(name, parseInt(value))) {
     updatedSettings.value[name] = parseInt(value);
+  }
+};
+
+const handleFloat = (name: string, targetValue: any) => {
+  const value = JSON.parse(JSON.stringify(targetValue));
+  if (!value || value === '') {
+    resettedSettings.value.push(name);
+
+    return;
+  }
+  if (isSettingChanged(name, parseFloat(value))) {
+    updatedSettings.value[name] = parseFloat(value);
   }
 };
 
@@ -265,6 +280,7 @@ const refreshValues = async () => {
   qaFollowupLLm.value = updatedConfig.qa_followup_llm;
   qaCompletionLLM.value = updatedConfig.qa_completion_llm;
   qaRetriever.value = updatedConfig.qa_retriever;
+  qaFollowupSimThreshold.value = String(updatedConfig.qa_followup_sim_threshold);
   searchDocsNum.value = String(updatedConfig.search_docs_num);
   // Summarize
   summarizeLLm.value = updatedConfig.summarize_llm;
