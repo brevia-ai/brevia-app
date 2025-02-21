@@ -16,26 +16,32 @@ const userSession = (sessionData: SessionData) => {
 };
 
 export default defineNuxtRouteMiddleware(async (to) => {
+  if(to.path === '/' || to.path === '/index') {
+    const statesStore = useStatesStore();
+    statesStore.clearCollection();
+  }
+
   if (import.meta.server) {
     const event = useRequestEvent();
-    const session = await useSession(event, sessionConfig(event));
-    const user = userSession(session.data);
-    if (user) {
-      const statesStore = useStatesStore();
-      statesStore.userLogin(user);
-      statesStore.project = session.data?._project || null;
-      if (to.path !== '/index' && to.path !== '/') {
-        // In index page menu is loaded client side
-        try {
-          const items = await menuItems(event);
-          statesStore.menu = buildUserMenu(items);
-        } catch (error) {
-          console.error('Error loading menu', error);
+    if(event){
+      const session = await useSession(event, sessionConfig(event));
+      const user = userSession(session.data);
+      if (user) {
+        const statesStore = useStatesStore();
+        statesStore.userLogin(user);
+        statesStore.project = session.data?._project || null;
+        if (to.path !== '/index' && to.path !== '/') {
+          // In index page menu is loaded client side
+          try {
+            const items = await menuItems(event);
+            statesStore.menu = buildUserMenu(items);
+          } catch (error) {
+            console.error('Error loading menu', error);
+          }
         }
       }
+      return;
     }
-
-    return;
   }
 
   const publicPages = ['/auth', '/about'];
