@@ -2,66 +2,67 @@
   <div v-if="quickLoad" class="fixed flex items-center inset-0 z-50 h-full w-full bg-slate-500 opacity-45">
     <ElementLoader class="mx-auto z-[60]" :loader-dim="95" />
   </div>
-  <form class="flex flex-col space-y-6" @submit.prevent="saveConfig">
-    <!--INDEX AND SEARCH-->
+
+  <form class="flex flex-col space-y-12" @submit.prevent="saveConfig">
+
+    <!-- INDEX AND SEARCH -->
     <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('IndexAndSearch')">
       <p class="mx-auto font-bold uppercase text-xl">Index and Search</p>
       <Icon :name="idxVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'" size="32" />
     </div>
+
     <Transition name="section-fade">
-      <div v-if="idxVisible" class="space-y-4">
-        <div>
-          Embeddings
+      <div v-if="idxVisible" class="space-y-6">
+        <div class="space-y-1.5">
+          <h3 class="uppercase tracking-wide">Embeddings</h3>
           <JsonEditorVue v-model="embeddings" :mode="Mode.text" />
         </div>
 
         <UIXInput v-model.trim="chunkSize" label="Chunk Size" autocapitalize="on" @keydown.enter.stop.prevent="saveConfig" />
 
         <UIXInput v-model.trim="chunkOverlap" label="Chunk Overlap" autocapitalize="none" @keydown.enter.stop.prevent="saveConfig" />
-        <div>
-          Text Splitter
+
+        <div class="space-y-1.5">
+          <h3 class="uppercase tracking-wide">Text Splitter</h3>
           <JsonEditorVue v-model="textSplitter" :mode="Mode.text" />
         </div>
       </div>
     </Transition>
 
-    <!--Q&A AND CHAT-->
+
+    <!-- Q&A AND CHAT -->
     <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('Q&A and Chat')">
       <p class="mx-auto font-bold uppercase text-xl">Q&A and Chat</p>
       <Icon :name="qacVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'" size="32" />
     </div>
+
     <Transition name="section-fade">
-      <div v-if="qacVisible" class="space-y-4">
+      <div v-if="qacVisible" class="space-y-8">
         <UIXInput v-model.trim="searchDocsNum" label="Documents Number" autocapitalize="none" @keydown.enter.stop.prevent="saveConfig" />
-        <div>
-          Followup LLm
-          <JsonEditorVue v-model="qaFollowupLLm" :mode="Mode.text" />
-        </div>
+
+        <ConfigLlm v-model="qaFollowupLLm" title="Followup LLM" />
+
         <UIXInput v-model.trim="qaFollowupSimThreshold" label="Follow Up Sim Threshold" autocapitalize="none" @keydown.enter.stop.prevent="saveConfig" />
 
-        <div>
-          Completion LLm
-          <JsonEditorVue v-model="qaCompletionLLM" :mode="Mode.text" />
-        </div>
+        <ConfigLlm v-model="qaCompletionLLM" title="Completion LLm" />
 
-        <div>
-          Q&A Retriever
+        <div class="space-y-1.5">
+          <h3 class="uppercase tracking-wide">Q&A Retriever</h3>
           <JsonEditorVue v-model="qaRetriever" :mode="Mode.text" />
         </div>
       </div>
     </Transition>
 
-    <!--SUMMARIZE-->
+
+    <!-- SUMMARIZE -->
     <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('Summarize')">
       <p class="mx-auto font-bold uppercase text-xl">Summarize</p>
       <Icon :name="sumVisible ? 'material-symbols:keyboard-arrow-up' : 'material-symbols:keyboard-arrow-down'" size="32" />
     </div>
+
     <Transition name="section-fade">
-      <div v-if="sumVisible" class="space-y-4">
-        <div>
-          Summarize LLm
-          <JsonEditorVue v-model="summarizeLLm" :mode="Mode.text" />
-        </div>
+      <div v-if="sumVisible" class="space-y-6">
+        <ConfigLlm v-model="summarizeLLm" title="Summarize LLm" />
 
         <UIXInput v-model.trim="summarizeChunkSize" label="Summarize Chunk Size" autocapitalize="on" @keydown.enter.stop.prevent="saveConfig" />
 
@@ -69,7 +70,8 @@
       </div>
     </Transition>
 
-    <div v-if="error" class="p-3 bg-neutral-100 text-center font-semibold text-brand_primary">
+
+    <div v-if="error" class="p-3 bg-neutral-100 text-center text-brand_primary">
       {{ $t('AN_ERROR_OCCURRED_PLEASE_RETRY') }}
     </div>
 
@@ -83,6 +85,7 @@
       >
         {{ $t('SAVE') }}
       </button>
+
       <button class="button button-primary uppercase" :class="{ 'is-loading': isLoading }" @click="handleReset">
         {{ $t('RESET') }}
       </button>

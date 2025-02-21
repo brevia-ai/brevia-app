@@ -5,3 +5,4 @@ overrides:
   - files: "*.vue"
     options:
       printWidth: 160
+      endOfLine: "auto"

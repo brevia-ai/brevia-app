@@ -7,6 +7,7 @@ const customRules = {
   'vue/no-v-html': ['off'],
   '@typescript-eslint/no-explicit-any': ['off'],
   'vue/no-multiple-template-root': ['off'],
+  'endOfLine': ['auto'],
 };
 
 const config = {

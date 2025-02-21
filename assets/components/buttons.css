@@ -10,13 +10,28 @@
     &.disabled {
       @apply bg-slate-400 border-slate-400 text-opacity-80 cursor-not-allowed;
     }
+
+    &.button-sm {
+      @apply px-3 py-2 text-sm;
+    }
+    &.button-xs {
+      @apply px-2 py-2 text-xs;
+    }
   }
 
   .button-secondary {
     @apply border-primary bg-white hover:bg-sky-100 text-primary
             disabled:text-slate-400 disabled:text-opacity-70 disabled:bg-slate-200 disabled:border-slate-300;
+
     &.disabled {
       @apply text-slate-400 text-opacity-70 bg-slate-200 border-slate-300;
+    }
+
+    &.button-sm {
+      @apply px-3 py-2 text-sm;
+    }
+    &.button-xs {
+      @apply px-2 py-2 text-xs;
     }
   }
 
