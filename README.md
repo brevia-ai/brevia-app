@@ -102,6 +102,12 @@ NUXT_BEDITA_SESSION_SECRET=<BEDITA SESSION SECRET>
 * `NUXT_BEDITA_SESSION_NAME` (optional, default is `bedita`) - The name used for the session cookie.
 * `NUXT_BEDITA_SESSION_SECRET` - The secret used to encrypt/decrypt the session stored in the cookie. It must be **at least 32 chars**.
 
+When building the application in production mode (see [Production](#production)), make sure that the environment variable `NUXT_PUBLIC_INTEGRATION` is set to `bedita` to enable the BEdita integration. If no .env file is present, you may want to use a command like this:
+
+```bash
+NUXT_PUBLIC_INTEGRATION=bedita npm run build
+```
+
 ### Recaptcha
 
 To enable/disable Recaptcha you should edit these vars:
