@@ -16,14 +16,14 @@ const userSession = (sessionData: SessionData) => {
 };
 
 export default defineNuxtRouteMiddleware(async (to) => {
-  if(to.path === '/' || to.path === '/index') {
+  if (to.path === '/' || to.path === '/index') {
     const statesStore = useStatesStore();
     statesStore.clearCollection();
   }
 
   if (import.meta.server) {
     const event = useRequestEvent();
-    if(event){
+    if (event) {
       const session = await useSession(event, sessionConfig(event));
       const user = userSession(session.data);
       if (user) {
