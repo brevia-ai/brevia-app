@@ -171,8 +171,8 @@
     "THE_FOLLOWING_WILL_ALSO_BE_ELIMINATED": "The following will also be eliminated along with the",
     "THE_MODIFIED_CONFIGURATION_WILL_BE_LOST": "All the configuration changes will be lost",
     "THIS_ACTION_CANNOT_BE_UNDONE": "This action cannot be undone",
-    "TITLE": "Titolo",
-    "TITLE_PLACEHOLDER": "Inserisci qui il titolo",
+    "TITLE": "Title",
+    "TITLE_PLACEHOLDER": "Insert the title here",
     "TITLES": {
         "ATLAS_AI_POWERED_TOOLS": "AI-powered tools by Atlas",
         "REGISTER_ACCOUNT": "Create account",

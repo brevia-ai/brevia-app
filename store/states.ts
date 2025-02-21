@@ -64,6 +64,10 @@ export const useStatesStore = defineStore('states', {
       localStorage.setItem(name, JSON.stringify(value));
     },
 
+    clearCollection() {
+      this.collection = null;
+    },
+
     userHasRole(name: string) {
       return !!(this.user as UserDataStore)?.roles?.find((r) => r === name);
     },
