@@ -56,9 +56,7 @@ export default defineNuxtConfig({
     'nuxt-gtag',
     '@nuxt/eslint',
   ],
-  extends: [
-    ['github:brevia-ai/nuxt-chatbot-layer#v0.1.4', { install: true }]
-  ],
+  extends: [['github:brevia-ai/nuxt-chatbot-layer#v0.1.4', { install: true }]],
   build: {
     transpile: ['@vuepic/vue-datepicker'],
   },
