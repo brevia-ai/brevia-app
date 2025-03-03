@@ -1,7 +1,13 @@
 <template>
   <main>
     <div v-if="collection.uuid" class="space-y-12">
-      <ChatZone :collection :is-demo-chatbot="false" :is-embedded="true" />
+      <ChatZone :collection :is-demo-chatbot="false" :is-embedded="true" :bot-name="collection.cmetadata.title">
+        <template #chatbot-header>
+          <div class="w-full relative -top-3 left-0 bg-primary text-white z-20 px-3 py-2">
+            <h1 class="pl-6 text-xl font-bold">{{ collection.cmetadata.title }}</h1>
+          </div>
+        </template>
+      </ChatZone>
     </div>
   </main>
 </template>

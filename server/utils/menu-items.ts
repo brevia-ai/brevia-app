@@ -1,10 +1,9 @@
-import { apiFetch } from '~/server/utils/api-client';
 import type { H3Event } from 'h3';
 import fs from 'fs';
 import path from 'path';
 
-function chatbotItems(response): Array<any> {
-  return response.map((item) => {
+function chatbotItems(response: any): Array<any> {
+  return response.map((item: any) => {
     return {
       type: 'collections',
       attributes: {
