@@ -1,5 +1,3 @@
-import type { AxiosError } from 'axios';
-import { isAxiosError } from 'axios';
 import type { H3Event } from 'h3';
 import { currentProject } from './project';
 
