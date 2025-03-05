@@ -29,9 +29,8 @@
       <ChatZone
         ref="chatZone"
         :collection
-        :is-demo-chatbot="isDemo"
         :is-app-bot="true"
-        :max-messages="messagesLeft"
+        :max-messages="maxChatMessages"
         :bot-name="collection.cmetadata.title"
         @update-left="updateLeftMessages"
       >
@@ -63,7 +62,8 @@ const collection = ref<{ name?: string; uuid?: string; cmetadata?: any }>({});
 const isBusy = ref(false);
 const input = ref<HTMLElement | null>(null);
 const isDemo = ref(store.userHasRole('demo'));
-const messagesLeft = ref(0);
+const maxChatMessages = isDemo.value ? parseInt(config.public.demo.maxChatMessages) : 0;
+const messagesLeft = ref(maxChatMessages);
 
 let collectionName = '';
 let editLevel = ItemEditLevel.None;
