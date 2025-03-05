@@ -29,7 +29,7 @@
       <ChatZone
         ref="chatZone"
         :collection
-        :is-app-bot="true"
+        :is-full-page="false"
         :max-messages="maxChatMessages"
         :bot-name="collection.cmetadata.title"
         @update-left="updateLeftMessages"
