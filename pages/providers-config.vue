@@ -32,7 +32,8 @@ const providersList: string[] = await loadProvidersList();
 const store = useProvidersStore();
 
 const loadConfigData = async () => {
-  const breviaConfig = await $fetch('/api/brevia/config');
+  const query = 'key=providers&key=known_env_vars&key=brevia_env_secrets';
+  const breviaConfig = await $fetch(`/api/brevia/config?${query}`);
   store.providers = breviaConfig.providers;
   store.setKnownVars(breviaConfig.known_env_vars);
   store.setupEnvVarsMap(breviaConfig.brevia_env_secrets);
