@@ -6,32 +6,34 @@
   </div>
   <template v-else>
   <div class="mb-8">
-      <div class="flex mb-1 gap-2" v-for="e in envVars" :key="e.name">
-        <div>
-          {{ e.name }}
-        </div>
-        <div>
-          <input type="text" :value="e.value" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" @change="e.value = $event?.target?.value || ''">
-        </div>
-        <button class="button button-secondary" @click="delEnvVar(e.name)">
-          <Icon name="ph:trash-simple-bold" class="text-2xl" />
-        </button>
-      </div>
-
-
-      <div class="flex space-x-4" v-if="availableEnvVars.length > 0">
-        <select
-            v-model="newEnvVar"
-            class="border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary px-2">
-            <option :value="name" v-for="name in availableEnvVars" :key="name">{{ name }}</option>
-          </select>
-        <button class="button button-secondary" @click="addEnvVar()">
-            <Icon name="ph:plus-bold" class="text-2xl" />
-        </button>
-      </div>
-
+    <div v-if="apiKey" class="mb-4">
+      <label class="flex items-center space-x-2">
+        <span class="block text-sm font-medium text-gray-700">API Key</span>
+        <input type="text" id="apiKey" :value="apiKey.value" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" @change="apiKey.value = $event?.target?.value || ''">
+      </label>
     </div>
-
+    <div class="flex mb-1 gap-2" v-for="e in envVars" :key="e.name">
+      <div>
+        {{ e.name }}
+      </div>
+      <div>
+        <input type="text" :value="e.value" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" @change="e.value = $event?.target?.value || ''">
+      </div>
+      <button class="button button-secondary" @click="delEnvVar(e.name)">
+        <Icon name="ph:trash-simple-bold" class="text-2xl" />
+      </button>
+    </div>
+    <div class="flex space-x-4" v-if="availableEnvVars.length > 0">
+      <select
+          v-model="newEnvVar"
+          class="border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary px-2">
+          <option :value="name" v-for="name in availableEnvVars" :key="name">{{ name }}</option>
+        </select>
+      <button class="button button-secondary" @click="addEnvVar()">
+          <Icon name="ph:plus-bold" class="text-2xl" />
+      </button>
+    </div>
+  </div>
 
   <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2" v-if="modelsList.length > 0">
     <label class="p-1.5 flex items-center gap-2">
@@ -76,15 +78,43 @@ const saveLoading = ref(false);
 const store = useProvidersStore();
 
 const modelsList = ref<ModelSelect[]>([]);
-const envVars = ref<EnvVarItem[]>(store.envVars.get(props.provider)?.slice() || []);
+const envVars = ref<EnvVarItem[]>([]);
+const apiKey = ref<EnvVarItem | null>(null);
 let changedVars = false;
 const newEnvVar = ref('');
 
 const availableEnvVars = computed(() => {
-  return store.knownVars.get(props.provider)?.filter((knownVar) => {
+  return store.knownVars.get(props.provider)?.filter((knownVar) => !isApiKey(knownVar))?.filter((knownVar) => {
     return !envVars.value.some((envVar) => envVar.name === knownVar);
   }) || [];
 });
+
+const isApiKey = (name: string) => {
+  return name.toLowerCase().endsWith('_api_key');
+}
+
+const isApiKeyItem = (item: EnvVarItem) => {
+  return isApiKey(item.name);
+}
+
+const currentEnvVars = () => {
+  return store.envVars.get(props.provider)?.filter((item) => !isApiKeyItem(item))?.slice() || [];
+};
+
+const currentApiKey = (): EnvVarItem | null => {
+  const apiKeyName = store.knownVars.get(props.provider)?.find((item) => isApiKey(item));
+  if (!apiKeyName) {
+    return null;
+  }
+
+  return {
+    name: apiKeyName,
+    value: store.envVars.get(props.provider)?.find((item) => item.name === apiKeyName)?.value || '',
+  }
+};
+
+envVars.value = currentEnvVars();
+apiKey.value = currentApiKey();
 
 const loadModelsList = async () => {
   const items = await $fetch(`/api/brevia/providers/${props.provider}`);
@@ -188,7 +218,11 @@ const envVarsToJSON = () => {
 }
 
 const envVarsChanged = () => {
-  return JSON.stringify(envVars.value) !== JSON.stringify(store.envVars.get(props.provider));
+  const vars = envVars.value.slice();
+  if (apiKey.value?.value) {
+    vars.push(apiKey.value);
+  }
+  return JSON.stringify(vars) !== JSON.stringify(store.envVars.get(props.provider));
 }
 
 const updateProviderStore = () => {
@@ -201,7 +235,11 @@ const updateProviderStore = () => {
     store.providers.push({ model_provider: props.provider, models: selectedModels });
   }
   if (envVarsChanged()) {
-    store.envVars.set(props.provider, envVars.value.slice());
+    const vars = envVars.value.slice();
+    if (apiKey.value?.value) {
+      vars.push(apiKey.value);
+    }
+    store.envVars.set(props.provider, vars);
     changedVars = true;
   }
 };
