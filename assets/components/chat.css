@@ -6,7 +6,7 @@
   }
 
   /* odd chat-balloons left */
-  .chat-balloon:nth-child(2n) {
+  .chat-balloon-left {
     @apply self-start;
 
     .chat-balloon-status {
@@ -22,7 +22,7 @@
       }
     }
   }
-  .chat-balloon:nth-child(2n):after {
+  .chat-balloon-left:after {
     content: '';
     @apply absolute left-2 bottom-0 translate-y-full border-solid;
     border-width: 0.5rem 0.5rem 0 0;
@@ -30,13 +30,13 @@
   }
 
   /* even chat-balloons right */
-  .chat-balloon:nth-child(2n + 1) {
+  .chat-balloon-right {
     @apply self-end bg-sky-800;
     .chat-balloon-status {
       @apply hidden;
     }
   }
-  .chat-balloon:nth-child(2n + 1):after {
+  .chat-balloon-right:after {
     content: ' ';
     @apply absolute right-2 bottom-0 translate-y-full border-solid;
     border-width: 0.5rem 0 0 0.5rem;
