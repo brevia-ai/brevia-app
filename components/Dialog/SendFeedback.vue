@@ -25,7 +25,7 @@
       v-model="suggestionMsg"
       rows="4"
       class="block p-2.5 mb-4 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-      placeholder="Proponi la risposta corretta"
+      :placeholder="$t('SUGGEST_RESPONSE_PLACEHOLDER')"
     ></textarea>
     <button
       class="text-white inline-flex items-center bg-primary hover:bg-secondary focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
