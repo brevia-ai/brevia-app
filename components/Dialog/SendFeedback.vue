@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 const stateStore = useStatesStore();
-const { $closeModal } = useNuxtApp();
+const modal = useModalStore();
 const props = defineProps<{
   feedback?: any;
 }>();
@@ -49,8 +49,6 @@ const feedBackMsg = ref('');
 const suggestionMsg = ref('');
 
 onMounted(() => {
-  console.log(props.feedback);
-  console.log('Emitted');
   emit('stopClick');
 });
 
@@ -87,7 +85,7 @@ const sendFeedback = async () => {
         metadata: { user: getUser() },
       }),
     });
-    $closeModal();
+    modal.closeModalAction('refreshFeedback');
   } catch (err) {
     console.log(err);
   }

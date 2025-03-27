@@ -1,7 +1,7 @@
 <template>
   <main>
     <div v-if="collection.uuid" class="space-y-12">
-      <ChatZone :collection :bot-name="collection.cmetadata.title" @feedback="(feed) => $openModal('GiveFeedback', { feedback: feed })">
+      <ChatZone ref="chatZone" :collection :bot-name="collection.cmetadata.title" @feedback="(feed) => handleFeedback(feed)">
         <template #chatbot-header>
           <div class="w-full relative -top-3 left-0 bg-primary text-white z-20 px-3 py-2">
             <h1 class="pl-6 text-xl font-bold">{{ collection.cmetadata.title }}</h1>
@@ -17,6 +17,8 @@ definePageMeta({
   layout: 'iframe',
 });
 
+const chatZone = ref();
+const modalStore = useModalStore();
 const collection = ref<{ name?: string; uuid?: string; cmetadata?: any }>({});
 const isBusy = ref(false);
 const input = ref<HTMLElement | null>(null);
@@ -62,5 +64,19 @@ const checkChatbotAvailable = (): boolean => {
     return false;
   }
   return collection.value.cmetadata?.brevia_app?.public_iframe || false;
+};
+
+const handleFeedback = (feed: any) => {
+  modalStore.openModal('GiveFeedback', { feedback: feed });
+  modalStore.$onAction(({ after, onError }) => {
+    after((result) => {
+      if (result === 'refreshFeedback') {
+        chatZone.value.refreshFeebackThumbs();
+      }
+    });
+    onError((error) => {
+      console.log(error);
+    });
+  }, false);
 };
 </script>

@@ -33,7 +33,7 @@
         :max-messages="maxChatMessages"
         :bot-name="collection.cmetadata.title"
         @update-left="updateLeftMessages"
-        @feedback="(feed) => $openModal('GiveFeedback', { feedback: feed })"
+        @feedback="(feed) => handleFeedback(feed)"
       >
         <template #extra-icons>
           <div class="px-1.5 pb-1 hover:bg-neutral-500 hover:rounded-md cursor-pointer">
@@ -59,6 +59,7 @@
 <script lang="ts" setup>
 const config = useRuntimeConfig();
 const store = useStatesStore();
+const modalStore = useModalStore();
 useHead({ title: `Chatbot | ${config.public.appName}` });
 
 const chatZone = ref();
@@ -106,4 +107,18 @@ watch(isBusy, (val) => {
 });
 
 const updateLeftMessages = (left: number) => (messagesLeft.value = left);
+
+const handleFeedback = (feed: any) => {
+  modalStore.openModal('GiveFeedback', { feedback: feed });
+  modalStore.$onAction(({ after, onError }) => {
+    after((result) => {
+      if (result === 'refreshFeedback') {
+        chatZone.value.refreshFeebackThumbs();
+      }
+    });
+    onError((error) => {
+      console.log(error);
+    });
+  }, false);
+};
 </script>
