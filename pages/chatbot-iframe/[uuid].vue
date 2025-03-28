@@ -71,7 +71,7 @@ const handleFeedback = (feed: any) => {
   modalStore.$onAction(({ after, onError }) => {
     after((result) => {
       if (result === 'refreshFeedback') {
-        chatZone.value.refreshFeedbackThumbs();
+        chatZone.value.updateFeedbackThumbs();
       }
     });
     onError((error) => {
