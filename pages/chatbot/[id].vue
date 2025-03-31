@@ -36,7 +36,7 @@
         @feedback="(feed) => handleFeedback(feed)"
       >
         <template #extra-icons>
-          <div class="px-1.5 pb-1 hover:bg-neutral-500 hover:rounded-md cursor-pointer">
+          <div v-if="chatZone.showLastMsgDocs" class="px-1.5 pb-1 hover:bg-neutral-500 hover:rounded-md cursor-pointer">
             <Icon name="ph:files-bold" class="text-white" @click="$openModal('ChatDocuments', { documents: chatZone.getResponseDocs() })" />
           </div>
         </template>
