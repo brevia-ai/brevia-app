@@ -10,58 +10,28 @@
         ref="input"
         type="range"
         class="w-full"
-        :value="modelValue"
+        v-model.number="model"
         :readonly="readonly"
         :min="min"
         :max="max"
         :step="step"
       />
-
-      <p class="font-xs font-semibold text-center">{{ value }}</p>
+      <p class="font-semibold text-center">{{ model }}</p>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
+const model = defineModel<number>();
+
 const props = defineProps({
-  modelValue: {
-    type: Number,
-    default: '',
-  },
-  label: {
-    type: String,
-    default: null,
-  },
-  min: {
-    type: String,
-    default: 0,
-  },
-  max: {
-    type: String,
-    default: 100,
-  },
-  step: {
-    type: String,
-    default: 1,
-  },
-  readonly: {
-    type: Boolean,
-    default: false,
-  },
+  label: String,
+  min: { type: Number, default: 0 },
+  max: { type: Number, default: 100 },
+  step: { type: Number, default: 1 },
+  readonly: { type: Boolean, default: false },
 });
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void;
-}>();
-
 const input = ref<HTMLInputElement>();
-
-const value = computed(() => input.value?.value);
-
-const handleChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  emit('update:modelValue', target.value);
-};
-
-const uniqueId = computed(() => 'input-range-' + Date.now().toString(36) + Math.random().toString(36).substring(2));
+const uniqueId = useId();
 </script>

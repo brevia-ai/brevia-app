@@ -5,17 +5,18 @@
     <template v-if="!editorEnabled">
       <div class="space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <UIXInput v-model.trim="provider.name" label="Provider" autocapitalize="none" />
-          <UIXInput v-model.trim="provider.model" label="Model" autocapitalize="none" />
-          <UIXInputRange v-model.number="provider.temperature" label="Temperature" min="0" max="1" step="0.1" />
-          <UIXInputNumber v-model.trim.number="provider.max_tokens" label="Max tokens" hint="max 16280" />
+          <UIXInput v-model="provider.name" label="Provider" placeholder="es. OpenAI" :required="true" />
+          <UIXInput v-model="provider.model" label="Model" placeholder="es. gpt-4o-mini" :required="true" />
+          <UIXInputRange v-model="provider.temperature" label="Temperature" :min="0" :max="1" :step="0.1" />
+          <UIXInputNumber v-model="provider.max_tokens" label="Max tokens" hint="max 16280" />
         </div>
-        <button class="absolute -top-10 right-2 !py-1 button button-secondary button-xs uppercase" @click="editorEnabled = !editorEnabled">
-          <span v-if="editorEnabled">Editor guidato</span>
-          <span v-else>Editor avanzato</span>
-        </button>
       </div>
     </template>
+
+    <button class="absolute -top-7 right-2 sm:-right-3 !py-1.5 button button-secondary button-xs uppercase" @click="editorEnabled = !editorEnabled">
+      <Icon :name="editorEnabled ? 'ph:arrow-fat-line-left-bold' : 'ph:arrow-elbow-down-right-bold'" class="w-4 h-4" />
+      <span v-text="editorEnabled? 'Standard' : 'Advanced'"></span>
+    </button>
 
     <template v-if="editorEnabled">
       <JsonEditorVue v-model="json" :mode="Mode.text" />
@@ -31,7 +32,7 @@ type Provider = {
   name: string;
   model: string;
   temperature?: number;
-  max_tokens?: number;
+  max_tokens?: number | null;
 };
 
 defineProps<{
@@ -41,19 +42,22 @@ defineProps<{
 const json = defineModel<object|string|null>();
 const editorEnabled = ref(false);
 
-const provider = computed((): Provider => {
-  let data;
-  try {
-    data = JSON.parse(JSON.stringify(json.value) || '');
-  } catch (e) {
-    console.error('INVALID JSON', e);
-  }
-
-  return {
-    name: data?._type || '',
-    model: data?.model_name || '',
-    temperature: data?.temperature || 0,
-    max_tokens: data?.max_tokens || null,
-  };
+const provider = reactive<Provider>({
+  name: '',
+  model: '',
+  temperature: 0.5,
+  max_tokens: null,
 });
+
+watch(json, (val) => {
+  try {
+    const data = typeof val === 'string' ? JSON.parse(val) : val;
+    provider.name = data?._type || '';
+    provider.model = data?.model_name || '';
+    provider.temperature = data?.temperature ?? 0.5;
+    provider.max_tokens = data?.max_tokens ?? null;
+  } catch (e) {
+    console.error('Invalid JSON', e);
+  }
+}, { immediate: true });
 </script>

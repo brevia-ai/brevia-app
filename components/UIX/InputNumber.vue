@@ -10,7 +10,7 @@
         ref="input"
         type="number"
         class="w-full"
-        :value="modelValue"
+        v-model.number="model"
         :readonly="readonly"
         :min="min"
         :max="max"
@@ -22,48 +22,18 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
+const model = defineModel<number | null>();
+
 const props = defineProps({
-  modelValue: {
-    type: Number,
-    default: '',
-  },
-  label: {
-    type: String,
-    default: null,
-  },
-  hint: {
-    type: String,
-    default: null,
-  },
-  min: {
-    type: String,
-    default: 0,
-  },
-  max: {
-    type: String,
-    default: 100,
-  },
-  step: {
-    type: String,
-    default: 1,
-  },
-  readonly: {
-    type: Boolean,
-    default: false,
-  },
+  label: String,
+  hint: String,
+  min: Number,
+  max: Number,
+  step: Number,
+  readonly: { type: Boolean, default: false },
 });
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void;
-}>();
-
 const input = ref<HTMLInputElement>();
-
-const handleChange = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  emit('update:modelValue', target.value);
-};
-
-const uniqueId = computed(() => 'input-number-' + Date.now().toString(36) + Math.random().toString(36).substring(2));
+const uniqueId = useId();
 </script>

@@ -15,88 +15,45 @@
       :autocomplete="autocomplete"
       :placeholder="placeholder"
       :required="required"
-      :value="modelValue"
       :readonly="readonly"
-      @input="handleInput"
+      v-model="model"
       @change="handleChange"
     />
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
+const model = defineModel<string>({ default: '' });
+
 const props = defineProps({
-  modelValue: {
-    type: String,
-    default: '',
-  },
-  label: {
-    type: String,
-    default: null,
-  },
-  required: {
-    type: Boolean,
-    default: false,
-  },
-  placeholder: {
-    type: String,
-    default: '',
-  },
-  autocapitalize: {
-    type: String,
-    default: 'none',
-  },
-  autocorrect: {
-    type: String,
-    default: 'off',
-  },
-  autocomplete: {
-    type: String,
-    default: null,
-  },
-  password: {
-    type: Boolean,
-    default: false,
-  },
-  noTrim: {
-    type: Boolean,
-    default: false,
-  },
-  autofocus: {
-    type: Boolean,
-    default: false,
-  },
-  readonly: {
-    type: Boolean,
-    default: false,
-  },
+  label: String,
+  required: { type: Boolean, default: false },
+  placeholder: { type: String, default: '' },
+  autocapitalize: { type: String, default: 'none' },
+  autocorrect: { type: String, default: 'off' },
+  autocomplete: { type: String, default: undefined },
+  password: { type: Boolean, default: false },
+  noTrim: { type: Boolean, default: false },
+  autofocus: { type: Boolean, default: false },
+  readonly: { type: Boolean, default: false },
 });
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void;
-}>();
-
 const input = ref<HTMLInputElement>();
+const uniqueId = useId(); // stabile per istanza
+
 onMounted(() => {
   if (props.autofocus) {
-    setTimeout(() => {
-      input.value?.focus();
-    }, 100);
+    setTimeout(() => input.value?.focus(), 100);
   }
 });
 
-const handleInput = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  emit('update:modelValue', target.value);
-};
-
-const handleChange = (event: Event) => {
-  if (props.noTrim) return;
-
-  const target = event.target as HTMLInputElement;
-  target.value = target.value.trim();
-  emit('update:modelValue', target.value);
-};
-
-const uniqueId = computed(() => 'input-text-' + Date.now().toString(36) + Math.random().toString(36).substring(2));
 const type = computed(() => (props.password ? 'password' : 'text'));
+
+const handleChange = () => {
+  if (props.noTrim || !input.value) return;
+  const trimmed = input.value.value.trim();
+  if (trimmed !== model.value) {
+    model.value = trimmed;
+  }
+};
 </script>
