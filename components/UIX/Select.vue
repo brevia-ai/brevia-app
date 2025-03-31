@@ -1,32 +1,46 @@
 <template>
-  <select
-    v-model="model"
-    :id="uniqueId"
-    class="h-14 px-4 border rounded border-primary
-      bg-white hover:bg-sky-100 focus:outline-primary
-      text-primary text-xl"
-  >
-    <option v-for="(item, i) in options" :key="i" :value="item" class="px-4">{{ item }}</option>
-  </select>
+  <div class="flex flex-col space-y-2">
+    <label v-if="label" class="flex align-top leading-none space-x-1" :for="uniqueId">
+      <span>{{ label }}</span>
+      <Icon v-if="required" name="ph:star-fill" size="12" class="text-pink-600" />
+    </label>
+
+    <select
+      v-model="model"
+      :id="uniqueId"
+      class="border-2 border-neutral-300 rounded outline-sky-600
+        text-neutral-900 bg-slate-50
+        text-lg px-4 py-3.5"
+      :disabled="readonly"
+      :required="required"
+    >
+      <option v-if="placeholder" disabled value="">{{ placeholder }}</option>
+      <option
+        v-for="(opt, i) in normalizedOptions"
+        :key="i"
+        :value="typeof opt === 'object' ? opt.value : opt"
+        v-text="typeof opt === 'object' ? opt.label : opt"
+      />
+    </select>
+  </div>
 </template>
 
+<script setup lang="ts">
+const model = defineModel<string | number | null>();
 
-<script lang="ts" setup>
 const props = defineProps({
-  label: {
-    type: String,
-    default: null,
-  },
+  label: String,
+  required: { type: Boolean, default: false },
+  readonly: { type: Boolean, default: false },
+  placeholder: String,
   options: {
-    type: Array,
+    type: Array as PropType<Array<string | { label: string; value: string | number }>>,
     default: () => [],
-  },
-  readonly: {
-    type: Boolean,
-    default: false,
   },
 });
 
-const model = defineModel();
-const uniqueId = computed(() => 'input-range-' + Date.now().toString(36) + Math.random().toString(36).substring(2));
+const uniqueId = useId();
+
+// normalizza le opzioni per accettare sia string[] che object[]
+const normalizedOptions = computed(() => props.options);
 </script>

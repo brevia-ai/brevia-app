@@ -5,6 +5,26 @@
     <template v-if="!editorEnabled">
       <div class="space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+
+        <!-- esempio di select con options array di stringhe -->
+        <UIXSelect v-model="provider.name"
+          label="Provider"
+          placeholder="Seleziona un provider"
+          :required="true"
+          :options="['OpenAI', 'Anthropic', 'Pizza Hut']" />
+
+        <!-- oppure con options array di oggetti label/value -->
+        <UIXSelect v-model="provider.name"
+          label="Provider"
+          placeholder="Seleziona un provider"
+          :options="[
+            { label: 'OpenAI', value: 'openai' },
+            { label: 'Anthropic', value: 'anthropic' },
+            { label: 'Pizza hut', value: 'pepperoni' },
+          ]"/>
+
+
           <UIXInput v-model="provider.name" label="Provider" placeholder="es. OpenAI" :required="true" />
           <UIXInput v-model="provider.model" label="Model" placeholder="es. gpt-4o-mini" :required="true" />
           <UIXInputRange v-model="provider.temperature" label="Temperature" :min="0" :max="1" :step="0.1" />
