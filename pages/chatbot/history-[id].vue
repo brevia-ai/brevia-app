@@ -100,13 +100,22 @@
           <div v-else-if="dialog.length">
             <div class="px-4 pt-6 pb-4 bg-white shadow-md rounded space-y-3">
               <div class="flex flex-col space-y-6 pb-4">
-                <div v-for="(item, i) in dialog" :key="i" class="chat-balloon space-y-2" :class="{ 'bg-pink-800': item.error }">
+                <div
+                  v-for="(item, i) in dialog"
+                  :key="i"
+                  class="chat-balloon space-y-2"
+                  :class="{
+                    'bg-danger text-white': item.error,
+                    'chat-balloon-right': item.who == userNick,
+                    'chat-balloon-left': item.who != userNick,
+                  }"
+                >
                   <div class="flex space-x-3 justify-between">
-                    <p class="text-xs">{{ item.who }}</p>
+                    <p class="text-base uppercase font-bold">{{ item.who }}</p>
                   </div>
                   <div class="break-words rich-text" v-html="formatResponse(item.message, responseFormat)"></div>
                   <div
-                    v-if="item.who === 'ASSISTANT' && item.evaluation !== null"
+                    v-if="item.who === botName && item.evaluation !== null"
                     class="p-2 absolute -bottom-4 right-4 z-20 bg-neutral-700 rounded-full flex flex-row"
                     :class="{ 'hover:cursor-pointer hover:bg-neutral-500': item.feedback }"
                     @click="item.feedback ? $openModal('ShowAnswerFeedback', { evaluation: item.evaluation, feedback: item.feedback }) : ''"
@@ -177,6 +186,8 @@ if (!collection.value?.uuid) {
   });
 }
 
+const botName = collection.value?.cmetadata?.title ?? 'ASSISTANT';
+const userNick = 'USER';
 const responseFormat = llmResponseFormat(collection.value.cmetadata?.qa_completion_llm);
 
 const csvKeys = ['question', 'answer', 'session_id', 'created', 'user_evaluation', 'user_feedback', 'chat_source'];
@@ -271,8 +282,8 @@ const loadChat = async (id: any) => {
     const data: any = await $fetch(`/api/brevia/chat_history?session_id=${id}&collection=${collectionName}`);
     const loadedDialog: DialogItem[] = [];
     for (let i = data.data.length - 1; i >= 0; i--) {
-      loadedDialog.push(formatDialogItem('USER', data.data[i].question, data.data[i].user_evaluation, data.data[i].user_feedback, data.data[i].uuid));
-      loadedDialog.push(formatDialogItem('ASSISTANT', data.data[i].answer, data.data[i].user_evaluation, data.data[i].user_feedback, data.data[i].uuid));
+      loadedDialog.push(formatDialogItem(userNick, data.data[i].question, data.data[i].user_evaluation, data.data[i].user_feedback, data.data[i].uuid));
+      loadedDialog.push(formatDialogItem(botName, data.data[i].answer, data.data[i].user_evaluation, data.data[i].user_feedback, data.data[i].uuid));
     }
     dialog.value = loadedDialog;
     setTimeout(() => (loadingChats.value = false), 250);
