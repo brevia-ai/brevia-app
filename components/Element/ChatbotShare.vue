@@ -27,22 +27,6 @@
     </button>
     <template v-if="chatbotIframeEnabled">
       <p v-if="chatbotIframeEnabled" class="text-lg">{{ $t('BUBBLE_TRY_CHATBOT') }}</p>
-      <div class="absolute bottom-12 right-6 flex flex-col space-y-6">
-        <Transition name="iframe" appear>
-          <div v-if="iframeVisible" class="shadow-md border-0.5 border-slate-700 rounded-md bg-white z-50">
-            <h1 class="pl-6 py-0.5 shadow-sm text-xl font-bold">{{ collection.name }}</h1>
-            <iframe class="h-[30rem] w-96 rounded-md center" :src="iframeSrc" sandbox="allow-same-origin allow-scripts allow-forms"> </iframe>
-          </div>
-        </Transition>
-        <div class="flex flex-row self-end">
-          <button
-            class="bg-primary text-white rounded-full transform hover:scale-110 transition duration-300 hover:opacity-95"
-            @click="iframeVisible = !iframeVisible"
-          >
-            <Icon :name="!iframeVisible ? 'ph:chat-circle-text-bold' : 'ph:arrow-down-bold'" class="text-3xl m-4" />
-          </button>
-        </div>
-      </div>
     </template>
   </div>
 </template>
@@ -56,7 +40,6 @@ const isAdmin = statesStore.userHasRole('admin');
 const host = window.location.host;
 const protocol = window.location.protocol;
 const iframeSrc = ref('/chatbot-iframe/' + collection.uuid);
-const iframeVisible = ref(false);
 const shouldPreloadIframe = ref(true);
 const codeArea = ref();
 const copiedToClip = ref(false);
@@ -66,6 +49,9 @@ onMounted(() => {
   setTimeout(() => {
     shouldPreloadIframe.value = false;
   }, 5000);
+  if (chatbotIframeEnabled.value) {
+    initBubble({ iframeSrc: iframeSrc.value });
+  }
 });
 
 const copyCode = () => {
@@ -88,6 +74,13 @@ const enableChatbotIframe = async () => {
 
   statesStore.collection = collection;
 };
+
+onUnmounted(() => {
+  const iframeWindow = document.getElementById('chat-iframe');
+  const iframeButton = document.getElementById('chat-iframe-button');
+  iframeButton?.remove();
+  iframeWindow?.remove();
+});
 </script>
 
 <style>

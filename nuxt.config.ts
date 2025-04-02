@@ -46,7 +46,7 @@ export default defineNuxtConfig({
   },
 
   imports: {
-    dirs: ['store'],
+    dirs: ['store', 'server/utils'],
   },
   modules: [
     '@nuxtjs/tailwindcss',
@@ -56,6 +56,7 @@ export default defineNuxtConfig({
     'nuxt-gtag',
     '@nuxt/eslint',
   ],
+  extends: [['github:brevia-ai/nuxt-chatbot-layer#v0.2.2', { install: true }]],
   build: {
     transpile: ['@vuepic/vue-datepicker'],
   },

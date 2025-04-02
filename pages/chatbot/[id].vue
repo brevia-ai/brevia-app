@@ -8,6 +8,9 @@
         </div>
 
         <div class="flex justify-between space-x-4">
+          <div class="mt-0.5 text-sky-700 hover:text-sky-500 hover:cursor-pointer">
+            <Icon name="ph:arrow-clockwise-bold" class="text-4xl" @click="chatZone.refreshChat()" />
+          </div>
           <NuxtLink class="mt-0.5 text-sky-700 hover:text-sky-500" :to="`history-${collectionName}`" :title="$t('CHATBOT_HISTORY')">
             <Icon name="ph:clock-counter-clockwise-bold" class="text-4xl" />
           </NuxtLink>
@@ -23,13 +26,26 @@
         </div>
       </div>
 
-      <ChatZone :collection :is-demo-chatbot="isDemo" :messages-left @update-left="updateLeftMessages">
+      <ChatZone
+        ref="chatZone"
+        :collection
+        :is-full-page="false"
+        :max-messages="maxChatMessages"
+        :bot-name="collection.cmetadata.title"
+        @update-left="updateLeftMessages"
+        @feedback="(feed) => handleFeedback(feed)"
+      >
+        <template #extra-icons>
+          <div v-if="chatZone.showLastMsgDocs" class="px-1.5 pb-1 hover:bg-neutral-500 hover:rounded-md cursor-pointer">
+            <Icon name="ph:files-bold" class="text-white" @click="$openModal('ChatDocuments', { documents: chatZone.getResponseDocs() })" />
+          </div>
+        </template>
         <template #messageCounter>
           <div v-if="isDemo" class="flex space-x-4">
             <span class="grow text-lg">{{ $t('MESSAGES_LEFT') }}: {{ messagesLeft }}</span>
           </div>
 
-          <div v-if="isDemo && messagesLeft == '0'" class="space-x-4">
+          <div v-if="isDemo && messagesLeft == 0" class="space-x-4">
             <div class="w-full bg-red-100 border border-red-400 rounded text-center">
               {{ $t('NO_MORE_CHAT_MESSAGES') }}
             </div>
@@ -41,17 +57,18 @@
 </template>
 
 <script lang="ts" setup>
-import { ItemEditLevel } from '#imports';
-
 const config = useRuntimeConfig();
 const store = useStatesStore();
+const modalStore = useModalStore();
 useHead({ title: `Chatbot | ${config.public.appName}` });
 
+const chatZone = ref();
 const collection = ref<{ name?: string; uuid?: string; cmetadata?: any }>({});
 const isBusy = ref(false);
 const input = ref<HTMLElement | null>(null);
 const isDemo = ref(store.userHasRole('demo'));
-const messagesLeft = ref('');
+const maxChatMessages = isDemo.value ? parseInt(config.public.demo.maxChatMessages) : 0;
+const messagesLeft = ref(maxChatMessages);
 
 let collectionName = '';
 let editLevel = ItemEditLevel.None;
@@ -89,5 +106,19 @@ watch(isBusy, (val) => {
   }
 });
 
-const updateLeftMessages = (left: number) => (messagesLeft.value = String(left));
+const updateLeftMessages = (left: number) => (messagesLeft.value = left);
+
+const handleFeedback = (feed: any) => {
+  modalStore.openModal('GiveFeedback', { feedback: feed });
+  modalStore.$onAction(({ after, onError }) => {
+    after((result) => {
+      if (result === 'refreshFeedback') {
+        chatZone.value.updateFeedbackThumbs();
+      }
+    });
+    onError((error) => {
+      console.log(error);
+    });
+  }, false);
+};
 </script>
