@@ -140,6 +140,17 @@ const summarizeLLm = ref(breviaConfig.summarize_llm);
 const summarizeChunkSize = ref(String(breviaConfig.summ_token_splitter));
 const summarizeChunkOverlap = ref(String(breviaConfig.summ_token_overlap));
 
+// Providers store needed by ConfigLlm components
+const loadProvidersConfig = async () => {
+  const store = useProvidersStore();
+  if (store.providers.length) {
+    return;
+  }
+  const breviaConfig = await $fetch(`/api/brevia/config?key=providers`);
+  store.providers = breviaConfig.providers;
+};
+await loadProvidersConfig();
+
 const saveConfig = async () => {
   if (isLoading.value) {
     return;
