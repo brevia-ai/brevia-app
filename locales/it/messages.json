@@ -151,6 +151,8 @@
     "SAVE": "Salva",
     "SEARCH": "Ricerca...",
     "SELECT_ALL": "Seleziona tutti",
+    "SELECT_MODEL": "Seleziona un modello",
+    "SELECT_PROVIDER": "Seleziona un provider",
     "SEND": "Invia",
     "SETTINGS": "Impostazioni",
     "SET_NEW_PASSWORD": "Applica la nuova password",
