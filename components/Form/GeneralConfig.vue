@@ -9,7 +9,6 @@
     </p>
   </div>
 
-
   <form class="flex flex-col space-y-12" @submit.prevent="saveConfig">
     <!-- INDEX AND SEARCH -->
     <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('IndexAndSearch')">

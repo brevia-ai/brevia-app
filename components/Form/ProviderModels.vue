@@ -8,18 +8,25 @@
       <!-- Api KEY -->
       <div v-if="apiKey" class="mb-4">
         <div class="flex gap-4">
-          <UIXInput class="grow" v-model="apiKey.value" :label="$t('API_KEY')" :placeholder="$t('INSERT_API_KEY')" :password="!showApiKey" autocomplete="none"/>
+          <UIXInput
+            class="grow"
+            v-model="apiKey.value"
+            :label="$t('API_KEY')"
+            :placeholder="$t('INSERT_API_KEY')"
+            :password="!showApiKey"
+            autocomplete="none"
+          />
           <button class="button button-secondary self-end h-[3.75rem]" @click="showApiKey = !showApiKey">
-            <Icon name="ph:eye" class="text-2xl" v-if="showApiKey"/>
-            <Icon name="ph:eye-slash" class="text-2xl" v-else/>
+            <Icon name="ph:eye" class="text-2xl" v-if="showApiKey" />
+            <Icon name="ph:eye-slash" class="text-2xl" v-else />
           </button>
         </div>
       </div>
 
       <!-- Selected env vars -->
-      <div class="mb-4" >
+      <div class="mb-4">
         <div class="flex gap-4" v-for="e in envVars" :key="e.name">
-          <UIXInput class="grow" v-model="e.value" :label="e.name" :placeholder="'Insert ' +  e.name"/>
+          <UIXInput class="grow" v-model="e.value" :label="e.name" :placeholder="'Insert ' + e.name" />
           <button class="button button-secondary self-end h-[3.75rem]" @click="delEnvVar(e.name)">
             <Icon name="ph:trash-simple-bold" class="text-2xl" />
           </button>

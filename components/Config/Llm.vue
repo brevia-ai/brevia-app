@@ -15,7 +15,12 @@
       </div>
     </template>
 
-    <button class="absolute -top-7 right-2 sm:-right-3 !py-1.5 button button-xs uppercase" :class="isJsonValid ? 'button-secondary' : 'button-danger'" @click.prevent="switchConfigEditor()" :disabled="!someModelsAvailable">
+    <button
+      class="absolute -top-7 right-2 sm:-right-3 !py-1.5 button button-xs uppercase"
+      :class="isJsonValid ? 'button-secondary' : 'button-danger'"
+      @click.prevent="switchConfigEditor()"
+      :disabled="!someModelsAvailable"
+    >
       <Icon :name="editorEnabled ? 'ph:arrow-fat-line-left-bold' : 'ph:arrow-elbow-down-right-bold'" class="w-4 h-4" />
       <span v-text="editorEnabled ? 'Standard' : 'Advanced'"></span>
     </button>
@@ -49,10 +54,14 @@ const json = defineModel<object | string | null>();
 const editorEnabled = ref(false);
 
 const availableProviders = () => {
-  return store.providers.filter((p) => p.models?.length > 0)?.map((provider: Provider) => ({
-    label: provider.model_provider,
-    value: provider.model_provider,
-  })) || [];
+  return (
+    store.providers
+      .filter((p) => p.models?.length > 0)
+      ?.map((provider: Provider) => ({
+        label: provider.model_provider,
+        value: provider.model_provider,
+      })) || []
+  );
 };
 
 const availableModels = computed(() => {
@@ -96,14 +105,14 @@ const isJsonValid = computed((): boolean => {
     return false;
   }
   const provider = store.providers.find((p) => p.model_provider === config.model_provider);
-  if(!provider) {
+  if (!provider) {
     return false;
   }
   const model = provider.models?.find((m) => m.name === config.model);
   if (!model) {
     return false;
   }
-  if (config.max_tokens && (config.max_tokens < 0 || model.tokens_limit && config.max_tokens > model.tokens_limit)) {
+  if (config.max_tokens && (config.max_tokens < 0 || (model.tokens_limit && config.max_tokens > model.tokens_limit))) {
     return false;
   }
   return true;
