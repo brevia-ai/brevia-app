@@ -18,6 +18,7 @@
         <LazyDialogResetConfig v-if="$isOpenModal('ResetConfig')" v-bind="modalStore.activeModalProps" />
         <LazyDialogSystemInfo v-if="$isOpenModal('DialogSystemInfo')" v-bind="modalStore.activeModalProps" />
         <LazyDialogSendFeedback v-if="$isOpenModal('GiveFeedback')" v-bind="modalStore.activeModalProps" @stop-click="clickableOutside = false" />
+        <LazyDialogLlmConfigWarn v-if="$isOpenModal('LlmConfigWarn')" v-bind="modalStore.activeModalProps"/>
       </div>
     </div>
   </div>

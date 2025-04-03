@@ -5,24 +5,14 @@
     </label>
 
     <div class="space-y-1">
-      <input
-        :id="uniqueId"
-        ref="input"
-        type="range"
-        class="w-full"
-        v-model.number="model"
-        :readonly="readonly"
-        :min="min"
-        :max="max"
-        :step="step"
-      />
+      <input :id="uniqueId" ref="input" type="range" class="w-full" v-model.number="model" :readonly="readonly" :min="min" :max="max" :step="step" />
       <p class="font-semibold text-center">{{ model }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const model = defineModel<number>();
+const model = defineModel<number | null>();
 
 const props = defineProps({
   label: String,

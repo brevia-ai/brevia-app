@@ -8,9 +8,7 @@
     <select
       v-model="model"
       :id="uniqueId"
-      class="border-2 border-neutral-300 rounded outline-sky-600
-        text-neutral-900 bg-slate-50
-        text-lg px-4 py-3.5"
+      class="border-2 border-neutral-300 rounded outline-sky-600 text-neutral-900 bg-slate-50 text-lg px-4 py-3.5"
       :disabled="readonly"
       :required="required"
     >

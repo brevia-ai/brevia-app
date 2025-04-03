@@ -5,17 +5,7 @@
     </label>
 
     <div class="space-y-1">
-      <input
-        :id="uniqueId"
-        ref="input"
-        type="number"
-        class="w-full"
-        v-model.number="model"
-        :readonly="readonly"
-        :min="min"
-        :max="max"
-        :step="step"
-      />
+      <input :id="uniqueId" ref="input" type="number" class="w-full" v-model.number="model" :readonly="readonly" :min="min" :max="max" :step="step" />
 
       <p class="text-right text-xs pr-2" v-if="hint" v-text="hint" />
     </div>
