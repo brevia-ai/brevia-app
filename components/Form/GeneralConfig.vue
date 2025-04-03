@@ -3,14 +3,14 @@
     <ElementLoader class="mx-auto z-[60]" :loader-dim="95" />
   </div>
 
+  <div class="mb-4">
+    <p class="text-sm text-gray-500">
+      {{ $t('GENERAL_CONFIG_DESCRIPTION') }}
+    </p>
+  </div>
+
+
   <form class="flex flex-col space-y-12" @submit.prevent="saveConfig">
-    <div v-if="!someModelsAvailable">
-      <div class="text-center space-y-4">
-        <Icon name="ph:warning-circle-bold" class="text-6xl text-pink-700" />
-        <p class="text-lg">{{ $t('NO_MODELS_AVAILABLE') }}</p>
-        <p class="text-lg">{{ $t('PLEASE_CONFIGURE_PROVIDERS') }}</p>
-      </div>
-    </div>
     <!-- INDEX AND SEARCH -->
     <div class="flex border-b-4 border-primary hover:cursor-pointer" @click="openCloseSection('IndexAndSearch')">
       <p class="mx-auto font-bold uppercase text-xl">Index and Search</p>
@@ -130,22 +130,6 @@ const sumVisible = ref(true);
 const summarizeLLm = ref(breviaConfig.summarize_llm);
 const summarizeChunkSize = ref(String(breviaConfig.summ_token_splitter));
 const summarizeChunkOverlap = ref(String(breviaConfig.summ_token_overlap));
-
-// Providers store needed by ConfigLlm components
-const loadProvidersConfig = async () => {
-  const store = useProvidersStore();
-  if (store.providers.length) {
-    return;
-  }
-  const breviaConfig = await $fetch(`/api/brevia/config?key=providers`);
-  store.providers = breviaConfig.providers;
-};
-await loadProvidersConfig();
-
-const someModelsAvailable = computed(() => {
-  const store = useProvidersStore();
-  return store.providers.some((provider) => provider.models && provider.models.length > 0);
-});
 
 const saveConfig = async () => {
   if (isLoading.value) {

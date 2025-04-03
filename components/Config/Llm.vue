@@ -15,7 +15,7 @@
       </div>
     </template>
 
-    <button class="absolute -top-7 right-2 sm:-right-3 !py-1.5 button button-xs uppercase" :class="isJsonValid ? 'button-secondary' : 'button-danger'" @click.prevent="switchConfigEditor()">
+    <button class="absolute -top-7 right-2 sm:-right-3 !py-1.5 button button-xs uppercase" :class="isJsonValid ? 'button-secondary' : 'button-danger'" @click.prevent="switchConfigEditor()" :disabled="!someModelsAvailable">
       <Icon :name="editorEnabled ? 'ph:arrow-fat-line-left-bold' : 'ph:arrow-elbow-down-right-bold'" class="w-4 h-4" />
       <span v-text="editorEnabled ? 'Standard' : 'Advanced'"></span>
     </button>
@@ -49,15 +49,19 @@ const json = defineModel<object | string | null>();
 const editorEnabled = ref(false);
 
 const availableProviders = () => {
-  return store.providers.map((provider: Provider) => ({
+  return store.providers.filter((p) => p.models?.length > 0)?.map((provider: Provider) => ({
     label: provider.model_provider,
     value: provider.model_provider,
-  }));
+  })) || [];
 };
 
 const availableModels = computed(() => {
   const models = store.providers.find((p) => p.model_provider === llmConf.model_provider)?.models?.map((m) => m.name) || [];
   return models.sort();
+});
+
+const someModelsAvailable = computed(() => {
+  return store.providers.some((provider) => provider.models && provider.models?.length > 0);
 });
 
 const llmConfigFromJson = (jsonVal: any): LlmConfig => {
@@ -105,6 +109,11 @@ const isJsonValid = computed((): boolean => {
   return true;
 });
 
+// Enable JSON editor if the JSON is invalid
+if (!isJsonValid.value) {
+  editorEnabled.value = true;
+}
+
 const switchConfigEditor = () => {
   if (editorEnabled.value) {
     if (!isJsonValid.value) {
@@ -133,6 +142,10 @@ watch(
 watch(
   llmConf,
   (val) => {
+    if (val.model_provider === '' && val.model === '' && val.temperature === 0 && val.max_tokens === null) {
+      json.value = '';
+      return;
+    }
     json.value = JSON.stringify(val, null, 2);
   },
   { immediate: true },

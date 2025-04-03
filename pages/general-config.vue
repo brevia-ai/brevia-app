@@ -1,4 +1,11 @@
 <template>
+  <div class="flex mb-4 gap-4" v-if="!someModelsAvailable">
+    <Icon name="ph:warning-circle-bold" class="text-6xl text-pink-700" />
+    <div>
+      <p class="text-lg">{{ $t('NO_MODELS_AVAILABLE') }}</p>
+      <p class="text-sm text-gray-500">{{ $t('PLEASE_CONFIGURE_PROVIDERS') }}</p>
+    </div>
+  </div>
   <div class="space-y-8">
     <UIXTabs :tabs="[t('GENERAL'), t('PROVIDERS')]">
       <template #0>
@@ -26,14 +33,10 @@ definePageMeta({
 
 const { t } = useI18n();
 
-// Providers store needed by ConfigLlm components
-const loadProvidersConfig = async () => {
+await initProviders();
+
+const someModelsAvailable = computed(() => {
   const store = useProvidersStore();
-  if (store.providers.length) {
-    return;
-  }
-  const breviaConfig = await $fetch(`/api/brevia/config?key=providers`);
-  store.providers = breviaConfig.providers;
-};
-await loadProvidersConfig();
+  return store.providers.some((provider) => provider.models && provider.models.length > 0);
+});
 </script>

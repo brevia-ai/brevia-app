@@ -1,5 +1,11 @@
 <template>
-  <div class="my-16 space-y-8">
+  <div class="my-8 space-y-8">
+    <div class="mb-4">
+      <p class="text-sm text-gray-500">
+        {{ $t('PROVIDERS_CONFIG_DESCRIPTION') }}
+      </p>
+    </div>
+
     <div class="flex gap-8">
       <UIXTabs :tabs="providersList">
         <template v-for="(item, idx) in providersList" v-slot:[idx]>

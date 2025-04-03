@@ -5,44 +5,39 @@
   </div>
   <template v-else>
     <div class="mb-8">
+      <!-- Api KEY -->
       <div v-if="apiKey" class="mb-4">
-        <label class="flex items-center space-x-2">
-          <span class="block text-sm font-medium text-gray-700">API Key</span>
-          <input
-            type="text"
-            id="apiKey"
-            :value="apiKey.value"
-            class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            @change="apiKey.value = $event?.target?.value || ''"
-          />
-        </label>
-      </div>
-      <div class="flex mb-1 gap-2" v-for="e in envVars" :key="e.name">
-        <div>
-          {{ e.name }}
+        <div class="flex gap-4">
+          <UIXInput class="grow" v-model="apiKey.value" :label="$t('API_KEY')" :placeholder="$t('INSERT_API_KEY')" :password="!showApiKey" autocomplete="none"/>
+          <button class="button button-secondary self-end h-[3.75rem]" @click="showApiKey = !showApiKey">
+            <Icon name="ph:eye" class="text-2xl" v-if="showApiKey"/>
+            <Icon name="ph:eye-slash" class="text-2xl" v-else/>
+          </button>
         </div>
-        <div>
-          <input
-            type="text"
-            :value="e.value"
-            class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            @change="e.value = $event?.target?.value || ''"
-          />
-        </div>
-        <button class="button button-secondary" @click="delEnvVar(e.name)">
-          <Icon name="ph:trash-simple-bold" class="text-2xl" />
-        </button>
       </div>
-      <div class="flex space-x-4" v-if="availableEnvVars.length > 0">
-        <select v-model="newEnvVar" class="border rounded border-primary bg-white hover:bg-sky-100 focus:outline-primary text-primary px-2">
-          <option :value="name" v-for="name in availableEnvVars" :key="name">{{ name }}</option>
-        </select>
-        <button class="button button-secondary" @click="addEnvVar()">
-          <Icon name="ph:plus-bold" class="text-2xl" />
-        </button>
+
+      <!-- Selected env vars -->
+      <div class="mb-4" >
+        <div class="flex gap-4" v-for="e in envVars" :key="e.name">
+          <UIXInput class="grow" v-model="e.value" :label="e.name" :placeholder="'Insert ' +  e.name"/>
+          <button class="button button-secondary self-end h-[3.75rem]" @click="delEnvVar(e.name)">
+            <Icon name="ph:trash-simple-bold" class="text-2xl" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Available env vars -->
+      <div class="mb-4" v-if="availableEnvVars.length > 0">
+        <div class="flex mb-4 gap-4">
+          <UIXSelect class="grow" v-model="newEnvVar" :label="$t('ADD_ENV_VAR')" :options="availableEnvVars" :placeholder="$t('SELECT_ENV_VAR')" />
+          <button class="button button-secondary self-end h-[3.75rem]" @click="addEnvVar()">
+            <Icon name="ph:plus-bold" class="text-2xl" />
+          </button>
+        </div>
       </div>
     </div>
 
+    <!-- Models list and selection -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2" v-if="modelsList.length > 0">
       <label class="p-1.5 flex items-center gap-2">
         <input type="checkbox" :indeterminate="indeterminateCheck" v-model="checkAll" />
@@ -80,7 +75,7 @@ interface ModelSelect {
 const isLoading = ref(true);
 
 const saveLoading = ref(false);
-
+const showApiKey = ref(false);
 const store = useProvidersStore();
 
 const modelsList = ref<ModelSelect[]>([]);
