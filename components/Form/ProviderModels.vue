@@ -175,7 +175,7 @@ const addEnvVar = () => {
 
 const delEnvVar = (name: string) => {
   const index = envVars.value.findIndex((item) => item.name === name);
-  if (index !== undefined && index !== -1) {
+  if (index !== -1) {
     envVars.value.splice(index, 1);
   }
 };
