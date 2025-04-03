@@ -50,7 +50,7 @@
         <input type="checkbox" :indeterminate="indeterminateCheck" v-model="checkAll" />
         <span class="font-normal text-xs leading-tight">{{ $t('SELECT_ALL') }}</span>
       </label>
-      <label class="p-1.5 flex items-center gap-2 bg-slate-200 rounded-sm" v-for="m in modelsList">
+      <label class="p-1.5 flex items-center gap-2 bg-slate-200 rounded-sm" v-for="m in modelsList" :key="m.name">
         <input type="checkbox" v-model="m.selected" :id="`${provider}_${m.name}`" @change="updateCheckAll()" />
         <span class="text-xs leading-tight tracking-wide">{{ m.name }}</span>
       </label>
@@ -204,7 +204,7 @@ const saveProvidersConfig = async () => {
 const updateProvidersConfig = async () => {
   try {
     updateProviderStore();
-    let body: any = {
+    const body: any = {
       providers: JSON.stringify(store.providers),
     };
     if (changedVars) {
@@ -225,7 +225,7 @@ const updateProvidersConfig = async () => {
 
 const envVarsToJSON = () => {
   const varsMap = new Map<string, string>();
-  for (const [k, list] of store.envVars.entries()) {
+  for (const [_k, list] of store.envVars.entries()) {
     list.forEach((item) => {
       varsMap.set(item.name, item.value);
     });

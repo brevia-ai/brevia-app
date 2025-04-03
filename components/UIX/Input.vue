@@ -26,7 +26,7 @@
 const model = defineModel<string>({ default: '' });
 
 const props = defineProps({
-  label: String,
+  label: { type: String, default: '' },
   required: { type: Boolean, default: false },
   placeholder: { type: String, default: '' },
   autocapitalize: { type: String, default: 'none' },

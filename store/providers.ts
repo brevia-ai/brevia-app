@@ -23,7 +23,6 @@ export const useProvidersStore = defineStore('providers', {
   }),
 
   actions: {
-
     setKnownVars(conf: any) {
       this.knownVars.clear();
       for (const [key, value] of Object.entries(conf)) {
@@ -39,15 +38,16 @@ export const useProvidersStore = defineStore('providers', {
         const varList: EnvVarItem[] = [];
         for (const item of items) {
           if (keys.includes(item)) {
-            varList.push({name: item, value: String(confEnvVars[item])});
+            varList.push({ name: item, value: String(confEnvVars[item]) });
             providerVars.push(item);
           }
         }
         this.envVars.set(provider, varList);
       }
       // put every other var in a special `_keep` variable
-      const otherVars = keys.filter(key => !providerVars.includes(key));
-      this.envVars.set('_keep', otherVars.map(key => ({ name: key, value: String(confEnvVars[key])})));
+      const otherVars = keys.filter((key) => !providerVars.includes(key));
+      const keep = otherVars.map((key) => ({ name: key, value: String(confEnvVars[key]) }));
+      this.envVars.set('_keep', keep);
     },
   },
 });

@@ -27,10 +27,10 @@
 const model = defineModel<string | number | null>();
 
 const props = defineProps({
-  label: String,
+  label: { type: String, default: '' },
   required: { type: Boolean, default: false },
   readonly: { type: Boolean, default: false },
-  placeholder: String,
+  placeholder: { type: String, default: '' },
   options: {
     type: Array as PropType<Array<string | { label: string; value: string | number }>>,
     default: () => [],

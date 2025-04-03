@@ -1,7 +1,7 @@
 export default defineEventHandler(async (event) => {
   try {
     const project = await currentProject(event);
-    const response: Response = await fetch(apiUrl(event,  '/status', project), {
+    const response: Response = await fetch(apiUrl(event, '/status', project), {
       method: 'HEAD',
       headers: apiHeaders(event),
     });

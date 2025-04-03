@@ -15,12 +15,12 @@
 <script setup lang="ts">
 const model = defineModel<number | null>();
 
-const props = defineProps({
-  label: String,
-  hint: String,
-  min: Number,
-  max: Number,
-  step: Number,
+defineProps({
+  label: { type: String, default: '' },
+  hint: { type: String, default: '' },
+  min: { type: Number, default: null },
+  max: { type: Number, default: null },
+  step: { type: Number, default: null },
   readonly: { type: Boolean, default: false },
 });
 

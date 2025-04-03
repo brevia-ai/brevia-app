@@ -8,7 +8,7 @@
 
     <div class="flex gap-8">
       <UIXTabs :tabs="providersList">
-        <template v-for="(item, idx) in providersList" v-slot:[idx]>
+        <template v-for="(item, idx) in providersList" :key="idx" #[idx]>
           <FormProviderModels :provider="item" />
         </template>
       </UIXTabs>

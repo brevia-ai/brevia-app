@@ -5,9 +5,9 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
 const customRules = {
   'vue/no-v-html': ['off'],
+  'vue/attributes-order': ['off'],
   '@typescript-eslint/no-explicit-any': ['off'],
   'vue/no-multiple-template-root': ['off'],
-  'endOfLine': ['auto'],
 };
 
 const config = {
