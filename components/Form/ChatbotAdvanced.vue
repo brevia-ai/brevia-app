@@ -48,15 +48,9 @@
       <div v-if="qacVisible" class="space-y-4">
         <UIXInput v-model.trim="docsNum" label="Documents Number" autocapitalize="none" @keydown.enter.stop.prevent="saveMeta" />
 
-        <div>
-          Folloup LLm
-          <JsonEditorVue v-model="qaFollowupLLm" :mode="Mode.text" />
-        </div>
+        <ConfigLlm v-model="qaFollowupLLm" title="Followup LLM" />
 
-        <div>
-          Completion LLm
-          <JsonEditorVue v-model="qaCompletionLLM" :mode="Mode.text" />
-        </div>
+        <ConfigLlm v-model="qaCompletionLLM" title="Completion LLm" />
 
         <div>
           Q&A Retriever
@@ -169,6 +163,8 @@ const uiVisible = ref(true);
 const breviaAppOptions = ref(collection.cmetadata.brevia_app);
 
 const integration = useIntegration();
+
+await initProviders();
 
 const saveMeta = async () => {
   if (isLoading.value) {
