@@ -36,7 +36,7 @@
         <button @click="$openModal('DialogSystemInfo')">
           v{{ appVersion }}
           <Icon v-if="statesStore.lowBreviaVersion()" name="ph:warning-bold" class="text-pink-700" />
-          <Icon v-else name="ph:info-bold"/>
+          <Icon v-else name="ph:info-bold" />
         </button>
       </span>
       <span v-else class="col-span-3 justify-self-end whitespace-nowrap"> v{{ appVersion }} </span>
