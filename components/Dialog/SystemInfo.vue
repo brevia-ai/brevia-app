@@ -19,6 +19,12 @@
           Brevia API <strong>v{{ versions.brevia }}</strong>
         </span>
         <br />
+        <template v-if="statesStore.lowBreviaVersion()">
+          <span class="col-span-3 justify-self-end whitespace-nowrap text-red-600">
+            {{ $t('MIN_BREVIA_VERSION_WARNING', { version: minBreviaVersion }) }}
+          </span>
+          <br />
+        </template>
       </template>
       <template v-if="versions?.apiName && versions?.apiVersion">
         <span class="col-span-3 justify-self-end whitespace-nowrap">
@@ -55,8 +61,9 @@
 
 <script lang="ts" setup>
 const appVersion = useRuntimeConfig().public.version;
-const response = await fetch('/api/brevia/versions');
-const versions = await response.json();
+const statesStore = useStatesStore();
+const versions = statesStore.versions;
+const minBreviaVersion = useRuntimeConfig().public.minBreviaVersion;
 
 const integration = useIntegration();
 const integrationName = integration.charAt(0).toUpperCase() + integration.slice(1);

@@ -34,8 +34,9 @@
     <div class="flex gap-3 text-xs tracking-wider text-white">
       <span v-if="statesStore.userHasRole('admin')" class="col-span-3 justify-self-end whitespace-nowrap">
         <button @click="$openModal('DialogSystemInfo')">
-          {{ appVersion }}
-          <Icon name="ph:info-bold" />
+          v{{ appVersion }}
+          <Icon v-if="statesStore.lowBreviaVersion()" name="ph:warning-bold" class="text-pink-700" />
+          <Icon v-else name="ph:info-bold"/>
         </button>
       </span>
       <span v-else class="col-span-3 justify-self-end whitespace-nowrap"> v{{ appVersion }} </span>
