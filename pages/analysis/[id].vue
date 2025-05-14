@@ -46,13 +46,14 @@
         <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ result.output }}</p>
       </div>
       <div v-if="result" class="space-y-2 text-center sm:text-left">
-        <a v-if="result.document_url" class="w-full sm:w-auto px-8 py-2 sm:py-4 button" :href="result.document_url" target="_blank">
-          <Icon name="ph:download-bold" class="mr-3 -translate-y-px text-xl" />
-          <span class="inline-block py-2">{{ $t('DOWNLOAD_ANALYSIS') }}</span>
-        </a>
+        <div v-if="result.artifacts && result.artifacts.length > 0" class="space-y-2">
+          <a v-for="artifact in result.artifacts" :key="artifact.url" class="w-full sm:w-auto px-8 py-2 sm:py-4 button" :href="artifact.url" target="_blank">
+            <Icon name="ph:download-bold" class="mr-3 -translate-y-px text-xl" />
+            <span class="inline-block py-2">{{ artifact.name }}</span>
+          </a>
+        </div>
         <button v-else class="w-full sm:w-auto px-8 py-2 sm:py-4 button" @click="downloadPdf">{{ $t('DOWNLOAD_ANALYSIS') }}</button>
       </div>
-
       <div v-if="error" class="space-y-4">
         <p class="block p-8 bg-red-900 border border-red-900 text-white rounded-lg text-lg whitespace-pre-line">{{ error }}</p>
       </div>
