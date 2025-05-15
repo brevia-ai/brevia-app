@@ -96,6 +96,7 @@ export default {
       this.isDragging = false;
       this.fileErrorMessage = !typeOk ? this.$t('FILE_TYPE_NOT_ACCEPTED') : this.$t('FILE_SIZE_ERROR');
       this.isFileError = true;
+      console.error(!typeOk ? `Wrong file type ${file.type}` : `File too big ${file.size}`);
       setTimeout(() => {
         this.isFileError = false;
       }, 4000);
