@@ -47,10 +47,16 @@
       </div>
       <div v-if="result" class="space-y-2 text-center sm:text-left">
         <div v-if="result.artifacts && result.artifacts.length > 0" class="space-y-2">
-          <a v-for="artifact in result.artifacts" :key="artifact.url" class="w-full sm:w-auto px-8 py-2 sm:py-4 button" :href="artifact.url" target="_blank">
-            <Icon name="ph:download-bold" class="mr-3 -translate-y-px text-xl" />
-            <span class="inline-block py-2">{{ artifact.name }}</span>
-          </a>
+          <template  v-for="artifact in result.artifacts" :key="artifact.url">
+            <a v-if="artifact.url?.startsWith('http')" class="w-full sm:w-auto px-8 py-2 sm:py-4 button" target="_blank">
+              <Icon name="ph:download-bold" class="mr-3 -translate-y-px text-xl" />
+              <span class="inline-block py-2">{{ artifact.name }}</span>
+            </a>
+            <a v-else @click="forceDownload(artifactLink(artifact.url), artifact.name)" class="w-full sm:w-auto px-8 py-2 sm:py-4 button">
+              <Icon name="ph:download-bold" class="mr-3 -translate-y-px text-xl" />
+              <span class="inline-block py-2">{{ artifact.name }}</span>
+            </a>
+          </template>
         </div>
         <button v-else class="w-full sm:w-auto px-8 py-2 sm:py-4 button" @click="downloadPdf">{{ $t('DOWNLOAD_ANALYSIS') }}</button>
       </div>
@@ -252,6 +258,35 @@ const readJobData = async () => {
   } catch (err) {
     error.value = t('AN_ERROR_OCCURRED_PLEASE_RETRY');
     console.log(err);
+  }
+};
+
+const artifactLink = (artifact_url: string) => {
+  if (artifact_url.startsWith('/download')) {
+    return `/api/brevia${artifact_url}`;
+  }
+
+  return artifact_url;
+};
+
+const forceDownload = async (artifact_url: string, filename: string) => {
+  try {
+    const response = await fetch(`/api/brevia${artifact_url}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch the file');
+    }
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error('Error downloading the file:', err);
+    error.value = t('AN_ERROR_OCCURRED_PLEASE_RETRY');
   }
 };
 </script>
