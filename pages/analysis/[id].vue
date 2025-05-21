@@ -47,7 +47,7 @@
       </div>
       <div v-if="result" class="space-y-2 text-center sm:text-left">
         <div v-if="result.artifacts && result.artifacts.length > 0" class="space-y-2">
-          <template  v-for="artifact in result.artifacts" :key="artifact.url">
+          <template v-for="artifact in result.artifacts" :key="artifact.url">
             <a v-if="artifact.url?.startsWith('http')" :href="artifact.url" class="w-full sm:w-auto px-8 py-2 sm:py-4 button" target="_blank">
               <Icon name="ph:download-bold" class="mr-3 -translate-y-px text-xl" />
               <span class="inline-block py-2">{{ artifact.name }}</span>
