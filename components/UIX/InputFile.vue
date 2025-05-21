@@ -51,9 +51,11 @@ const props = defineProps({
     required: false,
   },
   // comma separated lists of accepted mime types
+  // e.g. 'application/pdf,text/plain'
+  // if empty, all types are accepted
   acceptTypes: {
     type: String,
-    default: 'application/pdf',
+    default: '',
   },
   labelClasses: {
     type: String,

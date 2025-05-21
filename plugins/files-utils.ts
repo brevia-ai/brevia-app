@@ -26,6 +26,9 @@ export default defineNuxtPlugin(() => {
       },
 
       fileTypeAccepted: (file: File, acceptTypes: string) => {
+        if (!acceptTypes) {
+          return true;
+        }
         if (!file || !file?.type) {
           return false;
         }

@@ -125,7 +125,7 @@ const resetDisabled = computed(() => {
 });
 
 const acceptTypes = computed(() => {
-  return menuItem.value?.params?.accept || 'application/pdf';
+  return menuItem.value?.params?.accept || '';
 });
 
 const elapsedTime = computed(() => {

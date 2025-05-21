@@ -37,9 +37,10 @@ export default {
       default: false,
     },
     acceptTypes: {
-      // comma separated lists of accepted mime types
+      // comma separated lists of accepted mime types, e.g. 'application/pdf,text/plain'
+      // if empty, all types are accepted
       type: String,
-      default: 'application/pdf',
+      default: '',
     },
   },
 
