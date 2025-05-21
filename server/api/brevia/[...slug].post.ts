@@ -1,5 +1,8 @@
 export default defineEventHandler(async (event) => {
-  const url = `/${event.context?.params?.slug}`;
+  let url = `/${event.context?.params?.slug}`;
+  if (url.startsWith('/api/brevia/')) {
+    url = url.replace('/api/brevia', '');
+  }
   const body = await readBody(event);
   try {
     return await apiFetch(url, { method: 'POST', body }, event);
