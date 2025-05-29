@@ -34,11 +34,6 @@
         @update-left="updateLeftMessages"
         @feedback="(feed) => handleFeedback(feed)"
       >
-        <template #extra-icons>
-          <div v-if="chatZone.showLastMsgDocs" class="px-1.5 pb-1 hover:bg-neutral-500 hover:rounded-md cursor-pointer">
-            <Icon name="ph:files-bold" class="text-white" @click="$openModal('ChatDocuments', { documents: chatZone.getResponseDocs() })" />
-          </div>
-        </template>
         <template #messageCounter>
           <div v-if="isDemo" class="flex space-x-4">
             <span class="grow text-lg">{{ $t('MESSAGES_LEFT') }}: {{ messagesLeft }}</span>
