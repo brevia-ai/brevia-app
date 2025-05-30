@@ -32,6 +32,7 @@
     "CHATBOT_HISTORY": "Archivio messaggi chatbot",
     "CHATBOT_IFRAME_DISABLED": "La pubblicazione del chatbot via iframe è disabilitata.",
     "CHECKING": "Controllo in corso",
+    "CHECK_MODEL": "Conversa con il modello",
     "CHECK_YOUR_INBOX": "Controlla la tua casella di posta e segui le istruzioni per completare la registrazione",
     "CHECK_YOUR_INBOX_RESET": "Controlla la tua casella di posta e segui le istruzioni per resettare la tua password",
     "CHOOSE_NEW_PASSWORD": "Scegli una nuova password",
