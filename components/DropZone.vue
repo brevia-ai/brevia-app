@@ -37,9 +37,10 @@ export default {
       default: false,
     },
     acceptTypes: {
-      // comma separated lists of accepted mime types
+      // comma separated lists of accepted mime types, e.g. 'application/pdf,text/plain'
+      // if empty, all types are accepted
       type: String,
-      default: 'application/pdf',
+      default: '',
     },
   },
 
@@ -96,6 +97,7 @@ export default {
       this.isDragging = false;
       this.fileErrorMessage = !typeOk ? this.$t('FILE_TYPE_NOT_ACCEPTED') : this.$t('FILE_SIZE_ERROR');
       this.isFileError = true;
+      console.error(!typeOk ? `Wrong file type ${file.type}` : `File too big ${file.size}`);
       setTimeout(() => {
         this.isFileError = false;
       }, 4000);
