@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { type UserDataStore } from '~~/utils/user-data-store';
 import { type ApiVersions } from '~~/server/utils/versions';
+import { lt } from 'semver';
 
 export enum ItemEditLevel {
   ReadWrite = 'READ_WRITE',
@@ -84,7 +85,9 @@ export const useStatesStore = defineStore('states', {
 
     lowBreviaVersion() {
       const minBreviaVersion = useRuntimeConfig().public.minBreviaVersion;
-      return this.versions?.brevia ? this.versions.brevia < minBreviaVersion : false;
+      return this.versions?.brevia
+        ? lt(this.versions.brevia, minBreviaVersion)
+        : false;
     },
   },
 });
