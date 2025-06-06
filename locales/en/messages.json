@@ -53,6 +53,13 @@
     "CONFIRM_READ_ACCEPT": "I confirm that I have read and accepted the",
     "COOKIE_OPTIONS": "Cookie Options",
     "COPY": "Copy",
+    "CONVERSATION": {
+        "CUSTOMIZE_MODEL": "Customize your model",
+        "CUSTOMIZE_INFO": "To personalize your experience, open the {customizeModel} section and select a model tailored to your needs.",
+        "DEFAULT": "If you don't select a custom model, the default model defined in {settings} will be used instead.",
+        "DESCRIPTION": "Here you can freely start a conversation without RAG, choosing an AI model of your preference",
+        "TITLE": "Converse with the model"
+    },
     "CREATE": "Create",
     "CREATE_NEW_CHATBOT": "Create a new chatbot",
     "CURRENT_PASSWORD": "Current password",

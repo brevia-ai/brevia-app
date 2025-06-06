@@ -53,6 +53,13 @@
     "CONFIRM_READ_ACCEPT": "Confermo di avere letto e accettato",
     "COOKIE_OPTIONS": "Opzioni Cookie",
     "COPY": "Copia",
+    "CONVERSATION": {
+        "CUSTOMIZE_MODEL": "Configura il tuo modello",
+        "CUSTOMIZE_INFO": "Per personalizzare l’esperienza, apri la sezione {customizeModel} e seleziona un modello su misura per le tue esigenze. ",
+        "DEFAULT": "Se non selezioni un modello personalizzato, verrà automaticamente utilizzato quello predefinito indicato in {settings}.",
+        "DESCRIPTION": "Qui puoi iniziare una conversazione liberamente senza RAG, scegliendo il modello di intelligenza artificiale che preferisci.",
+        "TITLE": "Conversa con il modello"
+    },
     "CREATE": "Crea",
     "CREATE_NEW_CHATBOT": "Crea un nuovo chatbot",
     "CURRENT_PASSWORD": "Password corrente",
