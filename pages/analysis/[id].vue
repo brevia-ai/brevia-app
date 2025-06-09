@@ -5,11 +5,11 @@
       <div v-html="menuItem?.description"></div>
 
       <div>
-        <DropZone ref="fileDrop" :disabled="isBusy || jobsLeft == '0'" :accept-types="acceptTypes" @file-change="file = $event" />
+        <DropZone ref="fileDrop" class="h-96" :disabled="isBusy || jobsLeft == '0'" :accept-types="acceptTypes" @file-change="file = $event" />
       </div>
 
       <div class="flex flex-col sm:flex-row justify-between">
-        <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button" :class="{ loading: isBusy }" :disabled="!file || isBusy || jobsLeft == '0'" @click="submit">
+        <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button" :disabled="!file || isBusy || jobsLeft == '0'" @click="submit">
           {{ $t('UPLOAD_AND_ANALYZE_FILE') }}
         </button>
         <button
@@ -31,7 +31,7 @@
         </p>
       </div>
 
-      <hr v-if="jobData" class="border-neutral-300" />
+      <hr ref="jobResultSection" v-if="jobData" class="border-neutral-300" />
       <div v-if="jobData" class="space-y-4">
         <h2 class="text-xl leading-tight">
           <span class="block md:inline font-bold">{{ file.name }}</span> {{ $t('ANALYSIS') }} <span class="block md:inline font-bold">{{ jobStatus }}</span>
@@ -72,19 +72,20 @@ import { useStatesStore } from '~~/store/states';
 
 const INTERVAL = 15000; // 15 seconds in ms
 
-const result = ref(null);
-const file = ref(null);
+const result = ref<any | null>(null);
+const file = ref<any>(null);
 const isBusy = ref(false);
-const jobId = ref(null);
-const jobData = ref(null);
+const jobId = ref<string | null>(null);
+const jobData = ref<{ completed: boolean; locked_until: Date; created: Date; result: string } | null>(null);
 const jobName = ref('');
+const jobResultSection = ref();
 let pollingId: any = null;
 const error = ref('');
 const isDemo = ref(false);
 const jobsLeft = ref('');
 const menuItem = ref();
 const store = useStatesStore();
-const fileDrop = ref(null);
+const fileDrop = ref();
 
 const { $createPdf } = useNuxtApp();
 const { t } = useI18n();
@@ -132,12 +133,23 @@ const elapsedTime = computed(() => {
   const dt = Date.parse(jobData.value?.created + 'Z');
   const now = new Date().getTime();
   const seconds = Math.round((now - dt) / 1000);
+  if (seconds < 0) {
+    return '< 1 sec';
+  }
   if (seconds < 60) {
     return `${seconds} sec`;
   }
   const minutes = Math.round((now - dt) / 60000);
 
   return `${minutes} min`;
+});
+
+watch(jobStatus, async () => {
+  await nextTick();
+  if (jobStatus.value === 'completed' && jobResultSection.value) {
+    const y = jobResultSection.value.getBoundingClientRect().top - 96;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
 });
 
 const reset = () => {
