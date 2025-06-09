@@ -206,5 +206,6 @@
     "VALID_FROM": "Valido dal",
     "VALIT_TO": "fino al",
     "WELCOME_ON_BREVIA": "benvenuto su Brevia",
-    "WRONG_CREDENTIALS": "Credenziali errate"
+    "WRONG_CREDENTIALS": "Credenziali errate",
+    "WAIT_PROCESSING": "Attendi mentre il file viene elaborato."
 }

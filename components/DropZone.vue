@@ -11,7 +11,11 @@
     @dragleave="onDragLeave"
     @drop="onDrop"
   >
-    <div v-if="file" class="max-w-full text-sm font-mono text-green-300 overflow-hidden text-ellipsis">{{ file.name }}</div>
+    <div v-if="file && !disabled" class="max-w-full text-sm font-mono text-green-300 overflow-hidden text-ellipsis">{{ file.name }}</div>
+    <div v-else-if="file && disabled" class="max-w-full text-sm font-mono text-neutral-300 overflow-hidden text-ellipsis flex flex-col items-center gap-4">
+      <ElementLoader height="64" width="64" />
+      <p class="animate-pulse">{{ $t('WAIT_PROCESSING') }}</p>
+    </div>
     <div v-else-if="isFileError">{{ fileErrorMessage }}</div>
     <div v-else-if="isDragging">{{ $t('DROP_FILE') }}</div>
     <div v-else>{{ $t('PLEASE_DROP_A_FILE') }}</div>
@@ -29,81 +33,85 @@
   </label>
 </template>
 
-<script lang="ts">
-export default {
-  props: {
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    acceptTypes: {
-      // comma separated lists of accepted mime types, e.g. 'application/pdf,text/plain'
-      // if empty, all types are accepted
-      type: String,
-      default: '',
-    },
+<script setup lang="ts">
+const { $fileTypeAccepted, $fileSizeAccepted } = useNuxtApp();
+const { t } = useI18n();
+
+const props = defineProps({
+  disabled: {
+    type: Boolean,
+    default: false,
   },
-
-  emits: ['fileChange'],
-
-  data() {
-    return {
-      isDragging: false,
-      isFileError: false,
-      file: null,
-      fileErrorMessage: '',
-    };
+  acceptTypes: {
+    // comma separated lists of accepted mime types, e.g. 'application/pdf,text/plain'
+    // if empty, all types are accepted
+    type: String,
+    default: '',
   },
+});
 
-  methods: {
-    reset() {
-      this.isDragging = false;
-      this.file = null;
-      (this.$refs.fileInput as any).value = '';
-    },
-    onChangeFile() {
-      const file = [...(this.$refs.fileInput as any).files][0] || null;
-      if (!this.checkFile(file)) {
-        return;
-      }
-      this.file = file;
-      this.$emit('fileChange', this.file);
-    },
-    onDragOver(e: DragEvent) {
-      e.preventDefault();
-      this.isDragging = true;
-    },
-    onDragLeave() {
-      this.isDragging = false;
-    },
-    onDrop(e: DragEvent) {
-      e.preventDefault();
-      const file = [...(e.dataTransfer?.files as any)][0] || null;
-      if (!this.checkFile(file)) {
-        return;
-      }
+const emits = defineEmits(['fileChange']);
+const isDragging = ref(false);
+const isFileError = ref(false);
+const file = ref<File | null>(null);
+const fileErrorMessage = ref('');
+const fileInput = ref();
 
-      this.file = file;
-      this.$emit('fileChange', [...(e.dataTransfer?.files as any)][0]);
-      this.isDragging = false;
-    },
-    checkFile(file: File) {
-      const typeOk = this.$fileTypeAccepted(file, this.acceptTypes);
-      const sizeOk = this.$fileSizeAccepted(file);
-      if (typeOk && sizeOk) {
-        return true;
-      }
-      this.file = null;
-      this.isDragging = false;
-      this.fileErrorMessage = !typeOk ? this.$t('FILE_TYPE_NOT_ACCEPTED') : this.$t('FILE_SIZE_ERROR');
-      this.isFileError = true;
-      console.error(!typeOk ? `Wrong file type ${file.type}` : `File too big ${file.size}`);
-      setTimeout(() => {
-        this.isFileError = false;
-      }, 4000);
-
-      return false;
-    },
-  },
+const reset = () => {
+  isDragging.value = false;
+  file.value = null;
+  fileInput.value = '';
 };
+
+const onChangeFile = () => {
+  const f = [...fileInput.value.files][0] || null;
+  if (!checkFile(f)) {
+    return;
+  }
+  file.value = f;
+  emits('fileChange', file.value);
+};
+
+const onDragOver = (e: DragEvent) => {
+  e.preventDefault();
+  isDragging.value = true;
+};
+
+const onDragLeave = () => {
+  isDragging.value = false;
+};
+
+const onDrop = (e: DragEvent) => {
+  e.preventDefault();
+  const f = [...(e.dataTransfer?.files as any)][0] || null;
+  if (!checkFile(f)) {
+    return;
+  }
+
+  file.value = f;
+  emits('fileChange', [...(e.dataTransfer?.files as any)][0]);
+  isDragging.value = false;
+};
+
+const checkFile = (f: File) => {
+  const typeOk = $fileTypeAccepted(f, props.acceptTypes);
+  const sizeOk = $fileSizeAccepted(f);
+  if (typeOk && sizeOk) {
+    return true;
+  }
+  file.value = null;
+  isDragging.value = false;
+  fileErrorMessage.value = !typeOk ? t('FILE_TYPE_NOT_ACCEPTED') : t('FILE_SIZE_ERROR');
+  isFileError.value = true;
+  console.error(!typeOk ? `Wrong file type ${f.type}` : `File too big ${f.size}`);
+  setTimeout(() => {
+    isFileError.value = false;
+  }, 4000);
+
+  return false;
+};
+
+defineExpose({
+  reset,
+});
 </script>
