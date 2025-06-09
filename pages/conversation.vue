@@ -41,6 +41,7 @@
         </h2>
         <Transition name="section-fade">
           <div v-if="configVisible">
+            <ConfigLlm v-model="qaCompletionLLm" title="Completion LLM" />
             <ConfigLlm v-model="qaFollowupLLm" title="Followup LLM" />
           </div>
         </Transition>
@@ -50,6 +51,7 @@
         :collection
         :is-full-page="false"
         :max-messages="maxChatMessages"
+        :config="getConfig()"
         bot-name="test-chat"
         @update-left="updateLeftMessages"
         @feedback="(feed) => handleFeedback(feed)"
@@ -88,6 +90,7 @@ const messagesLeft = ref(maxChatMessages);
 const configVisible = ref(false);
 const breviaConfig: any = await $fetch('/api/brevia/config');
 const qaFollowupLLm = ref(breviaConfig.qa_followup_llm);
+const qaCompletionLLm = ref(breviaConfig.qa_completion_llm);
 
 onBeforeMount(async () => {
   isBusy.value = true;
@@ -123,6 +126,14 @@ const handleFeedback = (feed: any) => {
       console.log(error);
     });
   }, false);
+};
+
+const getConfig = () => {
+  // Serve fare check sul tipo perchè il componente salva object in string al cambiamento
+  return {
+    completion_llm: typeof qaCompletionLLm.value === 'object' ? qaCompletionLLm.value : JSON.parse(qaCompletionLLm.value),
+    followup_llm: typeof qaFollowupLLm.value === 'object' ? qaFollowupLLm.value : JSON.parse(qaFollowupLLm.value),
+  };
 };
 </script>
 
