@@ -113,5 +113,8 @@ const checkFile = (f: File) => {
 
 defineExpose({
   reset,
+  onDrop,
+  onDragLeave,
+  onDragOver,
 });
 </script>

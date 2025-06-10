@@ -1,11 +1,31 @@
 <template>
-  <main class="space-y-6">
+  <main
+    class="space-y-6 h-full"
+    @dragover="
+      (e) => {
+        e.preventDefault();
+        fileDrop.onDragOver(e);
+      }
+    "
+    @dragleave="
+      (e) => {
+        e.preventDefault();
+        fileDrop.onDragLeave();
+      }
+    "
+    @drop="
+      (e) => {
+        e.preventDefault();
+        fileDrop.onDrop(e);
+      }
+    "
+  >
     <h2 class="text-2xl md:text-3xl lg:text-4xl leading-tight font-bold">{{ menuItem?.title }}</h2>
     <div class="space-y-6 sm:space-y-8">
       <div v-html="menuItem?.description"></div>
 
       <div>
-        <DropZone ref="fileDrop" class="h-96" :disabled="isBusy || jobsLeft == '0'" :accept-types="acceptTypes" @file-change="file = $event" />
+        <DropZone ref="fileDrop" :disabled="isBusy || jobsLeft == '0'" :accept-types="acceptTypes" @file-change="file = $event" />
       </div>
 
       <div class="flex flex-col sm:flex-row justify-between">
@@ -38,7 +58,13 @@
         </h2>
       </div>
       <div v-if="jobData" class="space-y-4">
-        <p class="text-xl leading-tight">{{ $t('ELAPSED_TIME') }}: {{ elapsedTime }}</p>
+        <p class="text-xl leading-tight">
+          {{ $t('ELAPSED_TIME') }}: {{ elapsedTime }}
+          <span class="relative inline-flex size-3 ml-3">
+            <span v-if="!result" class="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-500 opacity-75"></span>
+            <span class="relative inline-flex size-3 rounded-full" :class="result ? 'bg-green-700' : 'bg-orange-500'"></span>
+          </span>
+        </p>
       </div>
 
       <hr v-if="result" class="border-neutral-300" />
@@ -86,6 +112,8 @@ const jobsLeft = ref('');
 const menuItem = ref();
 const store = useStatesStore();
 const fileDrop = ref();
+const timerElapsed = ref(0);
+let timer: any;
 
 const { $createPdf } = useNuxtApp();
 const { t } = useI18n();
@@ -130,23 +158,18 @@ const acceptTypes = computed(() => {
 });
 
 const elapsedTime = computed(() => {
-  const dt = Date.parse(jobData.value?.created + 'Z');
-  const now = new Date().getTime();
-  const seconds = Math.round((now - dt) / 1000);
-  if (seconds < 0) {
-    return '< 1 sec';
-  }
+  const seconds = Math.round(timerElapsed.value / 1000);
   if (seconds < 60) {
     return `${seconds} sec`;
   }
-  const minutes = Math.round((now - dt) / 60000);
-
-  return `${minutes} min`;
+  const minutes = Math.round(timerElapsed.value / 60000);
+  return `${minutes} min ${seconds} sec`;
 });
 
 watch(jobStatus, async () => {
   await nextTick();
   if (jobStatus.value === 'completed' && jobResultSection.value) {
+    clearInterval(timer);
     const y = jobResultSection.value.getBoundingClientRect().top - 96;
     window.scrollTo({ top: y, behavior: 'smooth' });
   }
@@ -232,6 +255,7 @@ const submit = async () => {
       jobId.value = data.job?.trim() || '';
       store.setJobInfo(jobName.value, { id: jobId.value, file: { name: file.value?.name } });
       startPolling();
+      timer = setInterval(() => (timerElapsed.value += 1000), 1000);
     }
   } catch (err) {
     error.value = t('AN_ERROR_OCCURRED_PLEASE_RETRY');
