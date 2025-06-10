@@ -40,9 +40,17 @@
           </button>
         </h2>
         <Transition name="section-fade">
-          <div v-if="configVisible">
-            <ConfigLlm v-model="qaCompletionLLm" title="Completion LLM" />
-            <ConfigLlm v-model="qaFollowupLLm" title="Followup LLM" />
+          <div v-if="configVisible" class="space-y-6">
+            <ConfigLlm v-model="qaCompletionLLm" title="" />
+            <label class="p-1.5 flex items-center gap-2">
+              <input type="checkbox" id="advanced" name="advanced" @click="moreConfig = !moreConfig" />
+              <span class="font-normal leading-tight">Voglio configurare ulteriormente il mio modello (Per utenti esperti)</span>
+            </label>
+            <Transition name="section-fade">
+              <div v-if="moreConfig">
+                <ConfigLlm v-model="qaFollowupLLm" title="Followup LLM" />
+              </div>
+            </Transition>
           </div>
         </Transition>
       </div>
@@ -88,6 +96,7 @@ const maxChatMessages = isDemo.value ? parseInt(config.public.demo.maxChatMessag
 const messagesLeft = ref(maxChatMessages);
 
 const configVisible = ref(false);
+const moreConfig = ref(false);
 const breviaConfig: any = await $fetch('/api/brevia/config');
 const qaFollowupLLm = ref(breviaConfig.qa_followup_llm);
 const qaCompletionLLm = ref(breviaConfig.qa_completion_llm);
