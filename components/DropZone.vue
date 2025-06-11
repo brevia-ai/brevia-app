@@ -116,5 +116,6 @@ defineExpose({
   onDrop,
   onDragLeave,
   onDragOver,
+  isDragging,
 });
 </script>

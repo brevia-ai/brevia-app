@@ -1,6 +1,33 @@
 <template>
+  <!-- div to make draggable the outside area of the page-->
+  <div
+    class="absolute grow top-24 left-0 right-0 pb-14 bottom-80 sm:bottom-96"
+    @dragover="
+      (e) => {
+        e.preventDefault();
+        fileDrop.onDragOver(e);
+      }
+    "
+    @dragleave="
+      (e) => {
+        e.preventDefault();
+        fileDrop.onDragLeave();
+      }
+    "
+    @drop="
+      (e) => {
+        e.preventDefault();
+        fileDrop.onDrop(e);
+      }
+    "
+  >
+    <div
+      v-if="fileDrop?.isDragging"
+      class="absolute z-10 inset-2 border-black border-2 border-dashed mb-2 rounded-lg bg-slate-500 bg-opacity-40 pointer-events-none"
+    ></div>
+  </div>
   <main
-    class="space-y-6 h-full"
+    class="space-y-6 h-full relative"
     @dragover="
       (e) => {
         e.preventDefault();
