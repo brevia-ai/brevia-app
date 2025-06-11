@@ -185,8 +185,8 @@ const acceptTypes = computed(() => {
 });
 
 const elapsedTime = computed(() => {
-  const seconds = Math.round(timerElapsed.value / 1000);
-  if (seconds < 60) {
+  const seconds = Math.round((timerElapsed.value / 1000) % 60);
+  if (Math.round(timerElapsed.value / 1000) < 60) {
     return `${seconds} sec`;
   }
   const minutes = Math.round(timerElapsed.value / 60000);

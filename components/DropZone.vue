@@ -89,7 +89,7 @@ const onDrop = (e: DragEvent) => {
   }
 
   file.value = f;
-  emits('fileChange', [...(e.dataTransfer?.files as any)][0]);
+  emits('fileChange', f);
   isDragging.value = false;
 };
 
