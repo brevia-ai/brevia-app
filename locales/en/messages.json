@@ -205,5 +205,6 @@
     "VALID_FROM": "Valid from",
     "VALIT_TO": "to",
     "WELCOME_ON_BREVIA": "welcome",
-    "WRONG_CREDENTIALS": "Wrong username or password"
+    "WRONG_CREDENTIALS": "Wrong username or password",
+    "WAIT_PROCESSING": "Please wait while the file is being processed."
 }

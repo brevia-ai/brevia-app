@@ -1,5 +1,52 @@
 <template>
-  <main class="space-y-6">
+  <!-- div to make draggable the outside area of the page-->
+  <div
+    class="absolute grow top-24 left-0 right-0 pb-14 bottom-80 sm:bottom-96"
+    @dragover="
+      (e) => {
+        e.preventDefault();
+        fileDrop.onDragOver(e);
+      }
+    "
+    @dragleave="
+      (e) => {
+        e.preventDefault();
+        fileDrop.onDragLeave();
+      }
+    "
+    @drop="
+      (e) => {
+        e.preventDefault();
+        fileDrop.onDrop(e);
+      }
+    "
+  >
+    <div
+      v-if="fileDrop?.isDragging"
+      class="absolute z-10 inset-2 border-black border-2 border-dashed mb-2 rounded-lg bg-slate-500 bg-opacity-40 pointer-events-none"
+    ></div>
+  </div>
+  <main
+    class="space-y-6 h-full relative"
+    @dragover="
+      (e) => {
+        e.preventDefault();
+        fileDrop.onDragOver(e);
+      }
+    "
+    @dragleave="
+      (e) => {
+        e.preventDefault();
+        fileDrop.onDragLeave();
+      }
+    "
+    @drop="
+      (e) => {
+        e.preventDefault();
+        fileDrop.onDrop(e);
+      }
+    "
+  >
     <h2 class="text-2xl md:text-3xl lg:text-4xl leading-tight font-bold">{{ menuItem?.title }}</h2>
     <div class="space-y-6 sm:space-y-8">
       <div v-html="menuItem?.description"></div>
@@ -9,7 +56,7 @@
       </div>
 
       <div class="flex flex-col sm:flex-row justify-between">
-        <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button" :class="{ loading: isBusy }" :disabled="!file || isBusy || jobsLeft == '0'" @click="submit">
+        <button class="w-full sm:w-auto px-8 py-2 sm:py-4 button" :disabled="!file || isBusy || jobsLeft == '0'" @click="submit">
           {{ $t('UPLOAD_AND_ANALYZE_FILE') }}
         </button>
         <button
@@ -31,14 +78,20 @@
         </p>
       </div>
 
-      <hr v-if="jobData" class="border-neutral-300" />
+      <hr ref="jobResultSection" v-if="jobData" class="border-neutral-300" />
       <div v-if="jobData" class="space-y-4">
         <h2 class="text-xl leading-tight">
           <span class="block md:inline font-bold">{{ file.name }}</span> {{ $t('ANALYSIS') }} <span class="block md:inline font-bold">{{ jobStatus }}</span>
         </h2>
       </div>
       <div v-if="jobData" class="space-y-4">
-        <p class="text-xl leading-tight">{{ $t('ELAPSED_TIME') }}: {{ elapsedTime }}</p>
+        <p class="text-xl leading-tight">
+          {{ $t('ELAPSED_TIME') }}: {{ elapsedTime }}
+          <span class="relative inline-flex size-3 ml-3">
+            <span v-if="!result" class="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-500 opacity-75"></span>
+            <span class="relative inline-flex size-3 rounded-full" :class="result ? 'bg-green-700' : 'bg-orange-500'"></span>
+          </span>
+        </p>
       </div>
 
       <hr v-if="result" class="border-neutral-300" />
@@ -72,19 +125,22 @@ import { useStatesStore } from '~~/store/states';
 
 const INTERVAL = 15000; // 15 seconds in ms
 
-const result = ref(null);
-const file = ref(null);
+const result = ref<any | null>(null);
+const file = ref<any>(null);
 const isBusy = ref(false);
-const jobId = ref(null);
-const jobData = ref(null);
+const jobId = ref<string | null>(null);
+const jobData = ref<{ completed: boolean; locked_until: Date; created: Date; result: string } | null>(null);
 const jobName = ref('');
+const jobResultSection = ref();
 let pollingId: any = null;
 const error = ref('');
 const isDemo = ref(false);
 const jobsLeft = ref('');
 const menuItem = ref();
 const store = useStatesStore();
-const fileDrop = ref(null);
+const fileDrop = ref();
+const timerElapsed = ref(0);
+let timer: any;
 
 const { $createPdf } = useNuxtApp();
 const { t } = useI18n();
@@ -129,15 +185,21 @@ const acceptTypes = computed(() => {
 });
 
 const elapsedTime = computed(() => {
-  const dt = Date.parse(jobData.value?.created + 'Z');
-  const now = new Date().getTime();
-  const seconds = Math.round((now - dt) / 1000);
-  if (seconds < 60) {
+  const seconds = Math.round((timerElapsed.value / 1000) % 60);
+  if (Math.round(timerElapsed.value / 1000) < 60) {
     return `${seconds} sec`;
   }
-  const minutes = Math.round((now - dt) / 60000);
+  const minutes = Math.round(timerElapsed.value / 60000);
+  return `${minutes} min ${seconds} sec`;
+});
 
-  return `${minutes} min`;
+watch(jobStatus, async () => {
+  await nextTick();
+  if (jobStatus.value === 'completed' && jobResultSection.value) {
+    clearInterval(timer);
+    const y = jobResultSection.value.getBoundingClientRect().top - 96;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
 });
 
 const reset = () => {
@@ -220,6 +282,7 @@ const submit = async () => {
       jobId.value = data.job?.trim() || '';
       store.setJobInfo(jobName.value, { id: jobId.value, file: { name: file.value?.name } });
       startPolling();
+      timer = setInterval(() => (timerElapsed.value += 1000), 1000);
     }
   } catch (err) {
     error.value = t('AN_ERROR_OCCURRED_PLEASE_RETRY');
