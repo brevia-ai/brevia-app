@@ -34,6 +34,7 @@ export default defineNuxtConfig({
         },
       },
       version: pkg?.version,
+      minBreviaVersion: '0.8.0',
     },
     // brevia integration session & auth credentials
     brevia: {
