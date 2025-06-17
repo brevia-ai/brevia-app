@@ -41,14 +41,14 @@
         </h2>
         <Transition name="section-fade">
           <div v-if="configVisible" class="space-y-6">
-            <ConfigLlm v-model="qaCompletionLLm" title="" />
+            <ConfigLlm v-model="qaCompletionLLM" title="" />
             <label class="p-1.5 flex items-center gap-2">
               <input type="checkbox" id="advanced" name="advanced" @click="moreConfig = !moreConfig" />
-              <span class="font-normal leading-tight">Voglio configurare ulteriormente il mio modello (Per utenti esperti)</span>
+              <span class="font-normal leading-tight">{{ $t('CONVERSATION.ADVANCED_CONFIG') }}</span>
             </label>
             <Transition name="section-fade">
               <div v-if="moreConfig">
-                <ConfigLlm v-model="qaFollowupLLm" title="Followup LLM" />
+                <ConfigLlm v-model="qaFollowupLLM" title="Followup LLM" />
               </div>
             </Transition>
           </div>
@@ -56,7 +56,6 @@
       </div>
       <ChatZone
         ref="chatZone"
-        :collection
         :is-full-page="false"
         :max-messages="maxChatMessages"
         :config="getConfig()"
@@ -88,7 +87,6 @@ useHead({ title: `Chatbot | ${config.public.appName}` });
 
 const chatZone = ref();
 const customizeOpts = ref();
-const collection = ref<{ name?: string; uuid?: string; cmetadata?: any }>({});
 const isBusy = ref(false);
 const input = ref<HTMLElement | null>(null);
 const isDemo = ref(store.userHasRole('demo'));
@@ -98,12 +96,11 @@ const messagesLeft = ref(maxChatMessages);
 const configVisible = ref(false);
 const moreConfig = ref(false);
 const breviaConfig: any = await $fetch('/api/brevia/config');
-const qaFollowupLLm = ref(breviaConfig.qa_followup_llm);
-const qaCompletionLLm = ref(breviaConfig.qa_completion_llm);
+const qaFollowupLLM = ref(breviaConfig.qa_followup_llm);
+const qaCompletionLLM = ref(breviaConfig.qa_completion_llm);
 
 onBeforeMount(async () => {
-  isBusy.value = true;
-  isBusy.value = false;
+  await initProviders();
 });
 
 watch(isBusy, (val) => {
@@ -118,7 +115,7 @@ const showHideConfig = () => (configVisible.value = !configVisible.value);
 
 const scrollToConfig = () => {
   if (!configVisible.value) showHideConfig();
-  setTimeout(() => customizeOpts.value.scrollIntoView({ behaviour: 'smooth' }), 100);
+  setTimeout(() => customizeOpts.value.scrollIntoView({ behavior: 'smooth' }), 100);
 };
 
 const updateLeftMessages = (left: number) => (messagesLeft.value = left);
@@ -140,8 +137,8 @@ const handleFeedback = (feed: any) => {
 const getConfig = () => {
   // Serve fare check sul tipo perchè il componente salva object in string al cambiamento
   return {
-    completion_llm: typeof qaCompletionLLm.value === 'object' ? qaCompletionLLm.value : JSON.parse(qaCompletionLLm.value),
-    followup_llm: typeof qaFollowupLLm.value === 'object' ? qaFollowupLLm.value : JSON.parse(qaFollowupLLm.value),
+    completion_llm: typeof qaCompletionLLM.value === 'object' ? qaCompletionLLM.value : JSON.parse(qaCompletionLLM.value),
+    followup_llm: typeof qaFollowupLLM.value === 'object' ? qaFollowupLLM.value : JSON.parse(qaFollowupLLM.value),
   };
 };
 </script>

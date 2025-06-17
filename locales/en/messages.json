@@ -54,11 +54,13 @@
     "COOKIE_OPTIONS": "Cookie Options",
     "COPY": "Copy",
     "CONVERSATION": {
+        "ADVANCED_CONFIG": "I want to further customize my model (For advanced users)",
         "CUSTOMIZE_MODEL": "Customize your model",
         "CUSTOMIZE_INFO": "To personalize your experience, open the {customizeModel} section and select a model tailored to your needs.",
         "DEFAULT": "If you don't select a custom model, the default model defined in {settings} will be used instead.",
         "DESCRIPTION": "Here you can freely start a conversation, choosing an AI model of your preference",
-        "TITLE": "Converse with the model"
+        "TITLE": "Converse with the model",
+        "TYPE": "Conversation"
     },
     "CREATE": "Create",
     "CREATE_NEW_CHATBOT": "Create a new chatbot",

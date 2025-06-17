@@ -22,7 +22,7 @@
       </div>
       <div class="static md:absolute bottom-7 flex items-center space-x-2 text-sky-300 opacity-90">
         <Icon class="opacity-70" name="carbon:chat-off" size="28" />
-        <span class="text-xs uppercase tracking-wider">conversation</span>
+        <span class="text-xs uppercase tracking-wider">{{ $t('CONVERSATION.TYPE') }}</span>
       </div>
     </NuxtLink>
   </div>

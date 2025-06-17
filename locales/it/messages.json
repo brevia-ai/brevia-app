@@ -54,11 +54,13 @@
     "COOKIE_OPTIONS": "Opzioni Cookie",
     "COPY": "Copia",
     "CONVERSATION": {
+        "ADVANCED_CONFIG": "Voglio configurare ulteriormente il mio modello (Per utenti esperti)",
         "CUSTOMIZE_MODEL": "Configura il tuo modello",
         "CUSTOMIZE_INFO": "Per personalizzare l’esperienza, apri la sezione {customizeModel} e seleziona un modello su misura per le tue esigenze. ",
         "DEFAULT": "Se non selezioni un modello personalizzato, verrà automaticamente utilizzato quello predefinito indicato in {settings}.",
         "DESCRIPTION": "Qui puoi iniziare una conversazione liberamente, scegliendo il modello di intelligenza artificiale che preferisci.",
-        "TITLE": "Conversa con il modello"
+        "TITLE": "Conversa con il modello",
+        "TYPE": "Conversazione"
     },
     "CREATE": "Crea",
     "CREATE_NEW_CHATBOT": "Crea un nuovo chatbot",
