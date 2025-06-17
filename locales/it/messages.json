@@ -122,6 +122,7 @@
     "MAX_NUMBER_LINKS": "Numero massimo di link",
     "MAX_NUMBER_QUESTIONS": "Numero massimo di domande",
     "MESSAGES_LEFT": "Messaggi rimanenti",
+    "MIN_BREVIA_VERSION_WARNING": "Attenzione: la versione minima di Brevia richiesta è {version}",
     "NEW_LINK": "Nuovo link",
     "NEW_PASSWORD": "Nuova password",
     "NEW_QUESTION": "Nuova domanda",

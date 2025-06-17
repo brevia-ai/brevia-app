@@ -122,6 +122,7 @@
     "MAX_NUMBER_LINKS": "Maximum number of links",
     "MAX_NUMBER_QUESTIONS": "Maximum number of questions",
     "MESSAGES_LEFT": "Messagges left",
+    "MIN_BREVIA_VERSION_WARNING": "Warning: Minimum required Brevia version is {version}",
     "NEW_LINK": "New link",
     "NEW_PASSWORD": "New password",
     "NEW_QUESTION": "New question",

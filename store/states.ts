@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import { type UserDataStore } from '~~/utils/user-data-store';
+import { type ApiVersions } from '~~/server/utils/versions';
+import { lt } from 'semver';
 
 export enum ItemEditLevel {
   ReadWrite = 'READ_WRITE',
@@ -28,6 +30,7 @@ export const useStatesStore = defineStore('states', {
     menu: [] as menuItem[],
     collection: null as collectionItem | null,
     project: null as string | null, // selected project in multi-project mode
+    versions: null as ApiVersions | null,
   }),
 
   actions: {
@@ -78,6 +81,11 @@ export const useStatesStore = defineStore('states', {
 
     userLogin(data: any) {
       this.user = data;
+    },
+
+    lowBreviaVersion() {
+      const minBreviaVersion = useRuntimeConfig().public.minBreviaVersion;
+      return this.versions?.brevia ? lt(this.versions.brevia, minBreviaVersion) : false;
     },
   },
 });
