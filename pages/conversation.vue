@@ -137,8 +137,8 @@ const handleFeedback = (feed: any) => {
 const getConfig = () => {
   // Serve fare check sul tipo perchè il componente salva object in string al cambiamento
   return {
-    completion_llm: typeof qaCompletionLLM.value === 'object' ? qaCompletionLLM.value : JSON.parse(qaCompletionLLM.value),
-    followup_llm: typeof qaFollowupLLM.value === 'object' ? qaFollowupLLM.value : JSON.parse(qaFollowupLLM.value),
+    qa_completion_llm: typeof qaCompletionLLM.value === 'object' ? qaCompletionLLM.value : JSON.parse(qaCompletionLLM.value),
+    qa_followup_llm: typeof qaFollowupLLM.value === 'object' ? qaFollowupLLM.value : JSON.parse(qaFollowupLLM.value),
   };
 };
 </script>
