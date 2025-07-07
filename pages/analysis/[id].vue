@@ -88,17 +88,17 @@
         <p class="text-xl leading-tight">
           {{ $t('ELAPSED_TIME') }}: {{ elapsedTime }}
           <span class="relative inline-flex size-3 ml-3">
-            <span v-if="!result" class="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-500 opacity-75"></span>
-            <span class="relative inline-flex size-3 rounded-full" :class="result ? 'bg-green-700' : 'bg-orange-500'"></span>
+            <span v-if="!result && !error" class="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-500 opacity-75"></span>
+            <span class="relative inline-flex size-3 rounded-full" :class="error ? 'bg-red-700' : result ? 'bg-green-700' : 'bg-orange-500'"></span>
           </span>
         </p>
       </div>
 
       <hr v-if="result" class="border-neutral-300" />
-      <div v-if="result" class="space-y-4">
+      <div v-if="result && !error" class="space-y-4">
         <p class="block p-8 bg-slate-900 border border-slate-900 text-white rounded-lg text-lg whitespace-pre-line">{{ result.output }}</p>
       </div>
-      <div v-if="result" class="space-y-2 text-center sm:text-left">
+      <div v-if="result && !error" class="space-y-2 text-center sm:text-left">
         <div v-if="result.artifacts && result.artifacts.length > 0" class="space-y-2">
           <template v-for="artifact in result.artifacts" :key="artifact.url">
             <a v-if="artifact.url?.startsWith('http')" :href="artifact.url" class="w-full sm:w-auto px-8 py-2 sm:py-4 button" target="_blank">
@@ -304,24 +304,27 @@ const readJobData = async () => {
   try {
     const data = await $fetch(`/api/brevia/jobs/${jobId.value}`);
     const err = data?.error || data.result?.error || null;
+    jobData.value = data;
     if (err) {
-      isBusy.value = false;
       error.value = `There has been an error\n${err}`;
-      console.log(err);
-      clearJob();
+      console.error(err);
+      jobTerminated();
     } else {
-      jobData.value = data;
       if (jobData.value?.completed) {
-        isBusy.value = false;
-        result.value = jobData.value?.result;
-        clearJob();
-        updateJobsLeft();
+        jobTerminated();
       }
     }
   } catch (err) {
     error.value = t('AN_ERROR_OCCURRED_PLEASE_RETRY');
-    console.log(err);
+    console.error(err);
   }
+};
+
+const jobTerminated = () => {
+  isBusy.value = false;
+  result.value = jobData.value?.result;
+  clearJob();
+  updateJobsLeft();
 };
 
 const artifactLink = (artifact_url: string) => {
